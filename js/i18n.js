@@ -412,5 +412,9 @@ TRANSLATIONS.pt = {
   "Ready, ${escapeHtml(studentName)}?": "Pronto, ${escapeHtml(studentName)}?",
   "Progress report": "Relatório de progresso",
   "Settings": "Configurações",
-  "Language": "Idioma",
+  "Switch instrument": "Trocar instrumento",
+  "Welcome to Preludio Band!": "Bem-vindo ao Preludio Band!",
+  "What's your name?": "Qual é o seu nome?",
+  "Your name...": "Seu nome...",
+  "Start practicing": "Começar a praticar"
 };
