@@ -107,7 +107,9 @@ function applyI18nToDOM() {
       }
     });
 
-    if (LANG !== 'en') {
+    if (LANG === 'pt') {
+      ptTranslateSubtree(document.body);
+    } else if (LANG === 'fr') {
       const dict = TRANSLATIONS[LANG] || {};
       const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT, null);
       const nodes = [];
@@ -749,3 +751,339 @@ TRANSLATIONS.fr = {
   "Language": "Langue",
   "Welcome to Preludio Band!": "Bienvenue au Preludio Band !",
 };
+
+const PT_EXTRA = {
+  "+ Import Song": "+ Importar canção",
+  "16ths": "Semicolcheias",
+  "8ths": "Colcheias",
+  "A quick guide to your first sound, before note one.": "Um guia rápido para o seu primeiro som, antes da primeira nota.",
+  "A side key": "Chave lateral de Lá",
+  "A — valves 1 and 2.": "Lá — válvulas 1 e 2.",
+  "Aim slightly down, as if blowing across the top of a bottle.": "Direcione o ar um pouco para baixo, como se soprasse sobre a boca de uma garrafa.",
+  "All done — nice work!": "Tudo pronto — bom trabalho!",
+  "Almost There": "Quase lá",
+  "Alto Sax": "Sax alto",
+  "Appearance": "Aparência",
+  "Audio analysis not supported here.": "Análise de áudio não suportada aqui.",
+  "Audio failed to load.": "Falha ao carregar o áudio.",
+  "Back": "Voltar",
+  "Beats": "Tempos",
+  "Beep": "Bipe",
+  "Blow a steady, focused airstream and hold a clear tone.": "Sopre uma coluna de ar constante e focada e sustente um som claro.",
+  "Blow a thin, steady stream of air across the tone hole.": "Sopre um fio de ar fino e constante sobre o buraco de sopro.",
+  "Blow warm, fast air — like fogging up a window — and hold a steady tone.": "Sopre ar quente e rápido — como embaçar uma janela — e sustente um som firme.",
+  "Bounce Back": "Volta por cima",
+  "Buzz through the instrument — rest the mouthpiece, never press hard.": "Vibre através do instrumento — apoie o bocal, nunca aperte com força.",
+  "C — open, the 8th partial.": "Dó — solta, o 8º harmônico.",
+  "Call & response": "Chamada e resposta",
+  "Check your pitch against the floating tuner.": "Confira a afinação com o afinador flutuante.",
+  "Clear all lesson progress and XP for all instruments. This cannot be undone.": "Apaga todo o progresso das aulas e o XP de todos os instrumentos. Esta ação não pode ser desfeita.",
+  "Click": "Clique",
+  "Click sound": "Som do clique",
+  "Climb the Ladder": "Subindo a escada",
+  "Continue": "Continuar",
+  "Continue to quiz": "Continuar para o quiz",
+  "Copy failed — try Print instead.": "Falha ao copiar — tente imprimir.",
+  "Copy recap": "Copiar recapitulação",
+  "Copy summary": "Copiar resumo",
+  "Could not access the microphone.": "Não foi possível acessar o microfone.",
+  "Could not play the recording.": "Não foi possível reproduzir a gravação.",
+  "Count-in…": "Contagem…",
+  "Daily practice (minutes)": "Prática diária (minutos)",
+  "Day streak": "Sequência de dias",
+  "Deep Down": "Lá no fundo",
+  "Delete imported song": "Excluir canção importada",
+  "Done": "Pronto",
+  "Ear training": "Treino auditivo",
+  "Error reading file.": "Erro ao ler o arquivo.",
+  "Euph.": "Eufônio",
+  "Export MusicXML": "Exportar MusicXML",
+  "E♭ key": "Chave de Mi♭",
+  "Faster": "Mais rápido",
+  "Finger gym": "Academia de dedos",
+  "Fingering": "Digitação",
+  "Fingering chart": "Tabela de digitação",
+  "Finish a couple of lessons to unlock the timed drills.": "Conclua algumas aulas para liberar os exercícios cronometrados.",
+  "Finish the previous note first.": "Termine a nota anterior primeiro.",
+  "Firm your bottom lip over the bottom teeth like a cushion.": "Firme o lábio de baixo sobre os dentes de baixo, como uma almofada.",
+  "First Song": "Primeira canção",
+  "First Song: Complete a song": "Primeira canção: conclua uma canção",
+  "First Steps": "Primeiros passos",
+  "First Steps: Complete your first lesson": "Primeiros passos: conclua sua primeira aula",
+  "Flat Third": "Terça bemol",
+  "Fr. Horn": "Trompa",
+  "Fri": "Sex",
+  "Full Octave": "Oitava completa",
+  "Full Octave: Learn all 8 notes on an instrument": "Oitava completa: aprenda as 8 notas de um instrumento",
+  "Gently set the mouthpiece on your lips and buzz again.": "Apoie o bocal com delicadeza nos lábios e vibre de novo.",
+  "Get ready...": "Prepare-se...",
+  "Goal Getter": "Meta batida",
+  "Goal Getter: Reach your weekly practice goal": "Meta batida: alcance sua meta semanal de prática",
+  "Golden Ear": "Ouvido de ouro",
+  "Golden Ear: Echo a phrase by ear, note for note": "Ouvido de ouro: repita uma frase de ouvido, nota por nota",
+  "Got it — let’s play!": "Entendi — vamos tocar!",
+  "HALF": "MEIO",
+  "Half-hole": "Meio buraco",
+  "Hear a short phrase, then echo it back — by ear.": "Ouça uma frase curta e repita — de ouvido.",
+  "Hear a target note": "Ouvir uma nota-alvo",
+  "Hear it": "Ouvir",
+  "Hear the model": "Ouvir o modelo",
+  "Hide for now": "Ocultar por enquanto",
+  "Hide weekly progress": "Ocultar o progresso semanal",
+  "High and Low": "Agudo e grave",
+  "I played it!": "Toquei!",
+  "If there is no crow, open your jaw and use more air. If it is tight and pinched, relax your lips around the reed.": "Se a palheta não \"cantar\", abra a mandíbula e use mais ar. Se estiver apertado e esganiçado, relaxe os lábios ao redor da palheta.",
+  "Instruments": "Instrumentos",
+  "Learn a couple of notes first.": "Aprenda algumas notas primeiro.",
+  "Learn two notes to unlock ear training.": "Aprenda duas notas para liberar o treino auditivo.",
+  "Left little finger": "Mindinho esquerdo",
+  "Lesson complete!": "Aula concluída!",
+  "Level": "Nível",
+  "Listen for a clear, hollow whistle — that is your sound.": "Ouça um assobio claro e oco — esse é o seu som.",
+  "Look up any note's fingering and sound.": "Consulte a digitação e o som de qualquer nota.",
+  "Make your first buzz": "Faça seu primeiro zumbido",
+  "Make your first sound": "Faça seu primeiro som",
+  "Marathon": "Maratona",
+  "Marathon: Practice for 30 minutes in total": "Maratona: pratique 30 minutos no total",
+  "Meet your next note": "Conheça sua próxima nota",
+  "Metronome / Tuner": "Metrônomo / Afinador",
+  "Metronome / tuner": "Metrônomo / afinador",
+  "Metronome and tuner": "Metrônomo e afinador",
+  "Metronome volume": "Volume do metrônomo",
+  "Microphone not available for tuning.": "Microfone indisponível para afinação.",
+  "Microphone not available here.": "Microfone indisponível aqui.",
+  "Microphone unavailable.": "Microfone indisponível.",
+  "Minutes": "Minutos",
+  "Mon": "Seg",
+  "New": "Novo",
+  "New badges this week": "Novas insígnias esta semana",
+  "New here? Make your first sound": "Novo por aqui? Faça seu primeiro som",
+  "Next": "Próximo",
+  "Next ›": "Próximo ›",
+  "Nice. Tap Start to try again, or confirm below.": "Muito bem. Toque em Iniciar para tentar de novo ou confirme abaixo.",
+  "No badges yet": "Nenhuma insígnia ainda",
+  "No buzz? Tighten the corners and speed up the air. Thin or pinched? Relax the middle of your lips.": "Sem zumbido? Firme os cantos e acelere o ar. Som fino ou apertado? Relaxe o meio dos lábios.",
+  "No new badges this week": "Nenhuma insígnia nova esta semana",
+  "No notes to show yet.": "Ainda não há notas para mostrar.",
+  "No practice logged this week — pick a lesson to start.": "Nenhuma prática registrada esta semana — escolha uma aula para começar.",
+  "No practice recorded yet — play a lesson to start the report.": "Nenhuma prática registrada ainda — toque uma aula para iniciar o relatório.",
+  "No score yet": "Sem pontuação ainda",
+  "No sound? Re-aim a little lower and use faster air. Stay relaxed — do not press or bite.": "Sem som? Mire um pouco mais para baixo e use um ar mais rápido. Fique relaxado — não aperte nem morda.",
+  "No valves. Faster air.": "Sem válvulas. Ar mais rápido.",
+  "Not quite — try again.": "Quase — tente de novo.",
+  "Note": "Nota",
+  "Now place the reed on the instrument and take it a little at a time.": "Agora coloque a palheta no instrumento e introduza-a aos poucos.",
+  "Octave Leap": "Salto de oitava",
+  "On a Roll": "Embalado",
+  "On a Roll: Practice 3 days in a row": "Embalado: pratique 3 dias seguidos",
+  "On a brass instrument the sound starts with your lips, not the metal. Get a buzz first — the instrument just makes it louder.": "Em um instrumento de metal, o som começa nos seus lábios, não no metal. Primeiro obtenha o zumbido — o instrumento só o deixa mais forte.",
+  "On the staff": "Na pauta",
+  "Open the floating metronome and tuner.": "Abra o metrônomo e o afinador flutuantes.",
+  "POSITION": "POSIÇÃO",
+  "Planner": "Planejador",
+  "Planner: Finish a full practice plan": "Planejador: conclua um plano de prática completo",
+  "Play again": "Jogar novamente",
+  "Play it on your instrument": "Toque no seu instrumento",
+  "Play note": "Tocar nota",
+  "Play now!": "Toque agora!",
+  "Playing…": "Tocando…",
+  "Practice drills": "Exercícios de prática",
+  "Practice report": "Relatório de prática",
+  "Practice today to start a streak!": "Pratique hoje para começar uma sequência!",
+  "Preset…": "Predefinições…",
+  "Print": "Imprimir",
+  "Progress reset.": "Progresso zerado.",
+  "Quick Fingers": "Dedos ágeis",
+  "Quick Fingers: Score 15 in a Finger gym sprint": "Dedos ágeis: faça 15 pontos em um sprint da Academia de dedos",
+  "Quick tour": "Tour rápido",
+  "Reach Higher": "Mais alto ainda",
+  "Record yourself and compare with the model.": "Grave-se e compare com o modelo.",
+  "Register key": "Chave de registro",
+  "Relax your lips into a soft \"ooo\" shape.": "Relaxe os lábios em um formato suave de \"uuu\".",
+  "Report copied to clipboard.": "Relatório copiado para a área de transferência.",
+  "Reset all progress": "Zerar todo o progresso",
+  "Reset all progress for all instruments? This cannot be undone.": "Zerar todo o progresso de todos os instrumentos? Esta ação não pode ser desfeita.",
+  "Reset progress": "Zerar progresso",
+  "Rest your top teeth on the mouthpiece.": "Apoie os dentes de cima no bocal.",
+  "Review complete!": "Revisão concluída!",
+  "Right-thumb key": "Chave do polegar direito",
+  "Rising Star": "Estrela em ascensão",
+  "Rising Star: Earn 500 XP": "Estrela em ascensão: ganhe 500 XP",
+  "Roll your lips slightly over your teeth to cushion the reed.": "Dobre levemente os lábios sobre os dentes para amortecer a palheta.",
+  "Sat": "Sáb",
+  "Save": "Salvar",
+  "Score": "Pontuação",
+  "Second left little finger key": "Segunda chave do mindinho esquerdo",
+  "See a note name, match its fingering fast.": "Veja o nome da nota e encontre a digitação rápido.",
+  "See a note on the staff, name it fast.": "Veja uma nota na pauta e diga o nome rápido.",
+  "Shape your lips into a firm \"mmm\" — corners tight, middle relaxed.": "Dê aos lábios um formato firme de \"mmm\" — cantos firmes, meio relaxado.",
+  "Sharp Turn": "Curva do sustenido",
+  "Sheet music": "Partitura",
+  "Sight-reading": "Leitura à primeira vista",
+  "Skip the tour": "Pular o tour",
+  "Soak the reed in water so it is soft and ready.": "Deixe a palheta de molho na água para ficar macia e pronta.",
+  "Song complete!": "Canção concluída!",
+  "Song not found.": "Canção não encontrada.",
+  "Squeaks mean the reed is too far in or your lip is too tight. No sound? Use more air and loosen your jaw.": "Guinchos indicam que a palheta está muito para dentro ou que o lábio está muito apertado. Sem som? Use mais ar e relaxe a mandíbula.",
+  "Start listening": "Começar a ouvir",
+  "Student name": "Nome do aluno",
+  "Sun": "Dom",
+  "Switch between the light \"paper\" theme and the dark theme.": "Alterne entre o tema claro \"papel\" e o tema escuro.",
+  "Switch to dark theme": "Mudar para o tema escuro",
+  "Switch to light theme": "Mudar para o tema claro",
+  "Take a big breath and blow a fast, steady stream of air.": "Respire fundo e sopre um fluxo de ar rápido e constante.",
+  "Take in the mouthpiece: about a third of it on clarinet, more on saxophone.": "Coloque o bocal na boca: cerca de um terço no clarinete e mais no saxofone.",
+  "Take just the reed and blow — it should crow like a duck call.": "Pegue só a palheta e sopre — ela deve soar como um chamado de pato.",
+  "Tap": "Marcar",
+  "Tap Start, then play along on the count.": "Toque em Iniciar e toque junto com a contagem.",
+  "Tap play, then follow along with the recording.": "Toque em Play e acompanhe a gravação.",
+  "Tap the notes in the order you heard them.": "Toque nas notas na ordem em que você as ouviu.",
+  "Tempo preset": "Andamento predefinido",
+  "The flute makes sound when a thin stream of air splits across the tone hole — not by blowing into it.": "A flauta soa quando um fino fio de ar se divide ao passar pelo buraco de sopro — e não soprando dentro dele.",
+  "The reed vibrates to make your sound. A good reed setup and a warm, fast airstream are everything.": "A palheta vibra para produzir o som. Uma boa montagem da palheta e um ar quente e rápido são tudo.",
+  "The two reeds vibrate together. Start by making the reed \"crow\" on its own, then play it on the instrument.": "As duas palhetas vibram juntas. Comece fazendo a palheta \"cantar\" sozinha, com um som agudo e estridente, e depois toque no instrumento.",
+  "This week in music": "Esta semana na música",
+  "Thu": "Qui",
+  "Thumb": "Polegar",
+  "Time signature": "Fórmula de compasso",
+  "Tip": "Dica",
+  "Top Note": "Nota mais aguda",
+  "Top of the Range": "Topo da extensão",
+  "Triplets": "Tercinas",
+  "Try another": "Tentar outra",
+  "Tue": "Ter",
+  "Tuner": "Afinador",
+  "Turn your head so the air reaches the far edge of the hole.": "Vire a cabeça para o ar alcançar a borda mais distante do buraco.",
+  "Unit 1 · First Notes": "Unidade 1 · Primeiras notas",
+  "Valves 1 and 2.": "Válvulas 1 e 2.",
+  "Wed": "Qua",
+  "Week Strong": "Semana firme",
+  "Week Strong: Practice 7 days in a row": "Semana firme: pratique 7 dias seguidos",
+  "Weekly digest": "Resumo semanal",
+  "Weekly goal": "Meta semanal",
+  "Weekly recap copied.": "Resumo semanal copiado.",
+  "Welcome! This is a one-minute tour of how the app works. You can skip it and replay it any time from your lesson map.": "Boas-vindas! Este é um tour de um minuto sobre como o app funciona. Você pode pulá-lo e repeti-lo quando quiser, no mapa de aulas.",
+  "Wet the reed, then line its tip up with the mouthpiece tip.": "Umedeça a palheta e alinhe a ponta dela com a ponta do bocal.",
+  "Which note does this fingering play?": "Qual nota esta digitação toca?",
+  "Wood": "Madeira",
+  "You got the basics down!": "Você dominou o básico!",
+  "You should hear a buzzy, brassy hum from your lips.": "Você deve ouvir um zumbido metálico saindo dos lábios.",
+  "Your drills will favour the notes you miss most.": "Seus exercícios vão priorizar as notas que você mais erra.",
+  "Your notes": "Suas notas",
+  "in tune ✓": "afinado ✓",
+  "— A key worked by your right thumb, such as the bassoon low Bb, F#, or G#.": "— Uma chave acionada pelo polegar direito, como o Si♭ grave, o Fá♯ ou o Sol♯ do fagote.",
+  "— A second key in the left little-finger group. It adds the low B or Bb that the main key cannot reach alone.": "— Uma segunda chave do grupo do mindinho esquerdo. Acrescenta o Si ou Si♭ grave que a chave principal não alcança sozinha.",
+  "— A second key in the right little-finger group. Your right pinky rests here for the low E-flat; the low C uses the other pinky key.": "— Uma segunda chave do grupo do mindinho direito. O mindinho direito descansa aqui para o Mi♭ grave; o Dó grave usa a outra chave do mindinho.",
+  "— An auxiliary key worked by your left pinky. On some notes it doubles as a resonance key.": "— Uma chave auxiliar acionada pelo mindinho esquerdo. Em algumas notas também funciona como chave de ressonância.",
+  "— Roll your left index finger so the hole is only half covered. This vent is needed for certain middle-register notes.": "— Role o indicador esquerdo para o buraco ficar só meio coberto. Essa abertura é necessária para algumas notas do registro médio.",
+  "— The octave (speaker) key just above the thumb — press it to jump up into the higher register.": "— A chave de oitava (speaker) logo acima do polegar — pressione para saltar ao registro mais agudo.",
+  "— The throat A key, worked by your left index finger — it opens the clarinet’s A and G# in the upper register.": "— A chave de Lá da garganta, acionada pelo indicador esquerdo — abre o Lá e o Sol♯ do clarinete no registro agudo.",
+  "— Your left thumb. It covers the back hole on recorder, works the thumb key on other woodwinds, or the Bb lever on flute.": "— Seu polegar esquerdo. Cobre o buraco de trás na flauta doce, aciona a chave do polegar nos outros instrumentos de madeira ou a alavanca de Si♭ na flauta.",
+  "‹ Prev": "‹ Anterior",
+  "⏺ Record yourself": "⏺ Grave-se",
+  "▶ My take": "▶ Minha gravação",
+  "▶ Play whole melody": "▶ Tocar a melodia inteira",
+  "▶ Play with recording": "▶ Tocar com a gravação",
+  "▶ Replay count-in": "▶ Repetir a contagem",
+  "▶ Start": "▶ Iniciar",
+  "▶ Start count-in": "▶ Iniciar a contagem",
+  "❔ How this app works": "❔ Como este app funciona",
+  "🌙 Dark theme": "🌙 Tema escuro",
+  "🎧 Listen & match": "🎧 Ouvir e combinar",
+  "🎼 Fingering chart": "🎼 Tabela de digitação",
+  "👂 Golden ear! Perfect echo.": "👂 Ouvido de ouro! Eco perfeito.",
+  "📈 Your week in music is ready!": "📈 Sua semana na música está pronta!",
+  "📋 Progress report": "📋 Relatório de progresso",
+  "🔊 Hear a target note": "🔊 Ouvir uma nota-alvo",
+  "🔊 Hear it": "🔊 Ouvir"
+};
+
+Object.assign(TRANSLATIONS.pt, Object.fromEntries(Object.entries(PT_EXTRA).filter(([k]) => !(k in TRANSLATIONS.pt))));
+
+const PT_INSTRUMENTS = { 'Flute': 'Flauta', 'Clarinet': 'Clarinete', 'Alto Sax': 'Sax alto', 'Oboe': 'Oboé', 'Bassoon': 'Fagote',
+  'Trumpet': 'Trompete', 'Trombone': 'Trombone', 'Fr. Horn': 'Trompa', 'Euph.': 'Eufônio', 'Tuba': 'Tuba' };
+const ptInst = s => PT_INSTRUMENTS[s] || t(s);
+const ptNote = s => {
+  const m = s.trim().match(/^([A-G])([#b♯♭]?)(\d*)$/);
+  if (!m) return s;
+  const acc = m[2] === 'b' ? '♭' : m[2] === '#' ? '♯' : m[2];
+  return (NOTE_TO_SOLFEGE_PT[m[1]] || m[1]) + acc + m[3];
+};
+const PT_HEAD = { 'Practice': 'Prática', 'Fingering chart': 'Tabela de digitação', 'First sound': 'Primeiro som' };
+const PT_PATTERNS = [
+  [/^Badges · (\d+)\/(\d+)$/, (a, b) => `Insígnias · ${a}/${b}`],
+  [/^(\d+) min to reach your (\d+)-minute goal$/, (a, b) => `${a} min para atingir sua meta de ${b} minutos`],
+  [/^You're set up on ([^.]+)$/, n => `Você escolheu: ${ptInst(n)}`],
+  [/^Learn (\d+) notes to unlock timed drills\.$/, n => `Aprenda ${n} notas para liberar os exercícios cronometrados.`],
+  [/^(Practice|Fingering chart|First sound) · (.+)$/, (k, n) => `${PT_HEAD[k]} · ${ptInst(n)}`],
+  [/^(\d+) of (\d+) notes learned$/, (a, b) => `${a} de ${b} notas aprendidas`],
+  [/^New — (\d+) correct$/, n => `Novo — ${n} acertos`],
+  [/^Note (\d+) of (\d+)$/, (a, b) => `Nota ${a} de ${b}`],
+  [/^(\d+) of (\d+) on first try$/, (a, b) => `${a} de ${b} de primeira`],
+  [/^Sounds as concert (.+) \((.+) instrument\)\.$/, (n, i) => `Soa como ${ptNote(n)} de concerto (instrumento em ${ptNote(i)}).`],
+  [/^Ready, (.+)\?$/, n => `Pronto, ${n}?`],
+  [/^Best: (\d+) names · (\d+) fingerings$/, (a, b) => `Melhor: ${a} nomes · ${b} digitações`],
+  [/^Best: (.+)$/, n => `Melhor: ${n}`],
+  [/^Listening for (.+)$/, n => `Ouvindo a nota ${n}`],
+  [/^Turn on your microphone and the app hears whether (.+) is right — green means you nailed it\.$/, n => `Ligue o microfone e o app ouve se ${n} está certo — verde significa que você acertou.`],
+  [/^(\d+)\/(\d+) notes · (\d+)\/(\d+) songs$/, (a, b, c, d) => `${a}/${b} notas · ${c}/${d} canções`],
+  [/^(\S+) Plan complete! \+(\d+) XP$/, (i, n) => `${i} Plano concluído! +${n} XP`],
+  [/^(\S+) Badge unlocked: (.+)$/, (i, n) => `${i} Insígnia desbloqueada: ${t(n)}`],
+  [/^(.+) is coming soon!$/, n => `${n} em breve!`],
+  [/^Imported "(.+)"$/, n => `Importado "${n}"`],
+  [/^Import error: (.+)$/, n => `Erro ao importar: ${n}`],
+];
+// Full translation of one line: exact entry or solfege (t), then anchored patterns.
+function tx(str) {
+  if (typeof str !== 'string' || LANG !== 'pt') return str;
+  const trimmed = str.trim();
+  if (!trimmed) return str;
+  const hit = t(trimmed);
+  if (hit !== trimmed) return str.replace(trimmed, hit);
+  for (const [re, fn] of PT_PATTERNS) {
+    const m = trimmed.match(re);
+    if (m) return str.replace(trimmed, fn(...m.slice(1)));
+  }
+  return str;
+}
+function ptTranslateText(node) {
+  const p = node.parentElement;
+  if (!p || /^(SCRIPT|STYLE|NOSCRIPT)$/.test(p.tagName)) return;
+  if (p.closest && p.closest('[translate="no"]')) return;
+  const v = node.nodeValue, out = tx(v);
+  if (out !== v) node.nodeValue = out;
+}
+const PT_ATTRS = ['title', 'aria-label', 'placeholder', 'alt'];
+function ptTranslateAttrs(el) {
+  for (const a of PT_ATTRS) {
+    const v = el.getAttribute && el.getAttribute(a);
+    if (v && v.trim()) { const out = tx(v); if (out !== v) el.setAttribute(a, out); }
+  }
+}
+function ptTranslateSubtree(root) {
+  if (!root) return;
+  if (root.nodeType === 3) { ptTranslateText(root); return; }
+  if (root.nodeType !== 1) return;
+  const w = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
+  let n; while ((n = w.nextNode())) ptTranslateText(n);
+  ptTranslateAttrs(root);
+  root.querySelectorAll('[title],[aria-label],[placeholder],[alt]').forEach(ptTranslateAttrs);
+}
+let _ptObserver = null;
+function ptStartObserver() {
+  if (_ptObserver || typeof MutationObserver === 'undefined' || !document.body) return;
+  _ptObserver = new MutationObserver(records => {
+    if (LANG !== 'pt') return;
+    for (const r of records) {
+      if (r.type === 'childList') r.addedNodes.forEach(ptTranslateSubtree);
+      else if (r.type === 'characterData') ptTranslateText(r.target);
+      else if (r.type === 'attributes') ptTranslateAttrs(r.target);
+    }
+  });
+  _ptObserver.observe(document.body, { childList: true, subtree: true, characterData: true, attributes: true, attributeFilter: PT_ATTRS });
+}
+if (typeof document !== 'undefined') {
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', ptStartObserver);
+  else ptStartObserver();
+}
+
