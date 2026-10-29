@@ -1,14 +1,15 @@
-const CACHE = 'preludio-band-v42';
+const CACHE = 'preludio-band-v43';
 const FILES = [
-  '/',
-  '/index.html',
-  '/manifest.json',
-  '/icon.svg',
-  '/css/styles.css',
-  '/js/app.js',
-  '/js/audio.js',
-  '/js/curriculum.js',
-  '/js/graphics.js',
+  './',
+  './index.html',
+  './manifest.json',
+  './icon.svg',
+  './css/styles.css',
+  './js/app.js',
+  './js/audio.js',
+  './js/curriculum.js',
+  './js/graphics.js',
+  './js/i18n.js',
 ];
 
 self.addEventListener('install', e => {
@@ -32,7 +33,7 @@ self.addEventListener('activate', e => {
 self.addEventListener('fetch', e => {
   const url = new URL(e.request.url);
   if (e.request.method !== 'GET' || url.origin !== location.origin) return;
-  if (url.pathname.startsWith('/audio/')) return;
+  if (url.pathname.includes('/audio/')) return;
   e.respondWith(
     caches.match(e.request).then(cached => cached || fetch(e.request).then(res => {
       const clone = res.clone();
