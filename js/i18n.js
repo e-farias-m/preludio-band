@@ -622,7 +622,7 @@ TRANSLATIONS.pt = {
   "Tap": "Marcar",
   "Turn on your microphone and the app hears whether": "Ligue o microfone e o app ouve se",
   "is right — green means you nailed it.": "está certo — verde significa que você acertou.",
-
+  "Update available — reload to get the latest version.": "Atualização disponível — recarregue para obter a versão mais recente.",
 };
 
 // French (Canadian French) translations - starter set
@@ -995,7 +995,8 @@ const PT_EXTRA = {
   "📈 Your week in music is ready!": "📈 Sua semana na música está pronta!",
   "📋 Progress report": "📋 Relatório de progresso",
   "🔊 Hear a target note": "🔊 Ouvir uma nota-alvo",
-  "🔊 Hear it": "🔊 Ouvir"
+  "🔊 Hear it": "🔊 Ouvir",
+  "Update available — reload to get the latest version.": "Mise à jour disponible — rechargez pour obtenir la dernière version."
 };
 
 Object.assign(TRANSLATIONS.pt, Object.fromEntries(Object.entries(PT_EXTRA).filter(([k]) => !(k in TRANSLATIONS.pt))));
@@ -1008,7 +1009,7 @@ const ptNote = s => {
   if (!m) return s;
   const acc = m[2] === 'b' ? '♭' : m[2] === '#' ? '♯' : m[2];
   return (NOTE_TO_SOLFEGE_PT[m[1]] || m[1]) + acc + m[3];
-};
+}
 const PT_HEAD = { 'Practice': 'Prática', 'Fingering chart': 'Tabela de digitação', 'First sound': 'Primeiro som' };
 const PT_PATTERNS = [
   [/^Badges · (\d+)\/(\d+)$/, (a, b) => `Insígnias · ${a}/${b}`],
