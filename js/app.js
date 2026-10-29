@@ -1092,7 +1092,7 @@ function evaluateBadges(opts = {}) {
   if (newly.length) {
     saveMotivation();
     if (opts.toast && typeof showToast === 'function') {
-      showToast(`${newly[0].icon} Badge unlocked: ${newly[0].name}`);
+      showToast(`${newly[0].icon} ${t('Badge unlocked:')} ${newly[0].name}`);
     }
   }
   return newly;

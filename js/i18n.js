@@ -515,6 +515,7 @@ TRANSLATIONS.pt = {
   "▶ Start count-in": "▶ Iniciar a contagem",
   "❔ How this app works": "❔ Como este app funciona",
   "All done — nice work!": "Tudo pronto — bom trabalho!",
+  "Badge unlocked:": "Medalha desbloqueada:",
   "Audio analysis not supported here.": "Análise de áudio não suportada aqui.",
   "Check your pitch against the floating tuner.": "Confira a afinação com o afinador flutuante.",
   "Clear all lesson progress and XP for all instruments. This cannot be undone.": "Apaga todo o progresso das aulas e o XP de todos os instrumentos. Esta ação não pode ser desfeita.",
