@@ -109,7 +109,10 @@ function applyI18nToDOM() {
         const keys = Object.keys(TRANSLATIONS.pt).sort((a, b) => b.length - a.length);
         keys.forEach(key => {
           if (key.length >= 2 && replaced.indexOf(key) !== -1) {
-            replaced = replaced.split(key).join(TRANSLATIONS.pt[key]);
+            // Word-boundary aware replacement to avoid corrupting names
+            const escaped = key.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+            const re = new RegExp('(?<![\\w])' + escaped + '(?![\\w])', 'g');
+            replaced = replaced.replace(re, TRANSLATIONS.pt[key]);
           }
         });
         if (replaced !== original) {
@@ -129,7 +132,9 @@ function applyI18nToDOM() {
               const keys = Object.keys(TRANSLATIONS.pt).sort((a, b) => b.length - a.length);
               keys.forEach(key => {
                 if (key.length >= 2 && replaced.indexOf(key) !== -1) {
-                  replaced = replaced.split(key).join(TRANSLATIONS.pt[key]);
+                  const escaped = key.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+                  const re = new RegExp('(?<![\\w])' + escaped + '(?![\\w])', 'g');
+                  replaced = replaced.replace(re, TRANSLATIONS.pt[key]);
                 }
               });
               if (replaced !== val) el.setAttribute(attr, replaced);
@@ -491,6 +496,8 @@ TRANSLATIONS.pt = {
   "Pick an instrument to start your very first lessons — fingerings, notes, and your first sounds.": "Escolha um instrumento para começar suas primeiras aulas — digitações, notas e seus primeiros sons.",
   "You're set up on ${savedInst.shortName}. Pick up where you left off.": "Você está configurado em ${savedInst.shortName}. Continue de onde parou.",
   "Ready to play?": "Pronto para tocar?",
+  "You're set up on": "Você está configurado em",
+  "Pick up where you left off.": "Continue de onde parou.",
   "Ready, ${escapeHtml(studentName)}?": "Pronto, ${escapeHtml(studentName)}?",
   "Progress report": "Relatório de progresso",
   "Settings": "Configurações",
@@ -498,5 +505,88 @@ TRANSLATIONS.pt = {
   "Welcome to Preludio Band!": "Bem-vindo ao Preludio Band!",
   "What's your name?": "Qual é o seu nome?",
   "Your name...": "Seu nome...",
-  "Start practicing": "Começar a praticar"
+  "Start practicing": "Começar a praticar",
+  "📈 Your week in music is ready!": "📈 Sua semana na música está pronta!",
+  "+ Import Song": "+ Importar canção",
+  "▶ My take": "▶ Minha gravação",
+  "▶ Play whole melody": "▶ Tocar a melodia inteira",
+  "▶ Play with recording": "▶ Tocar com a gravação",
+  "▶ Replay count-in": "▶ Repetir a contagem",
+  "▶ Start count-in": "▶ Iniciar a contagem",
+  "❔ How this app works": "❔ Como este app funciona",
+  "All done — nice work!": "Tudo pronto — bom trabalho!",
+  "Audio analysis not supported here.": "Análise de áudio não suportada aqui.",
+  "Check your pitch against the floating tuner.": "Confira a afinação com o afinador flutuante.",
+  "Clear all lesson progress and XP for all instruments. This cannot be undone.": "Apaga todo o progresso das aulas e o XP de todos os instrumentos. Esta ação não pode ser desfeita.",
+  "Click sound": "Som do clique",
+  "Could not access the microphone.": "Não foi possível acessar o microfone.",
+  "Could not play the recording.": "Não foi possível reproduzir a gravação.",
+  "Daily practice (minutes)": "Prática diária (minutos)",
+  "Delete imported song": "Excluir canção importada",
+  "Faster": "Mais rápido",
+  "Finish the previous note first.": "Termine a nota anterior primeiro.",
+  "Get ready...": "Prepare-se...",
+  "Hear a short phrase, then echo it back — by ear.": "Ouça uma frase curta e repita — de ouvido.",
+  "Hear it": "Ouvir",
+  "Hear the model": "Ouvir o modelo",
+  "Hide for now": "Ocultar por enquanto",
+  "Hide weekly progress": "Ocultar o progresso semanal",
+  "in tune ✓": "afinado ✓",
+  "Learn a couple of notes first.": "Aprenda algumas notas primeiro.",
+  "Learn two notes to unlock ear training.": "Aprenda duas notas para liberar o treino auditivo.",
+  "Look up any note's fingering and sound.": "Consulte a digitação e o som de qualquer nota.",
+  "Metronome and tuner": "Metrônomo e afinador",
+  "Microphone not available for tuning.": "Microfone indisponível para afinação.",
+  "Microphone not available here.": "Microfone indisponível aqui.",
+  "New badges this week": "Novas insígnias esta semana",
+  "Next ›": "Próximo ›",
+  "Nice. Tap Start to try again, or confirm below.": "Muito bem. Toque em Iniciar para tentar de novo ou confirme abaixo.",
+  "No badges yet": "Nenhuma insígnia ainda",
+  "No new badges this week": "Nenhuma insígnia nova esta semana",
+  "No notes to show yet.": "Ainda não há notas para mostrar.",
+  "No practice recorded yet — play a lesson to start the report.": "Nenhuma prática registrada ainda — toque uma aula para iniciar o relatório.",
+  "Not quite — try again.": "Quase — tente de novo.",
+  "On the staff": "Na pauta",
+  "Open the floating metronome and tuner.": "Abra o metrônomo e o afinador flutuantes.",
+  "Play again": "Jogar novamente",
+  "Play it on your instrument": "Toque no seu instrumento",
+  "Play note": "Tocar nota",
+  "Play now!": "Toque agora!",
+  "Practice report": "Relatório de prática",
+  "Practice today to start a streak!": "Pratique hoje para começar uma sequência!",
+  "Progress reset.": "Progresso zerado.",
+  "Reset all progress": "Zerar todo o progresso",
+  "Reset all progress for all instruments? This cannot be undone.": "Zerar todo o progresso de todos os instrumentos? Esta ação não pode ser desfeita.",
+  "Reset progress": "Zerar progresso",
+  "Review complete!": "Revisão concluída!",
+  "Skip the tour": "Pular o tour",
+  "Song complete!": "Canção concluída!",
+  "Song not found.": "Canção não encontrada.",
+  "Start listening": "Começar a ouvir",
+  "Student name": "Nome do aluno",
+  "Switch between the light \"paper\" theme and the dark theme.": "Alterne entre o tema claro \"papel\" e o tema escuro.",
+  "Tap play, then follow along with the recording.": "Toque em Play e acompanhe a gravação.",
+  "Tap Start, then play along on the count.": "Toque em Iniciar e toque junto com a contagem.",
+  "Tap the notes in the order you heard them.": "Toque nas notas na ordem em que você as ouviu.",
+  "This week in music": "Esta semana na música",
+  "Time signature": "Fórmula de compasso",
+  "Try another": "Tentar outra",
+  "Unit 1 · First Notes": "Unidade 1 · Primeiras notas",
+  "Your drills will favour the notes you miss most.": "Seus exercícios vão priorizar as notas que você mais erra.",
+  "Your notes": "Suas notas",
+  "Done": "Pronto",
+  "Back": "Voltar",
+  "Score": "Pontuação",
+  "Note": "Nota",
+  "New": "Novo",
+  "Best:": "Melhor:",
+  "fingerings": "digitações",
+  "First sound ·": "Primeiro som ·",
+  "Listening for": "Ouvindo a nota",
+  "notes ·": "notas ·",
+  "songs": "canções",
+  "Tap": "Marcar",
+  "Turn on your microphone and the app hears whether": "Ligue o microfone e o app ouve se",
+  "is right — green means you nailed it.": "está certo — verde significa que você acertou.",
+
 };

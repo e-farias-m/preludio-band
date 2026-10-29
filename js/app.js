@@ -1543,8 +1543,8 @@ function renderSelectScreen() {
       ${savedInst ? `<button class="picker-back" data-action="cancel-instrument-pick">\u2190 Back to ${savedInst.shortName}</button>` : ''}
       ${renderInstrumentGrid()}`;
   } else {
-    headline = studentName ? t(`Ready, ${escapeHtml(studentName)}?`) : t('Ready to play?');
-    sub = t(`You're set up on ${savedInst.shortName}. Pick up where you left off.`);
+    headline = studentName ? `${t('Ready,')} ${escapeHtml(studentName)}?` : t('Ready to play?');
+    sub = `${t("You're set up on")} ${savedInst.shortName}. ${t('Pick up where you left off.')}`;
     instrumentArea = renderFocusCard(savedInst);
   }
 
