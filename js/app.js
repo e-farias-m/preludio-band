@@ -1833,7 +1833,7 @@ function renderMapScreen() {
         <div class="map-unit-label">Unit 1 · First Notes</div>
         <div class="map-path">${nodes}${importedNodes}</div>
         <div class="import-section" style="margin-top:20px;text-align:center">
-          <button class="btn btn-secondary" data-action="import-song">+ Import Song</button>
+          <button class="btn btn-secondary" data-action="import-song">${t('+ Import Song')}</button>
           <input type="file" id="import-file-input" accept=".xml,.musicxml" style="display:none"/>
         </div>
         <div class="map-guide">
@@ -3166,6 +3166,7 @@ function render() {
   else if (APP.screen === 'first-sound') app.innerHTML = renderFirstSoundScreen();
   else if (APP.screen === 'lookup') app.innerHTML = renderLookupScreen();
   else if (APP.screen === 'lesson') app.innerHTML = renderLessonScreen();
+  if (typeof applyI18nToDOM === 'function') applyI18nToDOM();
   renderToolWidget();
 }
 
@@ -3707,6 +3708,7 @@ function handleAction(action, el) {
 
     case 'toggle-language':
       setLang(getLang() === 'pt' ? 'en' : 'pt');
+      render();
       break;
     case 'toggle-theme':
       toggleTheme();

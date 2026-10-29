@@ -22,10 +22,30 @@ var LANG = detectDefaultLang();
 // Translation tables. 'en' is identity (source strings). 'pt' holds PT-BR.
 var TRANSLATIONS = { en: {}, pt: {} };
 
+var NOTE_TO_SOLFEGE_PT = {
+  'C': 'Dó', 'C#': 'Dó#', 'Cb': 'Sib', 'Db': 'Réb', 'D': 'Ré', 'D#': 'Ré#', 'Eb': 'Mib',
+  'E': 'Mi', 'F': 'Fá', 'F#': 'Fá#', 'Gb': 'Solb', 'G': 'Sol', 'G#': 'Sol#', 'Ab': 'Láb',
+  'A': 'Lá', 'A#': 'Lá#', 'Bb': 'Sib', 'B': 'Si'
+};
+
+function noteToSolfeggio(str) {
+  if (typeof str !== 'string') return str;
+  if (LANG === 'pt') {
+    if (/^[A-G][#b]?$/.test(str.trim())) {
+      return NOTE_TO_SOLFEGE_PT[str.trim()] || str;
+    }
+  }
+  return str;
+}
+
 function t(str) {
   if (typeof str !== 'string') return str;
-  if (LANG === 'pt' && TRANSLATIONS.pt && Object.prototype.hasOwnProperty.call(TRANSLATIONS.pt, str)) {
-    return TRANSLATIONS.pt[str];
+  if (LANG === 'pt') {
+    if (TRANSLATIONS.pt && Object.prototype.hasOwnProperty.call(TRANSLATIONS.pt, str)) {
+      return TRANSLATIONS.pt[str];
+    }
+    const sol = noteToSolfeggio(str);
+    if (sol !== str) return sol;
   }
   return str;
 }
@@ -56,6 +76,68 @@ function applyI18nToDOM() {
         }
       }
     });
+
+    if (LANG === 'pt') {
+      const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT, null);
+      const nodes = [];
+      let node;
+      while ((node = walker.nextNode())) {
+        nodes.push(node);
+      }
+      nodes.forEach(textNode => {
+        const parent = textNode.parentElement;
+        if (!parent) return;
+        const tag = parent.tagName;
+        if (tag === 'SCRIPT' || tag === 'STYLE' || tag === 'NOSCRIPT') return;
+        const original = textNode.nodeValue;
+        if (!original) return;
+        const trimmed = original.trim();
+        if (!trimmed) return;
+
+        if (TRANSLATIONS.pt && Object.prototype.hasOwnProperty.call(TRANSLATIONS.pt, trimmed)) {
+          textNode.nodeValue = original.replace(trimmed, TRANSLATIONS.pt[trimmed]);
+          return;
+        }
+
+        const sol = noteToSolfeggio(trimmed);
+        if (sol !== trimmed) {
+          textNode.nodeValue = original.replace(trimmed, sol);
+          return;
+        }
+
+        let replaced = original;
+        const keys = Object.keys(TRANSLATIONS.pt).sort((a, b) => b.length - a.length);
+        keys.forEach(key => {
+          if (key.length >= 2 && replaced.indexOf(key) !== -1) {
+            replaced = replaced.split(key).join(TRANSLATIONS.pt[key]);
+          }
+        });
+        if (replaced !== original) {
+          textNode.nodeValue = replaced;
+        }
+      });
+
+      document.querySelectorAll('[title], [aria-label], [placeholder]').forEach(el => {
+        ['title', 'aria-label', 'placeholder'].forEach(attr => {
+          const val = el.getAttribute(attr);
+          if (val && val.trim()) {
+            const trimmed = val.trim();
+            if (TRANSLATIONS.pt && Object.prototype.hasOwnProperty.call(TRANSLATIONS.pt, trimmed)) {
+              el.setAttribute(attr, TRANSLATIONS.pt[trimmed]);
+            } else if (TRANSLATIONS.pt) {
+              let replaced = val;
+              const keys = Object.keys(TRANSLATIONS.pt).sort((a, b) => b.length - a.length);
+              keys.forEach(key => {
+                if (key.length >= 2 && replaced.indexOf(key) !== -1) {
+                  replaced = replaced.split(key).join(TRANSLATIONS.pt[key]);
+                }
+              });
+              if (replaced !== val) el.setAttribute(attr, replaced);
+            }
+          }
+        });
+      });
+    }
   } catch (e) {}
 }
 
