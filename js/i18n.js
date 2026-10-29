@@ -1032,6 +1032,13 @@ const PT_PATTERNS = [
   [/^(.+) is coming soon!$/, n => `${n} em breve!`],
   [/^Imported "(.+)"$/, n => `Importado "${n}"`],
   [/^Import error: (.+)$/, n => `Erro ao importar: ${n}`],
+  [/^Practice report — (.+)$/, n => `Relatório de prática — ${n}`],
+  [/^Level (\d+) · (\d+) XP · (\d+)-day streak · (\d+) min practiced$/, (a, b, c, d) => `Nível ${a} · ${b} XP · ${c} dias seguidos · ${d} min praticados`],
+  [/^Badges: (\d+)\/(\d+)$/, (a, b) => `Insígnias: ${a}/${b}`],
+  [/^No practice recorded yet\.$/, () => 'Nenhuma prática registrada ainda.'],
+  [/^(.+): (\d+)\/(\d+) notes · (\d+)\/(\d+) songs · (\d+) XP$/, (name, a, b, c, d, xp) => `${name}: ${a}/${b} notas · ${c}/${d} canções · ${xp} XP`],
+  [/^  Mastery: (\d+) mastered, (\d+) practiced, (\d+) learning$/, (a, b, c) => `  Domínio: ${a} dominados, ${b} praticados, ${c} aprendendo`],
+  [/^  Focus: (.+)$/, n => `  Foco: ${n}`],
 ];
 // Full translation of one line: exact entry or solfege (t), then anchored patterns.
 function tx(str) {

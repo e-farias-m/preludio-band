@@ -3829,8 +3829,8 @@ function handleAction(action, el) {
       break;
 
     case 'copy-report': {
-      const text = formatReportText(buildPracticeReport(getStudentName()));
-      copyText(text).then(ok => showToast(ok ? 'Report copied to clipboard.' : 'Copy failed — try Print instead.'));
+      const text = tx(formatReportText(buildPracticeReport(getStudentName())));
+      copyText(text).then(ok => showToast(ok ? tx('Report copied to clipboard.') : tx('Copy failed — try Print instead.')));
       break;
     }
 
@@ -3866,8 +3866,8 @@ function handleAction(action, el) {
       break;
 
     case 'copy-digest': {
-      const text = formatDigestText(buildWeeklyDigest(getStudentName()));
-      copyText(text).then(ok => showToast(ok ? 'Weekly recap copied.' : 'Copy failed — try Print instead.'));
+      const text = tx(formatDigestText(buildWeeklyDigest(getStudentName())));
+      copyText(text).then(ok => showToast(ok ? tx('Weekly recap copied.') : tx('Copy failed — try Print instead.')));
       break;
     }
 
