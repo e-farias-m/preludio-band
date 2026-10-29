@@ -527,11 +527,11 @@ TRANSLATIONS.pt = {
 
   "First notes, first wins.": "Primeiras notas, primeiras vitórias.",
   "Pick an instrument to start your very first lessons — fingerings, notes, and your first sounds.": "Escolha um instrumento para começar suas primeiras aulas — digitações, notas e seus primeiros sons.",
-  "You're set up on ${savedInst.shortName}. Pick up where you left off.": "Você está configurado em ${savedInst.shortName}. Continue de onde parou.",
+  // Dead key removed (PT-06): handled by PT_PATTERNS instead.
   "Ready to play?": "Pronto para tocar?",
   "You're set up on": "Você está configurado em",
   "Pick up where you left off.": "Continue de onde parou.",
-  "Ready, ${escapeHtml(studentName)}?": "Pronto, ${escapeHtml(studentName)}?",
+  // Dead key removed (PT-06): handled by PT_PATTERNS instead.
   "Progress report": "Relatório de progresso",
   "Settings": "Configurações",
   "Switch instrument": "Trocar instrumento",
