@@ -8,11 +8,12 @@ const LANG_STORAGE_KEY = 'preludioBandLang';
 function detectDefaultLang() {
   try {
     const saved = localStorage.getItem(LANG_STORAGE_KEY);
-    if (saved === 'pt' || saved === 'en') return saved;
+    if (saved === 'pt' || saved === 'en' || saved === 'fr') return saved;
   } catch (e) {}
   try {
     const nav = (typeof navigator !== 'undefined' && (navigator.language || navigator.userLanguage)) || 'en';
     if (/^pt/i.test(nav)) return 'pt';
+    if (/^fr/i.test(nav)) return 'fr';
   } catch (e) {}
   return 'en';
 }
@@ -20,7 +21,7 @@ function detectDefaultLang() {
 var LANG = detectDefaultLang();
 
 // Translation tables. 'en' is identity (source strings). 'pt' holds PT-BR.
-var TRANSLATIONS = { en: {}, pt: {} };
+var TRANSLATIONS = { en: {}, pt: {}, fr: {} };
 
 var NOTE_TO_SOLFEGE_PT = {
   'C': 'Dó', 'C#': 'Dó#', 'Cb': 'Sib', 'Db': 'Réb', 'D': 'Ré', 'D#': 'Ré#', 'Eb': 'Mib',
@@ -38,8 +39,34 @@ function noteToSolfeggio(str) {
   return str;
 }
 
+// User overrides
+function getUserOverrides(lang) {
+  try {
+    const raw = localStorage.getItem(OVERRIDE_STORAGE_KEY + '_' + lang);
+    return raw ? JSON.parse(raw) : {};
+  } catch (e) { return {}; }
+}
+function setUserOverride(lang, key, value) {
+  try {
+    const overrides = getUserOverrides(lang);
+    if (value === null || value === '' || value === TRANSLATIONS[lang]?.[key]) {
+      delete overrides[key];
+    } else {
+      overrides[key] = value;
+    }
+    localStorage.setItem(OVERRIDE_STORAGE_KEY + '_' + lang, JSON.stringify(overrides));
+  } catch (e) {}
+}
+function clearUserOverrides(lang) {
+  try { localStorage.removeItem(OVERRIDE_STORAGE_KEY + '_' + lang); } catch (e) {}
+}
+
 function t(str) {
   if (typeof str !== 'string') return str;
+  const overrides = getUserOverrides(LANG);
+  if (Object.prototype.hasOwnProperty.call(overrides, str)) {
+    return overrides[str];
+  }
   if (LANG === 'pt') {
     if (TRANSLATIONS.pt && Object.prototype.hasOwnProperty.call(TRANSLATIONS.pt, str)) {
       return TRANSLATIONS.pt[str];
@@ -47,12 +74,15 @@ function t(str) {
     const sol = noteToSolfeggio(str);
     if (sol !== str) return sol;
   }
+  if (LANG === 'fr' && TRANSLATIONS.fr && Object.prototype.hasOwnProperty.call(TRANSLATIONS.fr, str)) {
+    return TRANSLATIONS.fr[str];
+  }
   return str;
 }
 
 function getLang() { return LANG; }
 function setLang(lang) {
-  if (lang !== 'pt' && lang !== 'en') return;
+  if (lang !== 'pt' && lang !== 'en' && lang !== 'fr') return;
   LANG = lang;
   try { localStorage.setItem(LANG_STORAGE_KEY, lang); } catch (e) {}
   if (typeof render === 'function') render();
@@ -77,7 +107,8 @@ function applyI18nToDOM() {
       }
     });
 
-    if (LANG === 'pt') {
+    if (LANG !== 'en') {
+      const dict = TRANSLATIONS[LANG] || {};
       const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT, null);
       const nodes = [];
       let node;
@@ -94,25 +125,26 @@ function applyI18nToDOM() {
         const trimmed = original.trim();
         if (!trimmed) return;
 
-        if (TRANSLATIONS.pt && Object.prototype.hasOwnProperty.call(TRANSLATIONS.pt, trimmed)) {
-          textNode.nodeValue = original.replace(trimmed, TRANSLATIONS.pt[trimmed]);
+        if (dict && Object.prototype.hasOwnProperty.call(dict, trimmed)) {
+          textNode.nodeValue = original.replace(trimmed, dict[trimmed]);
           return;
         }
 
-        const sol = noteToSolfeggio(trimmed);
-        if (sol !== trimmed) {
-          textNode.nodeValue = original.replace(trimmed, sol);
-          return;
+        if (LANG === 'pt') {
+          const sol = noteToSolfeggio(trimmed);
+          if (sol !== trimmed) {
+            textNode.nodeValue = original.replace(trimmed, sol);
+            return;
+          }
         }
 
         let replaced = original;
-        const keys = Object.keys(TRANSLATIONS.pt).sort((a, b) => b.length - a.length);
+        const keys = Object.keys(dict).sort((a, b) => b.length - a.length);
         keys.forEach(key => {
           if (key.length >= 2 && replaced.indexOf(key) !== -1) {
-            // Word-boundary aware replacement to avoid corrupting names
             const escaped = key.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
             const re = new RegExp('(?<![\\w])' + escaped + '(?![\\w])', 'g');
-            replaced = replaced.replace(re, TRANSLATIONS.pt[key]);
+            replaced = replaced.replace(re, dict[key]);
           }
         });
         if (replaced !== original) {
@@ -125,16 +157,16 @@ function applyI18nToDOM() {
           const val = el.getAttribute(attr);
           if (val && val.trim()) {
             const trimmed = val.trim();
-            if (TRANSLATIONS.pt && Object.prototype.hasOwnProperty.call(TRANSLATIONS.pt, trimmed)) {
-              el.setAttribute(attr, TRANSLATIONS.pt[trimmed]);
-            } else if (TRANSLATIONS.pt) {
+            if (dict && Object.prototype.hasOwnProperty.call(dict, trimmed)) {
+              el.setAttribute(attr, dict[trimmed]);
+            } else if (dict) {
               let replaced = val;
-              const keys = Object.keys(TRANSLATIONS.pt).sort((a, b) => b.length - a.length);
+              const keys = Object.keys(dict).sort((a, b) => b.length - a.length);
               keys.forEach(key => {
                 if (key.length >= 2 && replaced.indexOf(key) !== -1) {
                   const escaped = key.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
                   const re = new RegExp('(?<![\\w])' + escaped + '(?![\\w])', 'g');
-                  replaced = replaced.replace(re, TRANSLATIONS.pt[key]);
+                  replaced = replaced.replace(re, dict[key]);
                 }
               });
               if (replaced !== val) el.setAttribute(attr, replaced);
@@ -146,7 +178,6 @@ function applyI18nToDOM() {
   } catch (e) {}
 }
 
-// PT-BR dictionary (curriculum + UI). Populated below.
 TRANSLATIONS.pt = {
   "1st position (slide all the way in). Buzz a firm centred pitch.": "1ª posição (cancro totalmente recolhido). Buzz firme e centrado.",
   "1st position. Bb is the 4th partial — one octave above Bb2. Faster air, firmer buzz.": "1ª posição. Sib é o 4º parcial — uma oitava acima de Sib2. Ar mais rápido, buzz mais firme.",
@@ -590,4 +621,131 @@ TRANSLATIONS.pt = {
   "Turn on your microphone and the app hears whether": "Ligue o microfone e o app ouve se",
   "is right — green means you nailed it.": "está certo — verde significa que você acertou.",
 
+};
+
+// French (Canadian French) translations - starter set
+TRANSLATIONS.fr = {
+  "Language": "Langue",
+  "Welcome to Preludio Band!": "Bienvenue au Preludio Band !",
+  "What's your name?": "Quel est votre nom ?",
+  "Your name...": "Votre nom...",
+  "Start practicing": "Commencer à pratiquer",
+  "Lesson": "Leçon",
+  "Map": "Carte",
+  "Practice": "Pratique",
+  "Settings": "Paramètres",
+  "Report": "Rapport",
+  "Fingering chart": "Doigtés",
+  "Metronome": "Métronome",
+  "Tuner": "Accordeur",
+  "Play": "Jouer",
+  "Listen": "Écouter",
+  "Next": "Suivant",
+  "Back": "Retour",
+  "Complete": "Terminé",
+  "Review": "Réviser",
+  "Song": "Chanson",
+  "Notes": "Notes",
+  "Level": "Niveau",
+  "Badges": "Badges",
+  "Start": "Démarrer",
+  "Stop": "Arrêter",
+  "Save": "Enregistrer",
+  "Cancel": "Annuler",
+  "Done": "Terminé",
+  "Close": "Fermer",
+  "Back to my path": "Retour à mon parcours",
+  "Got it — let's play!": "Compris — jouons !",
+  "Ready to play?": "Prêt à jouer ?",
+  "Continue": "Continuer",
+  "Switch instrument": "Changer d'instrument",
+  "Ready for your first lesson": "Prêt pour votre première leçon",
+  "First notes, first wins.": "Premières notes, premières victoires.",
+  "Pick a recorder to start your very first lessons — fingerings, notes, and your first sounds.": "Choisissez un instrument pour commencer vos premières leçons — doigtés, notes et vos premiers sons.",
+  "Practice today to start a streak!": "Pratiquez aujourd'hui pour commencer une série !",
+  "No badges yet": "Aucun badge pour l'instant",
+  "Focus areas": "Points à travailler",
+  "Learn a couple of notes first.": "Apprenez quelques notes d'abord.",
+  "How many can you get?": "Combien pouvez-vous en avoir ?",
+  "Finish a couple of lessons to unlock the timed drills.": "Terminez quelques leçons pour débloquer les exercices chronométrés.",
+  "Sight-reading": "Lecture à vue",
+  "Finger gym": "Gymnastique des doigts",
+  "See a note on the staff, name it fast.": "Voyez une note sur la portée, nommez-la vite.",
+  "See a note name, match its fingering fast.": "Voyez le nom de la note, trouvez le bon doigté vite.",
+  "Which note is this?": "Quelle est cette note ?",
+  "Which fingering plays this note?": "Quel doigté joue cette note ?",
+  "Play again": "Rejouer",
+  "Back": "Retour",
+  "Instruments": "Instruments",
+  "No practice recorded yet — play a lesson to start the report.": "Aucune pratique enregistrée — jouez une leçon pour commencer le rapport.",
+  "New here? Make your first sound": "Nouveau ? Faites votre premier son",
+  "Warm up your sound": "Échauffez votre son",
+  "Practice drills": "Exercices de pratique",
+  "Timed games to build speed and confidence.": "Jeux chronométrés pour gagner en vitesse et confiance.",
+  "Learn 2 notes to unlock timed drills.": "Apprenez 2 notes pour débloquer les exercices chronométrés.",
+  "Sight Reading Challenge": "Défi de lecture à vue",
+  "How this app works": "Comment fonctionne cette app",
+  "Review this note": "Réviser cette note",
+  "Meet your next note": "Rencontrez votre prochaine note",
+  "Fingering": "Doigté",
+  "On the staff": "Sur la portée",
+  "Sheet music": "Partition",
+  "Note": "Note",
+  "of": "de",
+  "Prev": "Précédent",
+  "Next": "Suivant",
+  "Replay": "Rejouer",
+  "Play whole melody": "Jouer la mélodie entière",
+  "No notes to show yet.": "Aucune note à afficher pour l'instant.",
+  "Student name": "Nom de l'élève",
+  "Save": "Enregistrer",
+  "Reset progress": "Réinitialiser le progrès",
+  "Switch instrument": "Changer d'instrument",
+  "My path": "Mon parcours",
+  "Continue": "Continuer",
+  "notes": "notes",
+  "songs": "chansons",
+  "Your Stats": "Vos statistiques",
+  "Total XP": "XP total",
+  "Lessons done": "Leçons terminées",
+  "Day streak": "Jours consécutifs",
+  "Per instrument": "Par instrument",
+  "Recent activity": "Activité récente",
+  "Clear analytics data": "Effacer les données d'analyse",
+  "Play again": "Rejouer",
+  "Badges": "Badges",
+  "Focus:": "Focus :",
+  "Tune": "Accorder",
+  "Count-in": "Compte",
+  "Stop": "Arrêter",
+  "Start": "Démarrer",
+  "Lessons": "Leçons",
+  "Hear it": "Entendre",
+  "Play note": "Jouer la note",
+  "Hear the model": "Entendre le modèle",
+  "Listen to how it sounds...": "Écoutez comme ça sonne...",
+  "Listen...": "Écoutez...",
+  "Get ready...": "Préparez-vous...",
+  "Go!": "Allez !",
+  "Try again": "Réessayez",
+  "Next note": "Note suivante",
+  "Skip": "Passer",
+  "Hint": "Indice",
+  "Practice": "Pratique",
+  "Practice report": "Rapport de pratique",
+  "Quick tour": "Visite rapide",
+  "First sound": "Premier son",
+  "Back to": "Retour à",
+  "Back to my path": "Retour à mon parcours",
+  "Got it — let's play!": "Compris — jouons !",
+  "Ready,": "Prêt,",
+  "You're set up on": "Vous êtes configuré sur",
+  "Pick up where you left off.": "Continuez où vous vous êtes arrêté.",
+  "Continue": "Continuer",
+  "Ready for your first lesson": "Prêt pour votre première leçon",
+  "notes": "notes",
+  "songs": "chansons",
+  "First notes, first wins.": "Premières notes, premières victoires.",
+  "Language": "Langue",
+  "Welcome to Preludio Band!": "Bienvenue au Preludio Band !",
 };
