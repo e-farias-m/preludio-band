@@ -623,7 +623,14 @@ TRANSLATIONS.pt = {
   "Turn on your microphone and the app hears whether": "Ligue o microfone e o app ouve se",
   "is right — green means you nailed it.": "está certo — verde significa que você acertou.",
   "Update available — reload to get the latest version.": "Atualização disponível — recarregue para obter a versão mais recente.",
-};
+
+  "Preparing…": "Preparando…",
+  "Count-in…": "Contagem…",
+  "Playing…": "Tocando…",
+  "Audio failed to load.": "Não foi possível carregar o áudio.",
+  "Retry": "Tentar de novo",
+  "Listening…": "Ouvindo…",
+  "Listen to how it sounds...": "Ouça como soa...",};
 
 // French (Canadian French) translations - starter set
 TRANSLATIONS.fr = {
@@ -750,7 +757,18 @@ TRANSLATIONS.fr = {
   "First notes, first wins.": "Premières notes, premières victoires.",
   "Language": "Langue",
   "Welcome to Preludio Band!": "Bienvenue au Preludio Band !",
-};
+
+  "Preparing…": "Préparation…",
+  "Count-in…": "Compte…",
+  "Playing…": "Lecture…",
+  "Audio failed to load.": "Échec du chargement audio.",
+  "Retry": "Réessayer",
+  "Song complete!": "Morceau terminé!",
+  "Play now!": "Jouez maintenant!",
+  "Nice. Tap Start to try again, or confirm below.": "Bien. Appuyez sur Démarrer pour réessayer, ou confirmez ci-dessous.",
+  "▶ Replay count-in": "▶ Rejouer le compte",
+  "Listening…": "Écoute…",
+  "in tune ✓": "juste ✓",};
 
 const PT_EXTRA = {
   "+ Import Song": "+ Importar música",
@@ -1077,21 +1095,11 @@ function ptTranslateSubtree(root) {
   ptTranslateAttrs(root);
   root.querySelectorAll('[title],[aria-label],[placeholder],[alt]').forEach(ptTranslateAttrs);
 }
+// NOTE: MutationObserver was disabled because it caused severe jank and
+// intermittent unresponsiveness on iOS Safari under Portuguese. Dynamic text
+// is now translated at creation time (wrapped in t()/tx()), and the static
+// applyI18nToDOM() pass handles the rest.
 let _ptObserver = null;
-function ptStartObserver() {
-  if (_ptObserver || typeof MutationObserver === 'undefined' || !document.body) return;
-  _ptObserver = new MutationObserver(records => {
-    if (LANG !== 'pt') return;
-    for (const r of records) {
-      if (r.type === 'childList') r.addedNodes.forEach(ptTranslateSubtree);
-      else if (r.type === 'characterData') ptTranslateText(r.target);
-      else if (r.type === 'attributes') ptTranslateAttrs(r.target);
-    }
-  });
-  _ptObserver.observe(document.body, { childList: true, subtree: true, characterData: true, attributes: true, attributeFilter: PT_ATTRS });
-}
-if (typeof document !== 'undefined') {
-  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', ptStartObserver);
-  else ptStartObserver();
-}
+function ptStartObserver() { _ptObserver = null; }
+if (typeof document !== 'undefined') { ptStartObserver(); }
 
