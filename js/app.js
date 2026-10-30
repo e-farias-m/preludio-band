@@ -1809,7 +1809,7 @@ function renderMapScreen() {
   const bestSight = getSprintBest(APP.instrumentId, SPRINT_MODES.SIGHT);
   const bestFinger = getSprintBest(APP.instrumentId, SPRINT_MODES.FINGER);
   const bestLine = practiceReady && (bestSight || bestFinger)
-    ? `<div class="practice-banner-best">Best: ${bestSight} names · ${bestFinger} fingerings</div>`
+    ? `<div class="practice-banner-best">${tFill('Best: {sight} names · {finger} fingerings', { sight: bestSight, finger: bestFinger })}</div>`
     : '';
 
   const nodes = inst.lessons.map((lesson, i) => {
@@ -1889,20 +1889,20 @@ function renderMapScreen() {
         <div class="first-sound-cta${fsSeen ? ' first-sound-cta-seen' : ''}" data-action="open-first-sound">
           <div class="first-sound-cta-emoji">${fsContent.emoji}</div>
           <div class="first-sound-cta-text">
-            <div class="first-sound-cta-title">${fsSeen ? 'Warm up your sound' : 'New here? Make your first sound'}</div>
-            <div class="first-sound-cta-sub">${fsSeen ? 'Breathing and tone reminders before you play.' : 'A quick guide to your first sound, before note one.'}</div>
+            <div class="first-sound-cta-title">${fsSeen ? t('Warm up your sound') : t('New here? Make your first sound')}</div>
+            <div class="first-sound-cta-sub">${fsSeen ? t('Breathing and tone reminders before you play.') : t('A quick guide to your first sound, before note one.')}</div>
           </div>
           <div class="first-sound-cta-arrow">›</div>
         </div>
         <div class="practice-banner ${practiceReady ? '' : 'practice-banner-locked'}">
           <div class="practice-banner-text">
-            <div class="practice-banner-title">Practice drills</div>
-            <div class="practice-banner-sub">${practiceReady ? 'Timed games to build speed and confidence.' : 'Learn 2 notes to unlock timed drills.'}</div>
+            <div class="practice-banner-title">${t('Practice drills')}</div>
+            <div class="practice-banner-sub">${practiceReady ? t('Timed games to build speed and confidence.') : t('Learn 2 notes to unlock timed drills.')}</div>
             ${bestLine}
           </div>
-          <button class="btn btn-primary" data-action="open-practice" ${practiceReady ? '' : 'disabled'}>Practice</button>
+          <button class="btn btn-primary" data-action="open-practice" ${practiceReady ? '' : 'disabled'}>${t('Practice')}</button>
         </div>
-        <div class="map-unit-label">Unit 1 · First Notes</div>
+        <div class="map-unit-label">${t('Unit 1')} · ${t('First Notes')}</div>
         <div class="map-path">${nodes}${importedNodes}</div>
         <div class="import-section" style="margin-top:20px;text-align:center">
           <button class="btn btn-secondary" data-action="import-song">${t('+ Import Song')}</button>
@@ -1928,10 +1928,10 @@ function renderFirstSoundScreen() {
   const steps = content.steps.map((step, i) => `
     <li class="first-sound-step">
       <span class="first-sound-step-num">${i + 1}</span>
-      <span class="first-sound-step-text">${escapeHtml(step)}</span>
+      <span class="first-sound-step-text">${escapeHtml(t(step))}</span>
     </li>`).join('');
   const hearBtn = firstNote
-    ? `<button class="btn btn-secondary btn-wide" data-action="first-sound-hear" style="margin-top:4px">\u{1F50A} Hear a target note</button>`
+    ? `<button class="btn btn-secondary btn-wide" data-action="first-sound-hear" style="margin-top:4px">\u{1F50A} ${t('Hear a target note')}</button>`
     : '';
 
   return `
@@ -1942,13 +1942,13 @@ function renderFirstSoundScreen() {
       </div>
       <div class="lesson-body">
         <div class="first-sound-hero">${content.emoji}</div>
-        <div class="first-sound-title">${escapeHtml(content.title)}</div>
-        <div class="first-sound-intro">${escapeHtml(content.intro)}</div>
+        <div class="first-sound-title">${escapeHtml(t(content.title))}</div>
+        <div class="first-sound-intro">${escapeHtml(t(content.intro))}</div>
         <ol class="first-sound-steps">${steps}</ol>
-        <div class="first-sound-tip"><strong>Tip</strong> ${escapeHtml(content.tip)}</div>
+        <div class="first-sound-tip"><strong>${t('Tip')}</strong> ${escapeHtml(t(content.tip))}</div>
         ${hearBtn}
         <div class="action-bar">
-          <button class="btn btn-primary btn-wide" data-action="first-sound-done">${seen ? 'Back to my path' : 'Got it — let\u2019s play!'}</button>
+          <button class="btn btn-primary btn-wide" data-action="first-sound-done">${seen ? t('Back to my path') : t('Got it — let\u2019s play!')}</button>
         </div>
       </div>
     </div>`;
@@ -2072,7 +2072,7 @@ function renderPracticeScreen() {
       <button class="sprint-card" data-action="start-sprint" data-mode="${m.mode}" ${ready ? '' : 'disabled'}>
         <div class="sprint-card-title">${m.title}</div>
         <div class="sprint-card-sub">${m.sub}</div>
-        <div class="sprint-card-best">${best ? `Best: ${best}` : 'No score yet'}</div>
+        <div class="sprint-card-best">${best ? tFill('Best: {best}', { best }) : t('No score yet')}</div>
       </button>`;
   }).join('');
   const earBest = getInstrumentProgress(APP.instrumentId).earBest || 0;
@@ -2089,9 +2089,9 @@ function renderPracticeScreen() {
           : 'Finish a couple of lessons to unlock the timed drills.'}</div>
         <div class="sprint-cards">${cards}</div>
         <button class="sprint-card ear-entry" data-action="open-ear" ${ready ? '' : 'disabled'}>
-          <div class="sprint-card-title">Ear training</div>
-          <div class="sprint-card-sub">Hear a short phrase, then echo it back — by ear.</div>
-          <div class="sprint-card-best">${earBest ? `Best: ${earBest}` : 'No score yet'}</div>
+          <div class="sprint-card-title">${t('Ear training')}</div>
+          <div class="sprint-card-sub">${t('Hear a short phrase, then echo it back — by ear.')}</div>
+          <div class="sprint-card-best">${earBest ? tFill('Best: {best}', { best: earBest }) : t('No score yet')}</div>
         </button>
         ${renderWeakSpots(APP.instrumentId)}
         ${renderPracticeTools()}
@@ -2165,7 +2165,7 @@ function renderEarScreen() {
   const perfect = e && e.finished && total > 0 && correct === total;
   const result = e && e.finished
     ? `<div class="ear-result ${perfect ? 'ear-result-perfect' : ''}">${correct}/${total} correct${perfect ? ' — golden ear!' : ''}</div>`
-    : '<div class="ear-result ear-result-pending">Tap the notes in the order you heard them.</div>';
+    : `<div class="ear-result ear-result-pending">${t('Tap the notes in the order you heard them.')}</div>`;
 
   const best = getInstrumentProgress(APP.instrumentId).earBest || 0;
 
@@ -2178,12 +2178,12 @@ function renderEarScreen() {
       <div class="lesson-body">
         <div class="ear-slots">${slots}</div>
         ${result}
-        <button class="btn btn-primary btn-wide" data-action="ear-play" style="margin-top:12px">\u25B6 ${e && e.finished ? 'Replay the call' : 'Play the call'}</button>
-        <div class="ear-palette-label">Your notes</div>
+        <button class="btn btn-primary btn-wide" data-action="ear-play" style="margin-top:12px">\u25B6 ${e && e.finished ? t('Replay the call') : t('Play the call')}</button>
+        <div class="ear-palette-label">${t('Your notes')}</div>
         <div class="ear-palette">${palette}</div>
         <div class="ear-footer">
-          ${best ? `<span class="ear-best">Best: ${best}</span>` : '<span></span>'}
-          <button class="btn btn-secondary" data-action="ear-new">Try another</button>
+          ${best ? `<span class="ear-best">${tFill('Best: {best}', { best })}</span>` : '<span></span>'}
+          <button class="btn btn-secondary" data-action="ear-new">${t('Try another')}</button>
         </div>
       </div>
     </div>`;

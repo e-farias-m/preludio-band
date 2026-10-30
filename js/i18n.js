@@ -660,7 +660,28 @@ TRANSLATIONS.pt = {
   "map. Finish one step to unlock the next — a 🔒 just means the step before it is still waiting.": "mapa. Termine uma etapa para desbloquear a próxima — um 🔒 só significa que a etapa anterior ainda está esperando.",
   "Switch to dark theme": "Mudar para o tema escuro",
   "Switch to light theme": "Mudar para o tema claro",
-  "Call & response": "Pergunta e resposta",};
+  "Call & response": "Pergunta e resposta",
+  "Best: {sight} names · {finger} fingerings": "Melhor: {sight} nomes · {finger} digitações",
+  "Best: {best}": "Melhor: {best}",
+  "No score yet": "Ainda sem pontuação",
+  "New best!": "Novo recorde!",
+  "Best day: {label} · {minutes} min": "Melhor dia: {label} · {minutes} min",
+  "Replay the call": "Repetir o chamado",
+  "Play the call": "Tocar o chamado",
+  "Ear training": "Treino auditivo",
+  "Practice drills": "Exercícios de prática",
+  "Timed games to build speed and confidence.": "Jogos cronometrados para ganhar velocidade e confiança.",
+  "Learn 2 notes to unlock timed drills.": "Aprenda 2 notas para desbloquear exercícios cronometrados.",
+  "Unit 1": "Unidade 1",
+  "First Notes": "Primeiras notas",
+  "Make your first buzz": "Faça seu primeiro buzz",
+  "Make your first sound": "Faça seu primeiro som",
+  "Warm up your sound": "Aqueça seu som",
+  "New here? Make your first sound": "Novo por aqui? Faça seu primeiro som",
+  "Breathing and tone reminders before you play.": "Lembretes de respiração e som antes de tocar.",
+  "A quick guide to your first sound, before note one.": "Um guia rápido para o seu primeiro som, antes da primeira nota.",
+  "Tip": "Dica",
+  "Got it — let's play!": "Entendi — vamos tocar!",};
 
 // French (Canadian French) translations - starter set
 TRANSLATIONS.fr = {
@@ -844,7 +865,26 @@ TRANSLATIONS.fr = {
   "map. Finish one step to unlock the next — a 🔒 just means the step before it is still waiting.": "carte. Terminez une étape pour débloquer la suivante — un 🔒 signifie simplement que l'étape précédente attend toujours.",
   "Switch to dark theme": "Passer au thème sombre",
   "Switch to light theme": "Passer au thème clair",
-  "Call & response": "Appel et réponse",};
+  "Call & response": "Appel et réponse",
+  "Best: {sight} names · {finger} fingerings": "Meilleur: {sight} noms · {finger} doigtés",
+  "Best: {best}": "Meilleur: {best}",
+  "No score yet": "Pas encore de score",
+  "New best!": "Nouveau record !",
+  "Best day: {label} · {minutes} min": "Meilleur jour: {label} · {minutes} min",
+  "Tap the notes in the order you heard them.": "Tapez les notes dans l'ordre où vous les avez entendues.",
+  "Replay the call": "Réécouter l'appel",
+  "Play the call": "Jouer l'appel",
+  "Your notes": "Vos notes",
+  "Try another": "Essayer une autre",
+  "Ear training": "Entraînement de l'oreille",
+  "Hear a short phrase, then echo it back — by ear.": "Écoutez une courte phrase, puis répétez-la à l'oreille.",
+  "Unit 1": "Unité 1",
+  "First Notes": "Premières notes",
+  "Make your first buzz": "Faites votre premier buzz",
+  "Make your first sound": "Faites votre premier son",
+  "Breathing and tone reminders before you play.": "Rappels de respiration et de son avant de jouer.",
+  "A quick guide to your first sound, before note one.": "Un guide rapide vers votre premier son, avant la note une.",
+  "Tip": "Astuce",};
 
 const PT_EXTRA = {
   "+ Import Song": "+ Importar música",
