@@ -80,6 +80,13 @@ function t(str) {
   return str;
 }
 
+function tFill(template, vars) {
+  if (typeof template !== 'string') return template;
+  return template.replace(/\{(\w+)\}/g, (m, key) => (
+    Object.prototype.hasOwnProperty.call(vars || {}, key) ? String(vars[key]) : m
+  ));
+}
+
 function getLang() { return LANG; }
 function setLang(lang) {
   if (lang !== 'pt' && lang !== 'en' && lang !== 'fr') return;
@@ -630,7 +637,30 @@ TRANSLATIONS.pt = {
   "Audio failed to load.": "Não foi possível carregar o áudio.",
   "Retry": "Tentar de novo",
   "Listening…": "Ouvindo…",
-  "Listen to how it sounds...": "Ouça como soa...",};
+  "Listen to how it sounds...": "Ouça como soa...",
+  "Today's Plan": "Plano de Hoje",
+  "sprint": "sprint",
+  "note": "nota",
+  "song": "música",
+  "Alto Sax": "Sax alto",
+  "Fr. Horn": "Trompa",
+  "Euph.": "Euf.",
+  "Ready, {name}?": "Pronto, {name}?",
+  "Full Scale": "Escala completa",
+  "Complete a song": "Concluir uma música",
+  "Complete your first lesson": "Conclua sua primeira aula",
+  "Earn 500 XP": "Ganhe 500 XP",
+  "Finish a full practice plan": "Conclua um plano de prática completo",
+  "Learn every note on an instrument": "Aprenda todas as notas de um instrumento",
+  "Practice 3 days in a row": "Pratique 3 dias seguidos",
+  "Practice 7 days in a row": "Pratique 7 dias seguidos",
+  "Practice for 30 minutes in total": "Pratique 30 minutos no total",
+  "Score 15 in a Finger gym sprint": "Faça 15 pontos em um sprint da Academia de dedos",
+  "Every note and song is a stop on your": "Cada nota e cada música são uma parada no seu",
+  "map. Finish one step to unlock the next — a 🔒 just means the step before it is still waiting.": "mapa. Termine uma etapa para desbloquear a próxima — um 🔒 só significa que a etapa anterior ainda está esperando.",
+  "Switch to dark theme": "Mudar para o tema escuro",
+  "Switch to light theme": "Mudar para o tema claro",
+  "Call & response": "Pergunta e resposta",};
 
 // French (Canadian French) translations - starter set
 TRANSLATIONS.fr = {
@@ -768,7 +798,53 @@ TRANSLATIONS.fr = {
   "Nice. Tap Start to try again, or confirm below.": "Bien. Appuyez sur Démarrer pour réessayer, ou confirmez ci-dessous.",
   "▶ Replay count-in": "▶ Rejouer le compte",
   "Listening…": "Écoute…",
-  "in tune ✓": "juste ✓",};
+  "in tune ✓": "juste ✓",
+  "Trumpet": "Trompette",
+  "Flute": "Flûte",
+  "Clarinet": "Clarinette",
+  "Alto Saxophone": "Saxophone alto",
+  "Oboe": "Hautbois",
+  "Bassoon": "Basson",
+  "Euphonium": "Euphonium",
+  "French Horn": "Cor",
+  "Trombone": "Trombone",
+  "Tuba": "Tuba",
+  "Today's Plan": "Plan du jour",
+  "All done — nice work!": "Tout est fait — beau travail !",
+  "sprint": "sprint",
+  "note": "note",
+  "song": "chanson",
+  "Shaky — needs review": "Hésitant — à réviser",
+  "Keep it fresh": "Garder en mémoire",
+  "Build speed": "Gagner en vitesse",
+  "Apply your notes": "Appliquer vos notes",
+  "Alto Sax": "Sax alto",
+  "Euph.": "Euph.",
+  "Fr. Horn": "Cor",
+  "Ready, {name}?": "Prêt, {name}?",
+  "First Steps": "Premiers pas",
+  "First Song": "Première chanson",
+  "Full Scale": "Gamme complète",
+  "On a Roll": "En belle",
+  "Week Strong": "Semaine solide",
+  "Marathon": "Marathon",
+  "Rising Star": "Étoile montante",
+  "Quick Fingers": "Doigts rapides",
+  "Planner": "Planificateur",
+  "Complete your first lesson": "Terminez votre première leçon",
+  "Complete a song": "Terminez une chanson",
+  "Learn every note on an instrument": "Apprenez toutes les notes d'un instrument",
+  "Practice 3 days in a row": "Pratiquez 3 jours de suite",
+  "Practice 7 days in a row": "Pratiquez 7 jours de suite",
+  "Practice for 30 minutes in total": "Pratiquez 30 minutes au total",
+  "Earn 500 XP": "Gagnez 500 XP",
+  "Score 15 in a Finger gym sprint": "Obtenez 15 points dans un sprint gymnastique des doigts",
+  "Finish a full practice plan": "Terminez un plan de pratique complet",
+  "Every note and song is a stop on your": "Chaque note et chaque chanson sont une étape sur votre",
+  "map. Finish one step to unlock the next — a 🔒 just means the step before it is still waiting.": "carte. Terminez une étape pour débloquer la suivante — un 🔒 signifie simplement que l'étape précédente attend toujours.",
+  "Switch to dark theme": "Passer au thème sombre",
+  "Switch to light theme": "Passer au thème clair",
+  "Call & response": "Appel et réponse",};
 
 const PT_EXTRA = {
   "+ Import Song": "+ Importar música",

@@ -1469,7 +1469,7 @@ function showNamePrompt() {
   overlay.className = 'name-overlay';
   overlay.innerHTML = `
     <div class="name-modal">
-      <div style="display:flex;justify-content:flex-end;width:100%"><button class="theme-toggle" data-action="name-toggle-language" title="Language">${getLang() === 'pt' ? 'PT' : getLang() === 'fr' ? 'FR' : 'EN'}</button></div>
+      <div style="display:flex;justify-content:flex-end;width:100%"><button class="theme-toggle" data-action="name-toggle-language" title="${t('Language')}">${getLang() === 'pt' ? 'PT' : getLang() === 'fr' ? 'FR' : 'EN'}</button></div>
       <div class="name-modal-icon">🎵</div>
       <div class="name-modal-title">${t('Welcome to Preludio Band!')}</div>
       <div class="name-modal-sub">${t("What's your name?")}</div>
@@ -1535,14 +1535,14 @@ function renderBadgeShelf() {
   const items = BADGES.map(b => {
     const got = hasBadge(b.id);
     return `
-      <div class="badge ${got ? 'badge-earned' : 'badge-locked'}" title="${b.name}: ${b.desc}">
+      <div class="badge ${got ? 'badge-earned' : 'badge-locked'}" title="${escapeHtml(t(b.name))}: ${escapeHtml(t(b.desc))}">
         <div class="badge-icon">${got ? b.icon : '\u{1F512}'}</div>
-        <div class="badge-name">${b.name}</div>
+        <div class="badge-name">${escapeHtml(t(b.name))}</div>
       </div>`;
   }).join('');
   return `
     <div class="badges-shelf">
-      <div class="badges-shelf-title">Badges · ${earned}/${BADGES.length}</div>
+      <div class="badges-shelf-title">${t('Badges')} · ${earned}/${BADGES.length}</div>
       <div class="badges-grid">${items}</div>
     </div>`;
 }
@@ -1557,7 +1557,7 @@ function renderInstrumentGrid() {
       <div class="${cls}" data-action="select-instrument" data-id="${id}" style="color:${instAccent(inst)}">
         ${badge}
         <div class="card-icon">${icon}</div>
-        <div class="card-name" style="color: var(--text-primary)">${inst.shortName}</div>
+        <div class="card-name" style="color: var(--text-primary)">${t(inst.shortName)}</div>
       </div>`;
   }).join('');
   return `<div class="instrument-grid">${cards}</div>`;
@@ -1606,11 +1606,11 @@ function renderSelectScreen() {
     headline = t('First notes, first wins.');
     sub = t('Pick an instrument to start your very first lessons — fingerings, notes, and your first sounds.');
     instrumentArea = `
-      ${savedInst ? `<button class="picker-back" data-action="cancel-instrument-pick">\u2190 Back to ${savedInst.shortName}</button>` : ''}
+      ${savedInst ? `<button class="picker-back" data-action="cancel-instrument-pick">\u2190 ${t('Back to')} ${t(savedInst.shortName)}</button>` : ''}
       ${renderInstrumentGrid()}`;
   } else {
-    headline = studentName ? `${t('Ready,')} ${escapeHtml(studentName)}?` : t('Ready to play?');
-    sub = `${t("You're set up on")} ${savedInst.shortName}. ${t('Pick up where you left off.')}`;
+    headline = studentName ? `${tFill('Ready, {name}?', { name: escapeHtml(studentName) })}` : t('Ready to play?');
+    sub = `${t("You're set up on")} ${t(savedInst.shortName)}. ${t('Pick up where you left off.')}`;
     instrumentArea = renderFocusCard(savedInst);
   }
 
@@ -1629,9 +1629,9 @@ function renderSelectScreen() {
         <div class="select-sub">${sub}</div>
       </div>
       <div class="select-hero-settings">
-        <button class="theme-toggle" data-action="toggle-language" title="Language">${getLang() === 'pt' ? 'PT' : getLang() === 'fr' ? 'FR' : 'EN'}</button>
-        <button class="theme-toggle" data-action="toggle-theme" title="Switch to ${getTheme() === 'light' ? 'dark' : 'light'} theme">${getTheme() === 'light' ? '\u{1F319}' : '\u2600\uFE0F'}</button>
-        <button class="theme-toggle settings-gear" data-action="open-settings" title="Settings">\u{2699}\u{FE0F}</button>
+        <button class="theme-toggle" data-action="toggle-language" title="${t('Language')}">${getLang() === 'pt' ? 'PT' : getLang() === 'fr' ? 'FR' : 'EN'}</button>
+        <button class="theme-toggle" data-action="toggle-theme" title="${t('Switch to ' + (getTheme() === 'light' ? 'dark' : 'light') + ' theme')}">${getTheme() === 'light' ? '\u{1F319}' : '\u2600\uFE0F'}</button>
+        <button class="theme-toggle settings-gear" data-action="open-settings" title="${t('Settings')}">\u{2699}\u{FE0F}</button>
       </div>
       ${motivationHtml}
       ${digestHtml}
@@ -1697,7 +1697,7 @@ function buildTutorialSlides(inst) {
     {
       icon: '🗺️',
       title: 'Follow your lesson path',
-      body: `Every note and song is a stop on your ${inst.shortName} map. Finish one step to unlock the next — a 🔒 just means the step before it is still waiting.`,
+      body: `${t('Every note and song is a stop on your')} ${t(inst.shortName)} ${t('map. Finish one step to unlock the next — a 🔒 just means the step before it is still waiting.')}`,
     },
     {
       icon: '👀',
@@ -1759,15 +1759,15 @@ function renderPlanCard(instrumentId) {
   const done = plan.items.filter(i => i.done).length;
   const total = plan.items.length;
   const rows = plan.items.map(it => {
-    let label = 'Practice';
+    let label = t('Practice');
     if (it.type === 'note') {
       const n = findLessonById(instrumentId, it.targetId);
-      label = 'Review ' + (n ? t(n.noteName) : 'note');
+      label = t('Review') + ' ' + (n ? t(n.noteName) : t('note'));
     } else if (it.type === 'song') {
       const s = findLessonById(instrumentId, it.targetId);
-      label = 'Play ' + (s ? t(s.noteName) : 'song');
+      label = t('Play') + ' ' + (s ? t(s.noteName) : t('song'));
     } else if (it.type === 'sprint') {
-      label = (it.mode === SPRINT_MODES.FINGER ? 'Finger gym' : 'Sight-reading') + ' sprint';
+      label = (it.mode === SPRINT_MODES.FINGER ? t('Finger gym') : t('Sight-reading')) + ' ' + t('sprint');
     }
     const icon = it.type === 'sprint' ? '\u{26A1}' : '\u{1F3B5}';
     return `
@@ -1775,22 +1775,22 @@ function renderPlanCard(instrumentId) {
         <div class="plan-item-icon">${it.done ? '\u2713' : icon}</div>
         <div class="plan-item-text">
           <div class="plan-item-name">${escapeHtml(label)}</div>
-          <div class="plan-item-reason">${escapeHtml(it.reason || '')}</div>
+          <div class="plan-item-reason">${escapeHtml(t(it.reason || ''))}</div>
         </div>
         ${it.done
-          ? '<div class="plan-item-tag">Done</div>'
-          : `<button class="btn btn-secondary plan-item-btn" data-action="plan-start" data-item="${it.id}">Start</button>`}
+          ? `<div class="plan-item-tag">${t('Done')}</div>`
+          : `<button class="btn btn-secondary plan-item-btn" data-action="plan-start" data-item="${it.id}">${t('Start')}</button>`}
       </div>`;
   }).join('');
   const allDone = done === total;
   return `
     <div class="plan-card ${allDone ? 'plan-card-done' : ''}">
       <div class="plan-header">
-        <div class="plan-title">Today\u2019s Plan</div>
+        <div class="plan-title">${t("Today's Plan")}</div>
         <div class="plan-count">${done}/${total}</div>
       </div>
       <div class="plan-items">${rows}</div>
-      ${allDone ? '<div class="plan-done-note">\u{1F389} All done — nice work!</div>' : ''}
+      ${allDone ? `<div class="plan-done-note">\u{1F389} ${t('All done — nice work!')}</div>` : ''}
     </div>`;
 }
 
@@ -1878,7 +1878,7 @@ function renderMapScreen() {
     <div class="screen active">
       <div class="app-header">
         <button class="header-back" data-action="go-select">←</button>
-        <div class="header-title">${inst.shortName}</div>
+        <div class="header-title">${t(inst.shortName)}</div>
         <div class="header-progress">
           <div class="progress-bar-track"><div class="progress-bar-fill" style="width:${pct}%"></div></div>
           <div class="progress-label">${doneCount}/${total}</div>
@@ -1938,7 +1938,7 @@ function renderFirstSoundScreen() {
     <div class="screen active first-sound-screen">
       <div class="app-header">
         <button class="header-back" data-action="close-first-sound">←</button>
-        <div class="header-title">First sound · ${inst.shortName}</div>
+        <div class="header-title">${t('First sound')} · ${t(inst.shortName)}</div>
       </div>
       <div class="lesson-body">
         <div class="first-sound-hero">${content.emoji}</div>
@@ -1968,7 +1968,7 @@ function renderLookupScreen() {
       <div class="screen active lookup-screen">
         <div class="app-header">
           <button class="header-back" data-action="close-lookup">←</button>
-          <div class="header-title">Fingering chart · ${inst.shortName}</div>
+          <div class="header-title">${t('Fingering chart')} · ${t(inst.shortName)}</div>
         </div>
         <div class="lesson-body">
           <div class="practice-intro">No notes to show yet.</div>
@@ -2002,7 +2002,7 @@ function renderLookupScreen() {
     <div class="screen active lookup-screen">
       <div class="app-header">
         <button class="header-back" data-action="close-lookup">←</button>
-        <div class="header-title">Fingering chart · ${inst.shortName}</div>
+        <div class="header-title">${t('Fingering chart')} · ${t(inst.shortName)}</div>
       </div>
       <div class="lesson-body">
         <div class="lookup-detail">
@@ -2081,7 +2081,7 @@ function renderPracticeScreen() {
     <div class="screen active practice-screen">
       <div class="app-header">
         <button class="header-back" data-action="close-practice">←</button>
-        <div class="header-title">Practice · ${inst.shortName}</div>
+        <div class="header-title">${t('Practice')} · ${t(inst.shortName)}</div>
       </div>
       <div class="lesson-body">
         <div class="practice-intro">${ready
@@ -2173,7 +2173,7 @@ function renderEarScreen() {
     <div class="screen active ear-screen">
       <div class="app-header">
         <button class="header-back" data-action="close-ear">←</button>
-        <div class="header-title">Call & response · ${inst.shortName}</div>
+        <div class="header-title">${t('Call & response')} · ${t(inst.shortName)}</div>
       </div>
       <div class="lesson-body">
         <div class="ear-slots">${slots}</div>
