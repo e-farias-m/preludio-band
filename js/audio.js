@@ -10,7 +10,8 @@ const AudioEngine = (() => {
     if (!ctx) {
       ctx = new (window.AudioContext || window.webkitAudioContext)();
     }
-    if (ctx.state === 'suspended') {
+    // Handle both 'suspended' and 'interrupted' states (iOS)
+    if (ctx.state === 'suspended' || ctx.state === 'interrupted') {
       try { ctx.resume(); } catch (e) {}
     }
     return ctx;
@@ -216,7 +217,20 @@ const AudioEngine = (() => {
     });
   }
 
-  function unlock() { getCtx(); }
+  function unlock() {
+    const c = getCtx();
+    // iOS Safari requires a silent buffer play to fully unlock audio
+    if (c.state === 'suspended') {
+      try { c.resume(); } catch (e) {}
+    }
+    try {
+      const buffer = c.createBuffer(1, 1, 22050);
+      const source = c.createBufferSource();
+      source.buffer = buffer;
+      source.connect(c.destination);
+      source.start(0);
+    } catch (e) {}
+  }
 
   return { playInstrumentNote, playChord, playClick, unlock };
 })();
