@@ -196,7 +196,10 @@ const AudioEngine = (() => {
   const WOODWIND_TYPES = ['flute', 'clarinet', 'saxophone', 'oboe', 'bassoon'];
 
   function playInstrumentNote(freq, fingeringType, duration = 1.1) {
-    getCtx(); // ensure unlocked on this gesture
+    const c = getCtx(); // ensure unlocked on this gesture
+    if (c.state === 'suspended' || c.state === 'interrupted') {
+      try { c.resume(); } catch (e) {}
+    }
     if (fingeringType === 'recorder') {
       playRecorder(freq, duration);
     } else if (BRASS_TYPES.includes(fingeringType)) {
