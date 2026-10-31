@@ -199,7 +199,7 @@ function getMasteryColor(level) {
 }
 
 function getMasteryLabel(level) {
-  return { new: 'New', learning: 'Learning', practiced: 'Practiced', mastered: 'Mastered' }[level] || 'New';
+  return t({ new: 'New', learning: 'Learning', practiced: 'Practiced', mastered: 'Mastered' }[level] || 'New');
 }
 
 // ── PROGRESS PERSISTENCE ───────────────────────────────────────────────────
@@ -353,7 +353,7 @@ function generatePlan(instrumentId, now = Date.now()) {
       id: 'note:' + l.id,
       type: 'note',
       targetId: l.id,
-      reason: w >= 0.55 ? 'Shaky — needs review' : 'Keep it fresh',
+      reason: w >= 0.55 ? t('Shaky — needs review') : t('Keep it fresh'),
     });
   });
 
@@ -361,7 +361,7 @@ function generatePlan(instrumentId, now = Date.now()) {
     const sight = getSprintBest(instrumentId, SPRINT_MODES.SIGHT);
     const finger = getSprintBest(instrumentId, SPRINT_MODES.FINGER);
     const mode = finger <= sight ? SPRINT_MODES.FINGER : SPRINT_MODES.SIGHT;
-    items.push({ id: 'sprint:' + mode, type: 'sprint', mode, reason: 'Build speed' });
+    items.push({ id: 'sprint:' + mode, type: 'sprint', mode, reason: t('Build speed') });
   }
 
   const inst = getInstrument(instrumentId);
@@ -370,7 +370,7 @@ function generatePlan(instrumentId, now = Date.now()) {
     isSongLesson(s) && isLessonUnlocked(instrumentId, CURRICULUM[instrumentId].lessons.indexOf(s)));
   const song = songs.find(s => !prog.completed[s.id]) || songs[0];
   if (song) {
-    items.push({ id: 'song:' + song.id, type: 'song', targetId: song.id, reason: 'Apply your notes' });
+    items.push({ id: 'song:' + song.id, type: 'song', targetId: song.id, reason: t('Apply your notes') });
   }
 
   return { date: todayKey(new Date(now)), items };
@@ -424,7 +424,7 @@ function completePlan(instrumentId) {
   saveMotivation();
   saveProgress();
   evaluateBadges({ toast: true });
-  showToast('\u{1F389} Plan complete! +' + bonus + ' XP');
+  showToast(tFill('\u{1F389} Plan complete! +{xp} XP', { xp: bonus }));
 }
 
 // ── EAR TRAINING (CALL & RESPONSE) ─────────────────────────────────────────
@@ -792,20 +792,20 @@ function buildPracticeReport(name, now = new Date()) {
 // Plain-text version for the clipboard / email.
 function formatReportText(report) {
   const lines = [];
-  lines.push(`Practice report — ${report.student}`);
+  lines.push(tFill('Practice report — {student}', { student: report.student }));
   lines.push(report.date);
   lines.push('');
-  lines.push(`Level ${report.level} · ${report.xp} XP · ${report.streak}-day streak · ${report.totalMinutes} min practiced`);
-  lines.push(`Badges: ${report.badges.length}/${report.badgeTotal}${report.badges.length ? ' — ' + report.badges.join(', ') : ''}`);
+  lines.push(tFill('Level {level} · {xp} XP · {streak}-day streak · {minutes} min practiced', { level: report.level, xp: report.xp, streak: report.streak, minutes: report.totalMinutes }));
+  lines.push(tFill('Badges: {earned}/{total}{suffix}', { earned: report.badges.length, total: report.badgeTotal, suffix: report.badges.length ? ' — ' + report.badges.map(b => t(b)).join(', ') : '' }));
   lines.push('');
   if (!report.instruments.length) {
-    lines.push('No practice recorded yet.');
+    lines.push(t('No practice recorded yet.'));
   } else {
     report.instruments.forEach(r => {
-      lines.push(`${r.name}: ${r.notesLearned}/${r.notesTotal} notes · ${r.songsCompleted}/${r.songsTotal} songs · ${r.xp} XP`);
-      lines.push(`  Mastery: ${r.mastery.mastered} mastered, ${r.mastery.practiced} practiced, ${r.mastery.learning} learning`);
+      lines.push(tFill('{name}: {notesLearned}/{notesTotal} notes · {songsCompleted}/{songsTotal} songs · {xp} XP', { name: r.name, notesLearned: r.notesLearned, notesTotal: r.notesTotal, songsCompleted: r.songsCompleted, songsTotal: r.songsTotal, xp: r.xp }));
+      lines.push(tFill('  Mastery: {mastered} mastered, {practiced} practiced, {learning} learning', { mastered: r.mastery.mastered, practiced: r.mastery.practiced, learning: r.mastery.learning }));
       if (r.weak.length) {
-        lines.push(`  Focus: ${r.weak.map(w => w.name + ' (' + w.accuracy + '%)').join(', ')}`);
+        lines.push(tFill('  Focus: {notes}', { notes: r.weak.map(w => w.name + ' (' + w.accuracy + '%)').join(', ') }));
       }
     });
   }
@@ -857,10 +857,10 @@ function getWeekDays(now = new Date()) {
 }
 
 function digestHeadline(activeDays, totalMinutes) {
-  if (activeDays === 0) return 'No practice logged this week — pick a lesson to start.';
-  if (activeDays <= 2) return `Nice start — ${totalMinutes} minute${totalMinutes === 1 ? '' : 's'} this week.`;
-  if (activeDays <= 4) return `Solid week — you practiced ${activeDays} days!`;
-  return `Amazing week — you showed up ${activeDays} days!`;
+  if (activeDays === 0) return t('No practice logged this week — pick a lesson to start.');
+  if (activeDays <= 2) return tFill('Nice start — {minutes} minute{plural} this week.', { minutes: totalMinutes, plural: totalMinutes === 1 ? '' : 's' });
+  if (activeDays <= 4) return tFill('Solid week — you practiced {days} days!', { days: activeDays });
+  return tFill('Amazing week — you showed up {days} days!', { days: activeDays });
 }
 
 function buildWeeklyDigest(name, now = new Date()) {
@@ -920,24 +920,24 @@ function markDigestReminded(now = new Date()) {
 function maybeRemindDigest(now = new Date()) {
   if (!shouldRemindDigest(now)) return false;
   markDigestReminded(now);
-  showToast('\u{1F4C8} Your week in music is ready!');
+  showToast(t('\u{1F4C8} Your week in music is ready!'));
   return true;
 }
 
 function formatDigestText(digest) {
   const lines = [];
-  lines.push(`This week in music — ${digest.student}`);
-  lines.push(`${digest.weekStart} to ${digest.weekEnd}`);
+  lines.push(tFill('This week in music — {student}', { student: digest.student }));
+  lines.push(tFill('{start} to {end}', { start: digest.weekStart, end: digest.weekEnd }));
   lines.push('');
   lines.push(digest.headline);
-  lines.push(`Level ${digest.level} · ${digest.streak}-day streak · ${digest.totalMinutes} min across ${digest.activeDays} day${digest.activeDays === 1 ? '' : 's'}`);
+  lines.push(tFill('Level {level} · {streak}-day streak · {minutes} min across {days} day{plural}', { level: digest.level, streak: digest.streak, minutes: digest.totalMinutes, days: digest.activeDays, plural: digest.activeDays === 1 ? '' : 's' }));
   if (digest.bestDayLabel) {
-    lines.push(`Best day: ${digest.bestDayLabel} (${digest.bestDayMinutes} min)`);
+    lines.push(tFill('Best day: {label} ({minutes} min)', { label: digest.bestDayLabel, minutes: digest.bestDayMinutes }));
   }
-  lines.push(`Daily: ${digest.days.map(d => d.label + ' ' + d.minutes).join(' · ')}`);
-  lines.push(`Weekly goal: ${digest.totalMinutes}/${digest.goalMinutes} min${digest.goalMet ? ' — met!' : ''}`);
+  lines.push(tFill('Daily: {values}', { values: digest.days.map(d => d.label + ' ' + d.minutes).join(' · ') }));
+  lines.push(tFill('Weekly goal: {total}/{goal} min{met}', { total: digest.totalMinutes, goal: digest.goalMinutes, met: digest.goalMet ? ' — met!' : '' }));
   if (digest.badges.length) {
-    lines.push(`New badges this week: ${digest.badges.map(b => b.name).join(', ')}`);
+    lines.push(tFill('New badges this week: {names}', { names: digest.badges.map(b => b.name).join(', ') }));
   }
   return lines.join('\n');
 }
@@ -1143,7 +1143,7 @@ function startRecording() {
     mediaRecorder.start();
     APP.recorder = { mediaRecorder, stream };
     render();
-  }).catch(() => showToast('Microphone unavailable.'));
+  }).catch(() => showToast(t('Microphone unavailable.')));
 }
 
 function stopRecording() {
@@ -1154,7 +1154,7 @@ function stopRecording() {
 function playRecording() {
   if (!APP.recordingUrl) return;
   const audio = new Audio(APP.recordingUrl);
-  audio.play().catch(() => showToast('Could not play the recording.'));
+  audio.play().catch(() => showToast(t('Could not play the recording.')));
 }
 
 function cleanupRecording() {
@@ -1275,7 +1275,7 @@ function showToast(msg) {
 function showTranslationEditor() {
   const lang = getLang();
   if (lang === 'en') {
-    showToast('Switch to PT or FR first.');
+    showToast(t('Switch to PT or FR first.'));
     return;
   }
   const overrides = getUserOverrides(lang);
@@ -1284,7 +1284,7 @@ function showTranslationEditor() {
   overlay.innerHTML = `
     <div class="name-modal" style="max-width:600px;width:90%;max-height:80vh;overflow:auto;">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
-        <h3 style="margin:0">Edit translations (${lang.toUpperCase()})</h3>
+        <h3 style="margin:0">${t('Edit translations')} (${lang.toUpperCase()})</h3>
         <button class="btn-icon" data-action="close-translation-editor" style="background:none;border:none;cursor:pointer;font-size:24px;">✕</button>
       </div>
       <p style="font-size:13px;color:var(--text-muted);margin-bottom:12px;">One translation per line: English = Translated. Leave empty to use default.</p>
@@ -1323,14 +1323,14 @@ function showTranslationEditor() {
       localStorage.setItem(OVERRIDE_STORAGE_KEY + '_' + lang, JSON.stringify(newOverrides));
     } catch (e) {}
     overlay.remove();
-    showToast('Translations saved!');
+    showToast(t('Translations saved!'));
     render();
   });
   overlay.querySelector('[data-action="clear-translations"]').addEventListener('click', () => {
     if (confirm('Clear all custom translations for this language?')) {
       clearUserOverrides(lang);
       overlay.remove();
-      showToast('Translations reset.');
+      showToast(t('Translations reset.'));
       render();
     }
   });
@@ -1408,7 +1408,7 @@ const FIRST_SOUND_CONTENT = {
 
 function renderFingeringLegend() {
   const keys = Object.entries(FINGERING_HELP).map(([key, info]) =>
-    `<div class="lookup-legend-row"><span class="fingering-help-key">${key}</span><span class="lookup-legend-text"><strong>${info.label}</strong> — ${info.text}</span></div>`
+    `<div class="lookup-legend-row"><span class="fingering-help-key">${key}</span><span class="lookup-legend-text"><strong>${t(info.label)}</strong> — ${t(info.text)}</span></div>`
   ).join('');
   return `<div class="lookup-legend">${keys}</div>`;
 }
@@ -1421,7 +1421,7 @@ function showFingeringHelp(key) {
   APP.fingeringHelp = key;
   const el = document.getElementById('fingering-help');
   if (!el) return;
-  el.innerHTML = `<span class="fingering-help-key">${key}</span><span class="fingering-help-text"><strong>${info.label}</strong> — ${info.text}</span>`;
+  el.innerHTML = `<span class="fingering-help-key">${key}</span><span class="fingering-help-text"><strong>${t(info.label)}</strong> — ${t(info.text)}</span>`;
   el.classList.add('show');
   clearTimeout(showFingeringHelp._timer);
   showFingeringHelp._timer = setTimeout(hideFingeringHelp, 7000);
@@ -1511,7 +1511,7 @@ function renderStudentCard(name) {
   const pct = xp % 100;
   const streakHtml = streak > 0
     ? `<span class="student-stat student-stat-streak">\u{1F525} ${streak}-day streak</span>`
-    : `<span class="student-stat">Practice today to start a streak!</span>`;
+    : `<span class="student-stat">${t('Practice today to start a streak!')}</span>`;
   return `
     <div class="student-card">
       <div class="student-avatar">${avatar}</div>
@@ -1552,7 +1552,7 @@ function renderInstrumentGrid() {
     const inst = CURRICULUM[id];
     const icon = Graphics.instrumentIconSVG(id, 56);
     const cls = inst.available ? 'instrument-card' : 'instrument-card coming-soon';
-    const badge = inst.available ? '' : `<div class="card-badge">Soon</div>`;
+    const badge = inst.available ? '' : `<div class="card-badge">${t('Soon')}</div>`;
     return `
       <div class="${cls}" data-action="select-instrument" data-id="${id}" style="color:${instAccent(inst)}">
         ${badge}
@@ -1568,7 +1568,7 @@ function renderInstrumentGrid() {
 function renderFocusCard(inst) {
   const ir = getInstrumentReport(inst.id);
   const progress = ir.xp > 0
-    ? `${ir.notesLearned}/${ir.notesTotal} notes · ${ir.songsCompleted}/${ir.songsTotal} songs`
+    ? tFill('{learned}/{total} notes · {songsCompleted}/{songsTotal} songs', { learned: ir.notesLearned, total: ir.notesTotal, songsCompleted: ir.songsCompleted, songsTotal: ir.songsTotal })
     : 'Ready for your first lesson';
   return `
     <div class="focus-instrument">
@@ -1596,7 +1596,7 @@ function renderSelectScreen() {
   const digestHtml = studentName ? renderDigestCard(studentName) : '';
   const badgesHtml = studentName ? renderBadgeShelf() : '';
   const reportHtml = studentName
-    ? `<button class="btn btn-secondary report-open" data-action="open-report">\u{1F4CB} Progress report</button>`
+    ? `<button class="btn btn-secondary report-open" data-action="open-report">\u{1F4CB} ${t('Progress report')}</button>`
     : '';
 
   let headline;
@@ -1653,26 +1653,26 @@ function renderSettingsScreen() {
       </div>
       <div class="settings-body">
         <div class="settings-section">
-          <label class="settings-label">Appearance</label>
-          <p class="settings-desc">Switch between the light "paper" theme and the dark theme.</p>
+          <label class="settings-label">${t('Appearance')}</label>
+          <p class="settings-desc">${t('Switch between the light "paper" theme and the dark theme.')}</p>
           <button class="btn btn-secondary" data-action="toggle-theme">${getTheme() === 'light' ? '\u{1F319} Dark theme' : '\u2600\uFE0F Light theme'}</button>
         </div>
         <div class="settings-section">
-          <label class="settings-label">Student name</label>
+          <label class="settings-label">${t('Student name')}</label>
           <div class="settings-row">
             <input type="text" id="settings-name-input" class="settings-input" value="${escapeHtml(name)}" maxlength="50" autocomplete="off" />
             <button class="btn btn-primary" data-action="save-settings-name">Save</button>
           </div>
         </div>
         <div class="settings-section">
-          <label class="settings-label">Reset progress</label>
-          <p class="settings-desc">Clear all lesson progress and XP for all instruments. This cannot be undone.</p>
-          <button class="btn btn-danger" data-action="reset-progress">Reset all progress</button>
+          <label class="settings-label">${t('Reset progress')}</label>
+          <p class="settings-desc">${t('Clear all lesson progress and XP for all instruments. This cannot be undone.')}</p>
+          <button class="btn btn-danger" data-action="reset-progress">${t('Reset all progress')}</button>
         </div>
         <div class="settings-section">
-          <label class="settings-label">Edit translations</label>
-          <p class="settings-desc">Override translated words for the current language.</p>
-          <button class="btn btn-secondary" data-action="edit-translations">Edit translations</button>
+          <label class="settings-label">${t('Edit translations')}</label>
+          <p class="settings-desc">${t('Override translated words for the current language.')}</p>
+          <button class="btn btn-secondary" data-action="edit-translations">${t('Edit translations')}</button>
         </div>
       </div>
     </div>`;
@@ -1690,8 +1690,8 @@ function buildTutorialSlides(inst) {
   return [
     {
       icon: '🎉',
-      title: `You're set up on ${t(inst.name)}`,
-      body: `Welcome! This is a one-minute tour of how the app works. You can skip it and replay it any time from your lesson map.`,
+      title: `${t("You're set up on")} ${t(inst.name)}`,
+      body: t('Welcome! This is a one-minute tour of how the app works. You can skip it and replay it any time from your lesson map.'),
       visual: instrumentArt,
     },
     {
@@ -1734,8 +1734,8 @@ function renderTutorialScreen() {
   return `
     <div class="screen active tutorial-screen">
       <div class="app-header">
-        <button class="header-back" data-action="tutorial-finish" title="Skip the tour">✕</button>
-        <div class="header-title">Quick tour</div>
+        <button class="header-back" data-action="tutorial-finish" title="${t('Skip the tour')}">✕</button>
+        <div class="header-title">${t('Quick tour')}</div>
       </div>
       <div class="tutorial-body">
         <div class="tutorial-art">${art}</div>
@@ -1745,7 +1745,7 @@ function renderTutorialScreen() {
       </div>
       <div class="action-bar">
         <div class="tutorial-actions">
-          <button class="btn btn-secondary" data-action="tutorial-back" ${i === 0 ? 'disabled' : ''}>Back</button>
+          <button class="btn btn-secondary" data-action="tutorial-back" ${i === 0 ? 'disabled' : ''}>${t('Back')}</button>
           <button class="btn btn-primary" data-action="tutorial-next">${last ? 'Start playing' : 'Next'}</button>
         </div>
       </div>
@@ -2008,17 +2008,17 @@ function renderLookupScreen() {
         <div class="lookup-detail">
           <div class="lookup-diagrams">
             <div class="lookup-diagram">
-              <div class="lookup-diagram-label">Fingering</div>
+              <div class="lookup-diagram-label">${t('Fingering')}</div>
               ${bigFingering}
             </div>
             <div class="lookup-diagram">
-              <div class="lookup-diagram-label">On the staff</div>
+              <div class="lookup-diagram-label">${t('On the staff')}</div>
               ${staffSvg}
             </div>
           </div>
           <div class="lookup-name">${escapeHtml(t(selected.noteName))}</div>
           <div class="lookup-desc">${escapeHtml(selected.description || '')}</div>
-          <button class="btn btn-secondary btn-wide" data-action="lookup-hear">\u{1F50A} Hear it</button>
+          <button class="btn btn-secondary btn-wide" data-action="lookup-hear">\u{1F50A} ${t('Hear it')}</button>
         </div>
         <div class="lookup-grid-label">${learnedIds.size} of ${notes.length} notes learned</div>
         <div class="lookup-grid">${cards}</div>
@@ -2050,8 +2050,8 @@ function renderWeakSpots(instrumentId) {
   }).join('');
   return `
     <div class="weak-card">
-      <div class="weak-title">Focus areas</div>
-      <div class="weak-sub">Your drills will favour the notes you miss most.</div>
+      <div class="weak-title">${t('Focus areas')}</div>
+      <div class="weak-sub">${t('Your drills will favour the notes you miss most.')}</div>
       ${rows}
     </div>`;
 }
@@ -2063,8 +2063,8 @@ function renderPracticeScreen() {
   const learned = getLearnedNotes(APP.instrumentId);
   const ready = learned.length >= 2;
   const modes = [
-    { mode: SPRINT_MODES.SIGHT, title: 'Sight-reading', sub: 'See a note on the staff, name it fast.' },
-    { mode: SPRINT_MODES.FINGER, title: 'Finger gym', sub: 'See a note name, match its fingering fast.' },
+    { mode: SPRINT_MODES.SIGHT, title: t('Sight-reading'), sub: t('See a note on the staff, name it fast.') },
+    { mode: SPRINT_MODES.FINGER, title: t('Finger gym'), sub: t('See a note name, match its fingering fast.') },
   ];
   const cards = modes.map(m => {
     const best = getSprintBest(APP.instrumentId, m.mode);
@@ -2085,8 +2085,8 @@ function renderPracticeScreen() {
       </div>
       <div class="lesson-body">
         <div class="practice-intro">${ready
-          ? `${SPRINT_SECONDS} seconds. How many can you get?`
-          : 'Finish a couple of lessons to unlock the timed drills.'}</div>
+          ? `${tFill('{n} seconds. How many can you get?', { n: SPRINT_SECONDS })}`
+          : t('Finish a couple of lessons to unlock the timed drills.')}</div>
         <div class="sprint-cards">${cards}</div>
         <button class="sprint-card ear-entry" data-action="open-ear" ${ready ? '' : 'disabled'}>
           <div class="sprint-card-title">${t('Ear training')}</div>
@@ -2105,17 +2105,17 @@ function renderPracticeTools() {
       <button class="tool-card" data-action="tools-tab" data-tab="metronome">
         <div class="tool-icon">\u{1F3B5}</div>
         <div class="tool-name">${t('Metronome / Tuner')}</div>
-        <div class="tool-sub">Open the floating metronome and tuner.</div>
+        <div class="tool-sub">${t('Open the floating metronome and tuner.')}</div>
       </button>
       <button class="tool-card" data-action="tools-tab" data-tab="tuner">
         <div class="tool-icon">\u{1F3A4}</div>
         <div class="tool-name">Tuner</div>
-        <div class="tool-sub">Check your pitch against the floating tuner.</div>
+        <div class="tool-sub">${t('Check your pitch against the floating tuner.')}</div>
       </button>
       <button class="tool-card" data-action="open-lookup">
         <div class="tool-icon">\u{1F3BC}</div>
-        <div class="tool-name">Fingering chart</div>
-        <div class="tool-sub">Look up any note's fingering and sound.</div>
+        <div class="tool-name">${t('Fingering chart')}</div>
+        <div class="tool-sub">${t("Look up any note's fingering and sound.")}</div>
       </button>
     </div>`;
 }
@@ -2129,10 +2129,10 @@ function renderEarScreen() {
       <div class="screen active ear-screen">
         <div class="app-header">
           <button class="header-back" data-action="close-ear">←</button>
-          <div class="header-title">Call & response</div>
+          <div class="header-title">${t('Call & response')}</div>
         </div>
         <div class="lesson-body">
-          <div class="practice-intro">Learn two notes to unlock ear training.</div>
+          <div class="practice-intro">${t('Learn two notes to unlock ear training.')}</div>
         </div>
       </div>`;
   }
@@ -2164,7 +2164,7 @@ function renderEarScreen() {
   const total = phrase.length;
   const perfect = e && e.finished && total > 0 && correct === total;
   const result = e && e.finished
-    ? `<div class="ear-result ${perfect ? 'ear-result-perfect' : ''}">${correct}/${total} correct${perfect ? ' — golden ear!' : ''}</div>`
+    ? `<div class="ear-result ${perfect ? 'ear-result-perfect' : ''}">${tFill('{correct}/{total} correct{golden}', { correct, total, golden: perfect ? ' — golden ear!' : '' })}</div>`
     : `<div class="ear-result ear-result-pending">${t('Tap the notes in the order you heard them.')}</div>`;
 
   const best = getInstrumentProgress(APP.instrumentId).earBest || 0;
@@ -2213,9 +2213,9 @@ function renderMetronomePanel() {
     <div class="tool-metro">
       <div class="metro-dots" id="metronome-dots">${dots.join('')}</div>
       <div class="tool-bpm">
-        <button class="tool-step" data-action="metronome-bpm" data-delta="-1" aria-label="Slower">−</button>
+        <button class="tool-step" data-action="metronome-bpm" data-delta="-1" aria-label="${t('Slower')}">−</button>
         <div class="tool-bpm-value"><span id="metronome-bpm">${m.bpm}</span><small>BPM</small></div>
-        <button class="tool-step" data-action="metronome-bpm" data-delta="1" aria-label="Faster">+</button>
+        <button class="tool-step" data-action="metronome-bpm" data-delta="1" aria-label="${t('Faster')}">+</button>
       </div>
       <div class="tool-row">
         <select id="tool-preset" class="tool-select" aria-label="Tempo preset"><option value="">Preset…</option>${presetOpts}</select>
@@ -2223,11 +2223,11 @@ function renderMetronomePanel() {
       </div>
       <div class="tool-row">
         <select id="tool-subdivision" class="tool-select" aria-label="Subdivision">${subOpts}</select>
-        <select id="tool-sound" class="tool-select" aria-label="Click sound">${soundOpts}</select>
+        <select id="tool-sound" class="tool-select" aria-label="${t('Click sound')}">${soundOpts}</select>
       </div>
       <div class="tool-row tool-row-between">
         <button class="tool-pill${m.countIn ? ' active' : ''}" data-action="metronome-countin" role="switch" aria-checked="${m.countIn ? 'true' : 'false'}">${t('Count-in')}</button>
-        <input type="range" id="metronome-volume" class="tool-volume" min="0" max="100" step="5" value="${vol}" aria-label="Metronome volume" />
+        <input type="range" id="metronome-volume" class="tool-volume" min="0" max="100" step="5" value="${vol}" aria-label="${t('Metronome volume')}" />
       </div>
       <div class="tool-actions">
         <button class="btn btn-secondary" data-action="metronome-tap">Tap</button>
@@ -2238,11 +2238,11 @@ function renderMetronomePanel() {
 
 function renderTunerPanel() {
   const noteLessons = APP.instrumentId ? getNoteLessons(APP.instrumentId) : [];
-  const t = APP.tuner;
-  const listening = !!(t && t.running);
-  const detected = t && t.freq > 0 ? freqToNoteInfo(t.freq, noteLessons) : null;
+  const tuner = APP.tuner;
+  const listening = !!(tuner && tuner.running);
+  const detected = tuner && tuner.freq > 0 ? freqToNoteInfo(tuner.freq, noteLessons) : null;
   let noteName = '—';
-  let cents = listening ? 'Listening…' : 'Press Tune';
+  let cents = listening ? t('Listening…') : t('Press Tune');
   let offset = 50;
   if (detected) {
     noteName = detected.note.noteName;
@@ -2289,16 +2289,16 @@ function renderReportScreen() {
   const report = buildPracticeReport(getStudentName());
   const statChips = `
     <div class="report-stats">
-      <div class="report-stat"><b>${report.level}</b><span>Level</span></div>
-      <div class="report-stat"><b>${report.xp}</b><span>XP</span></div>
-      <div class="report-stat"><b>${report.streak}</b><span>Day streak</span></div>
-      <div class="report-stat"><b>${report.totalMinutes}</b><span>Minutes</span></div>
+      <div class="report-stat"><b>${report.level}</b><span>${t('Level')}</span></div>
+      <div class="report-stat"><b>${report.xp}</b><span>${t('XP')}</span></div>
+      <div class="report-stat"><b>${report.streak}</b><span>${t('Day streak')}</span></div>
+      <div class="report-stat"><b>${report.totalMinutes}</b><span>${t('Minutes')}</span></div>
     </div>`;
 
   const cards = report.instruments.map(r => {
     const pct = r.notesTotal ? Math.round((r.notesLearned / r.notesTotal) * 100) : 0;
     const weak = r.weak.length
-      ? `<div class="report-focus">Focus: ${r.weak.map(w => `${escapeHtml(w.name)} (${w.accuracy}%)`).join(', ')}</div>`
+      ? `<div class="report-focus">${tFill('Focus: {notes}', { notes: r.weak.map(w => `${escapeHtml(w.name)} (${w.accuracy}%)`).join(', ') })}</div>`
       : '';
     return `
       <div class="report-card">
@@ -2315,17 +2315,17 @@ function renderReportScreen() {
         </div>
         ${weak}
       </div>`;
-  }).join('') || '<div class="report-empty">No practice recorded yet — play a lesson to start the report.</div>';
+  }).join('') || `<div class="report-empty">${t('No practice recorded yet — play a lesson to start the report.')}</div>`;
 
   const badges = report.badges.length
-    ? report.badges.map(b => `<span class="report-badge">${escapeHtml(b)}</span>`).join('')
-    : '<span class="report-badge-empty">No badges yet</span>';
+    ? report.badges.map(b => `<span class="report-badge">${escapeHtml(t(b))}</span>`).join('')
+    : `<span class="report-badge-empty">${t('No badges yet')}</span>`;
 
   return `
     <div class="screen active report-screen">
       <div class="app-header">
         <button class="header-back" data-action="close-report">←</button>
-        <div class="header-title">Practice report</div>
+        <div class="header-title">${t('Practice report')}</div>
       </div>
       <div class="lesson-body">
         <div class="report-hero">
@@ -2341,8 +2341,8 @@ function renderReportScreen() {
         <div class="report-section-label">Badges · ${report.badges.length}/${report.badgeTotal}</div>
         <div class="report-badges">${badges}</div>
         <div class="report-actions">
-          <button class="btn btn-primary" data-action="copy-report">Copy summary</button>
-          <button class="btn btn-secondary" data-action="print-report">Print</button>
+          <button class="btn btn-primary" data-action="copy-report">${t('Copy summary')}</button>
+          <button class="btn btn-secondary" data-action="print-report">${t('Print')}</button>
         </div>
       </div>
     </div>`;
@@ -2362,11 +2362,11 @@ function renderDigestCard(name, now = new Date()) {
       <span class="digest-col-label${isToday ? ' digest-col-today' : ''}">${x.label[0]}</span>
     </div>`;
   }).join('');
-  const pill = d.seen ? '' : '<span class="digest-new">New</span>';
+  const pill = d.seen ? '' : `<span class="digest-new">${t('New')}</span>`;
   return `
     <div class="digest-card" data-action="open-digest">
       <div class="digest-card-head">
-        <div class="digest-card-title">This week in music ${pill}</div>
+        <div class="digest-card-title">${t('This week in music')} ${pill}</div>
         <div class="digest-card-head-right">
           <div class="digest-card-min">${d.totalMinutes} min</div>
           <button class="digest-dismiss" data-action="dismiss-digest" title="Hide for now" aria-label="Hide weekly progress">\u2715</button>
@@ -2395,19 +2395,19 @@ function renderDigestScreen(now = new Date()) {
     </div>`;
   }).join('');
   const badges = d.badges.length
-    ? d.badges.map(b => `<span class="report-badge">${b.icon} ${escapeHtml(b.name)}</span>`).join('')
-    : '<span class="report-badge-empty">No new badges this week</span>';
+    ? d.badges.map(b => `<span class="report-badge">${b.icon} ${escapeHtml(t(b.name))}</span>`).join('')
+    : `<span class="report-badge-empty">${t('No new badges this week')}</span>`;
   const goalChips = WEEKLY_GOAL_OPTIONS.map(g =>
-    `<button class="digest-goal-chip${g === d.goalMinutes ? ' active' : ''}" data-action="set-weekly-goal" data-goal="${g}">${g} min</button>`
+    `<button class="digest-goal-chip${g === d.goalMinutes ? ' active' : ''}" data-action="set-weekly-goal" data-goal="${g}">${tFill('{n} min', { n: g })}</button>`
   ).join('');
   const goalStatus = d.goalMet
-    ? `\u2713 Goal met — ${d.totalMinutes} of ${d.goalMinutes} min!`
-    : `${d.goalRemaining} min to reach your ${d.goalMinutes}-minute goal`;
+    ? tFill('\u2713 Goal met — {total} of {goal} min!', { total: d.totalMinutes, goal: d.goalMinutes })
+    : tFill('{remaining} min to reach your {goal}-minute goal', { remaining: d.goalRemaining, goal: d.goalMinutes });
   return `
     <div class="screen active digest-screen">
       <div class="app-header">
         <button class="header-back" data-action="close-digest">←</button>
-        <div class="header-title">Weekly digest</div>
+        <div class="header-title">${t('Weekly digest')}</div>
       </div>
       <div class="lesson-body">
         <div class="report-hero">
@@ -2419,23 +2419,23 @@ function renderDigestScreen(now = new Date()) {
         </div>
         <div class="digest-headline">${escapeHtml(d.headline)}</div>
         <div class="report-stats">
-          <div class="report-stat"><b>${d.totalMinutes}</b><span>Minutes</span></div>
-          <div class="report-stat"><b>${d.activeDays}</b><span>Active days</span></div>
-          <div class="report-stat"><b>${d.streak}</b><span>Day streak</span></div>
-          <div class="report-stat"><b>${d.level}</b><span>Level</span></div>
+          <div class="report-stat"><b>${d.totalMinutes}</b><span>${t('Minutes')}</span></div>
+          <div class="report-stat"><b>${d.activeDays}</b><span>${t('Active days')}</span></div>
+          <div class="report-stat"><b>${d.streak}</b><span>${t('Day streak')}</span></div>
+          <div class="report-stat"><b>${d.level}</b><span>${t('Level')}</span></div>
         </div>
-        <div class="report-section-label">Daily practice (minutes)</div>
+        <div class="report-section-label">${t('Daily practice (minutes)')}</div>
         <div class="digest-bars digest-bars-tall">${bars}</div>
         ${d.bestDayLabel ? `<div class="digest-best">Best day: ${d.bestDayLabel} · ${d.bestDayMinutes} min</div>` : ''}
-        <div class="report-section-label">Weekly goal</div>
+        <div class="report-section-label">${t('Weekly goal')}</div>
         <div class="digest-goal-track digest-goal-track-lg"><div class="digest-goal-fill${d.goalMet ? ' digest-goal-met' : ''}" style="width:${d.goalPct}%"></div></div>
         <div class="digest-goal-status">${goalStatus}</div>
         <div class="digest-goal-options">${goalChips}</div>
-        <div class="report-section-label">New badges this week</div>
+        <div class="report-section-label">${t('New badges this week')}</div>
         <div class="report-badges">${badges}</div>
         <div class="report-actions">
-          <button class="btn btn-primary" data-action="copy-digest">Copy recap</button>
-          <button class="btn btn-secondary" data-action="print-digest">Print</button>
+          <button class="btn btn-primary" data-action="copy-digest">${t('Copy recap')}</button>
+          <button class="btn btn-secondary" data-action="print-digest">${t('Print')}</button>
         </div>
       </div>
     </div>`;
@@ -2445,7 +2445,7 @@ function renderSprintView(inst) {
   const s = APP.sprint;
   if (s.finished) {
     const best = getSprintBest(APP.instrumentId, s.mode);
-    const title = s.mode === SPRINT_MODES.SIGHT ? 'Sight-reading' : 'Finger gym';
+    const title = s.mode === SPRINT_MODES.SIGHT ? t('Sight-reading') : t('Finger gym');
     return `
       <div class="screen active practice-screen">
         <div class="app-header">
@@ -2455,7 +2455,7 @@ function renderSprintView(inst) {
         <div class="complete-layout">
           <div class="sprint-result-score">${s.score}</div>
           <div class="complete-sub">correct in ${SPRINT_SECONDS} seconds</div>
-          ${s.isBest ? `<div class="sprint-best-badge">New best!</div>` : `<div class="sprint-result-best">Best: ${best}</div>`}
+          ${s.isBest ? `<div class="sprint-best-badge">${t('New best!')}</div>` : `<div class="sprint-result-best">${tFill('Best: {best}', { best })}</div>`}
           <div class="complete-xp">+${s.xp} XP</div>
           <div class="gap-lg"></div>
           <button class="btn btn-primary btn-wide" data-action="sprint-again">Play again</button>
@@ -2494,7 +2494,7 @@ function renderSprintView(inst) {
         </div>
       </div>
       <div class="lesson-body">
-        <div class="lesson-instruction">${q.mode === SPRINT_MODES.SIGHT ? 'Which note is this?' : 'Which fingering plays this note?'}</div>
+        <div class="lesson-instruction">${q.mode === SPRINT_MODES.SIGHT ? t('Which note is this?') : t('Which fingering plays this note?')}</div>
         <div class="quiz-prompt">${promptHtml}</div>
         <div class="quiz-options sprint-options">${optionsHtml}</div>
       </div>
@@ -2515,7 +2515,7 @@ function startSprintTimer() {
 
 function startSprint(mode) {
   const learned = getLearnedNotes(APP.instrumentId);
-  if (learned.length < 2) { showToast('Learn a couple of notes first.'); return; }
+  if (learned.length < 2) { showToast(t('Learn a couple of notes first.')); return; }
   APP.sprint = {
     mode,
     endsAt: Date.now() + SPRINT_SECONDS * 1000,
@@ -2583,7 +2583,7 @@ function renderPresentPhase(inst, lesson) {
   const fingeringSvg = Graphics.fingeringSVG(inst.fingeringType, lesson.fingeringState, instAccent(inst), 84);
   const staffSvg = Graphics.staffSVG({ pos: lesson.staffStep, accidental: lesson.accidental, clef: inst.clef, accentColor: instAccent(inst), width: 96 });
   const transposeNote = inst.isTransposing && lesson.concertNote
-    ? `<div class="note-description">Sounds as concert ${lesson.concertNote} (${ ({'-9':'E\u266d','-7':'F','-2':'B\u266d'})[inst.transposeSemitones] || 'B\u266d' } instrument).</div>` : '';
+    ? `<div class="note-description">${tFill('Sounds as concert {note} ({key} instrument).', { note: lesson.concertNote, key: ({'-9':'E\u266d','-7':'F','-2':'B\u266d'})[inst.transposeSemitones] || 'B\u266d' })}</div>` : '';
 
   const mastery = getNoteMastery(APP.instrumentId, lesson.id);
   const masteryLevel = getMasteryLevel(mastery);
@@ -2593,15 +2593,15 @@ function renderPresentPhase(inst, lesson) {
 
   return `
     <div class="lesson-body">
-      <div class="lesson-instruction">${isReview ? 'Review this note' : 'Meet your next note'}</div>
+      <div class="lesson-instruction">${isReview ? t('Review this note') : t('Meet your next note')}</div>
       ${reviewLabel}
       <div class="present-layout">
         <div class="present-diagram-wrap">
-          <div class="present-diagram-label">Fingering</div>
+          <div class="present-diagram-label">${t('Fingering')}</div>
           <div class="present-diagram-svg">${fingeringSvg}</div>
         </div>
         <div class="present-notation-wrap">
-          <div class="present-diagram-label">On the staff</div>
+          <div class="present-diagram-label">${t('On the staff')}</div>
           <div class="present-diagram-svg">${staffSvg}</div>
         </div>
       </div>
@@ -2613,10 +2613,10 @@ function renderPresentPhase(inst, lesson) {
       <div class="gap-md"></div>
       <div class="note-prompt">${escapeHtml(t(lesson.prompt))}</div>
       <div class="gap-lg"></div>
-      <button class="btn-hear" data-action="hear-note"><span class="hear-icon">🔊</span> Hear it</button>
+      <button class="btn-hear" data-action="hear-note"><span class="hear-icon">🔊</span> ${t('Hear it')}</button>
     </div>
     <div class="action-bar">
-      <button class="btn btn-primary btn-wide" data-action="goto-quiz">Continue</button>
+      <button class="btn btn-primary btn-wide" data-action="goto-quiz">${t('Continue')}</button>
     </div>`;
 }
 
@@ -2628,9 +2628,9 @@ function songSpeedLabelText(speed) {
 function renderSongSpeedControl(disabled) {
   return `
     <div class="song-speed-control">
-      <button class="btn-speed" data-action="song-speed-down" aria-label="Slower" ${disabled || APP.songSpeed <= SPEED_MIN ? 'disabled' : ''}>−</button>
+      <button class="btn-speed" data-action="song-speed-down" aria-label="${t('Slower')}" ${disabled || APP.songSpeed <= SPEED_MIN ? 'disabled' : ''}>−</button>
       <span class="song-speed-label">${songSpeedLabelText(APP.songSpeed)}</span>
-      <button class="btn-speed" data-action="song-speed-up" aria-label="Faster" ${disabled || APP.songSpeed >= SPEED_MAX ? 'disabled' : ''}>+</button>
+      <button class="btn-speed" data-action="song-speed-up" aria-label="${t('Faster')}" ${disabled || APP.songSpeed >= SPEED_MAX ? 'disabled' : ''}>+</button>
     </div>`;
 }
 // Update only the label text in place (used while playback is running, so we
@@ -2672,15 +2672,15 @@ function renderSongPresentPhase(inst, lesson) {
     actionButtons = `
       <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
         <button class="btn btn-secondary" data-action="song-prev" ${isFirst ? 'disabled' : ''}>‹ Prev</button>
-        <button class="btn btn-secondary" data-action="song-next" ${isLast ? 'disabled' : ''}>Next ›</button>
+        <button class="btn btn-secondary" data-action="song-next" ${isLast ? 'disabled' : ''}>${t('Next ›')}</button>
       </div>
       <button class="btn btn-primary btn-wide" data-action="play-song-audio-start" style="margin-top:8px">▶ Play with recording</button>`;
   } else {
     actionButtons = `
       <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
         <button class="btn btn-secondary" data-action="song-prev" ${isFirst ? 'disabled' : ''}>‹ Prev</button>
-        <button class="btn-hear" data-action="hear-note"><span class="hear-icon">🔊</span> Play note</button>
-        <button class="btn btn-secondary" data-action="song-next" ${isLast ? 'disabled' : ''}>Next ›</button>
+        <button class="btn-hear" data-action="hear-note"><span class="hear-icon">🔊</span> ${t('Play note')}</button>
+        <button class="btn btn-secondary" data-action="song-next" ${isLast ? 'disabled' : ''}>${t('Next ›')}</button>
       </div>
       <div class="song-playback-controls">
         <button class="btn btn-secondary" data-action="play-melody">▶ Play whole melody</button>
@@ -2693,16 +2693,16 @@ function renderSongPresentPhase(inst, lesson) {
       <div class="lesson-instruction">${escapeHtml(t(lesson.noteName))}</div>
       <div style="font-size:12px;font-weight:600;color:var(--text-muted);margin-bottom:16px">Note ${currentNum} of ${totalNotes}</div>
       ${melodySvg ? `<div class="song-melody-wrap">
-        <div class="present-diagram-label">Sheet music</div>
+        <div class="present-diagram-label">${t('Sheet music')}</div>
         <div class="song-melody-svg">${melodySvg}</div>
       </div>` : ''}
       <div class="present-layout">
         <div class="present-diagram-wrap">
-          <div class="present-diagram-label">Fingering</div>
+          <div class="present-diagram-label">${t('Fingering')}</div>
           <div class="present-diagram-svg">${fingeringSvg}</div>
         </div>
         <div class="present-notation-wrap">
-          <div class="present-diagram-label">On the staff</div>
+          <div class="present-diagram-label">${t('On the staff')}</div>
           <div class="present-diagram-svg">${staffSvg}</div>
         </div>
       </div>
@@ -2715,7 +2715,7 @@ function renderSongPresentPhase(inst, lesson) {
       ${actionButtons}
     </div>
     <div class="action-bar">
-      <button class="btn btn-primary btn-wide" data-action="goto-quiz">Continue to quiz</button>
+      <button class="btn btn-primary btn-wide" data-action="goto-quiz">${t('Continue to quiz')}</button>
     </div>`;
 }
 
@@ -2723,18 +2723,18 @@ function renderSongAudioPlayerContent(inst, lesson) {
   return `
     <div class="lesson-body" id="song-audio-body">
       <div class="lesson-instruction">${escapeHtml(t(lesson.noteName))}</div>
-      <div class="song-audio-status" id="song-audio-status">Tap play, then follow along with the recording.</div>
+      <div class="song-audio-status" id="song-audio-status">${t('Tap play, then follow along with the recording.')}</div>
       <div class="beat-grid" id="song-audio-beats" style="justify-content:center;margin-bottom:20px">
         ${[1,2,3,4].map(n => `<div class="beat-cell count-in" data-beat="${n}"><span class="beat-num">${n}</span></div>`).join('')}
       </div>
       <div id="song-audio-notation">
         <div class="present-layout">
           <div class="present-diagram-wrap">
-            <div class="present-diagram-label">Fingering</div>
+            <div class="present-diagram-label">${t('Fingering')}</div>
             <div class="present-diagram-svg" id="song-audio-fingering"></div>
           </div>
           <div class="present-notation-wrap">
-            <div class="present-diagram-label">On the staff</div>
+            <div class="present-diagram-label">${t('On the staff')}</div>
             <div class="present-diagram-svg" id="song-audio-staff"></div>
           </div>
         </div>
@@ -2840,7 +2840,7 @@ function startSongAudioPlayback(inst, lesson) {
         if (fingEl) fingEl.innerHTML = Graphics.fingeringSVG(inst.fingeringType, note.fingeringState, instAccent(inst), 84);
         if (staffEl) staffEl.innerHTML = Graphics.staffSVG({ pos: note.staffStep, accidental: note.accidental, clef: inst.clef, accentColor: instAccent(inst), width: 96 });
         if (nameEl) nameEl.textContent = note.noteName;
-        if (progEl) progEl.textContent = `Note ${i + 1} of ${noteIds.length}`;
+        if (progEl) progEl.textContent = tFill('Note {current} of {total}', { current: i + 1, total: noteIds.length });
       }, startBeat * msPerBeat);
       APP.audioPlaybackTimeouts.push(t);
     });
@@ -2989,11 +2989,11 @@ function buildSprintQuestion(instrumentId, mode) {
 
 function getQuizQuestionText(quizType) {
   switch (quizType) {
-    case QUIZ_TYPES.FINGERING_TO_NOTE:  return 'Which note does this fingering play?';
-    case QUIZ_TYPES.NOTE_TO_FINGERING:  return 'Which fingering plays this note?';
-    case QUIZ_TYPES.STAFF_TO_NOTE:      return 'What note is on the staff?';
-    case QUIZ_TYPES.NOTE_TO_STAFF:      return 'Which staff position matches this note?';
-    default:                            return 'Which one is correct?';
+    case QUIZ_TYPES.FINGERING_TO_NOTE:  return t('Which note does this fingering play?');
+    case QUIZ_TYPES.NOTE_TO_FINGERING:  return t('Which fingering plays this note?');
+    case QUIZ_TYPES.STAFF_TO_NOTE:      return t('What note is on the staff?');
+    case QUIZ_TYPES.NOTE_TO_STAFF:      return t('Which staff position matches this note?');
+    default:                            return t('Which one is correct?');
   }
 }
 
@@ -3011,9 +3011,9 @@ function renderQuizPhase(inst, lesson) {
   // Review progress indicator / mixed-set progress indicator
   let reviewProgress = '';
   if (isReview) {
-    reviewProgress = `<div class="review-progress">Note ${APP.reviewIndex + 1} of ${APP.reviewTotal}</div>`;
+    reviewProgress = `<div class="review-progress">${tFill('Note {current} of {total}', { current: APP.reviewIndex + 1, total: APP.reviewTotal })}</div>`;
   } else if (APP.quizQueue.length > 1) {
-    reviewProgress = `<div class="review-progress">Question ${APP.quizIndex + 1} of ${APP.quizQueue.length}</div>`;
+    reviewProgress = `<div class="review-progress">${tFill('Question {current} of {total}', { current: APP.quizIndex + 1, total: APP.quizQueue.length })}</div>`;
   }
 
   // ── PROMPT ──
@@ -3056,12 +3056,12 @@ function renderQuizPhase(inst, lesson) {
   }).join('');
 
   const feedback = q.answeredCorrectly
-    ? `<div class="quiz-feedback correct visible">Nice work!</div>`
-    : (q.wrongIds.length > 0 ? `<div class="quiz-feedback wrong visible">Not quite — try again.</div>` : `<div class="quiz-feedback"></div>`);
+    ? `<div class="quiz-feedback correct visible">${t('Nice work!')}</div>`
+    : (q.wrongIds.length > 0 ? `<div class="quiz-feedback wrong visible">${t('Not quite — try again.')}</div>` : `<div class="quiz-feedback"></div>`);
 
   const btnLabel = isReview
     ? (APP.reviewIndex >= APP.reviewTotal - 1 ? 'See summary' : 'Next note')
-    : (APP.quizIndex >= APP.quizQueue.length - 1 ? 'Continue' : 'Next question');
+    : (APP.quizIndex >= APP.quizQueue.length - 1 ? t('Continue') : t('Next question'));
 
   return `
     <div class="lesson-body">
@@ -3117,22 +3117,22 @@ function renderPlayPhase(inst, lesson) {
     let controls;
     let status;
     if (recording) {
-      controls = `<button class="btn btn-secondary btn-wide" data-action="record-toggle">⏹ Stop recording</button>`;
+      controls = `<button class="btn btn-secondary btn-wide" data-action="record-toggle">⏹ ${t('Stop recording')}</button>`;
       status = 'Recording — play now, then tap Stop.';
     } else if (APP.recordingUrl) {
       controls = `
         <div class="record-actions">
-          <button class="btn btn-secondary" data-action="play-recording">▶ My take</button>
-          <button class="btn-hear" data-action="hear-note"><span class="hear-icon">🔊</span> Model</button>
-          <button class="btn btn-ghost" data-action="record-toggle">Re-record</button>
+          <button class="btn btn-secondary" data-action="play-recording">▶ ${t('My take')}</button>
+          <button class="btn-hear" data-action="hear-note"><span class="hear-icon">🔊</span> ${t('Model')}</button>
+          <button class="btn btn-ghost" data-action="record-toggle">${t('Re-record')}</button>
         </div>
-        <button class="btn-ghost" data-action="discard-recording">Delete recording</button>`;
-      status = 'Listen back, then compare with the model.';
+        <button class="btn-ghost" data-action="discard-recording">${t('Delete recording')}</button>`;
+      status = t('Listen back, then compare with the model.');
     } else {
       controls = `
-        <button class="btn btn-secondary btn-wide" data-action="record-toggle">⏺ Record yourself</button>
-        <button class="btn-hear" data-action="hear-note"><span class="hear-icon">🔊</span> Hear the model</button>`;
-      status = 'Record yourself and compare with the model.';
+        <button class="btn btn-secondary btn-wide" data-action="record-toggle">⏺ ${t('Record yourself')}</button>
+        <button class="btn-hear" data-action="hear-note"><span class="hear-icon">🔊</span> ${t('Hear the model')}</button>`;
+      status = t('Record yourself and compare with the model.');
     }
     recordPanel = `
       <div class="record-panel">
@@ -3143,21 +3143,21 @@ function renderPlayPhase(inst, lesson) {
 
   return `
     <div class="lesson-body">
-      <div class="lesson-instruction">Play it on your instrument</div>
+      <div class="lesson-instruction">${t('Play it on your instrument')}</div>
       <div class="play-layout">
         <div class="play-diagram-large">
           ${fingeringSvg}
           <span class="play-note-label">${escapeHtml(t(lesson.noteName))}</span>
         </div>
         <div class="beat-grid">${cells}${playCell}</div>
-        <div class="play-status" id="play-status">Tap Start, then play along on the count.</div>
+        <div class="play-status" id="play-status">${t('Tap Start, then play along on the count.')}</div>
         <button class="btn btn-secondary" data-action="play-start" id="play-start-btn">▶ Start count-in</button>
         ${recordPanel}
         ${listenEnabled(APP.instrumentId) && !isSongLesson(lesson) ? renderListenPanel(lesson) : ''}
       </div>
     </div>
     <div class="action-bar">
-      <button class="btn btn-success btn-wide" data-action="play-confirm" ${APP.play.hasPlayed ? '' : 'disabled'}>I played it!</button>
+      <button class="btn btn-success btn-wide" data-action="play-confirm" ${APP.play.hasPlayed ? '' : 'disabled'}>${t('I played it!')}</button>
     </div>`;
 }
 
@@ -3185,11 +3185,11 @@ function renderCompletePhase(inst, lesson) {
       <div class="complete-layout">
         <div class="complete-stars">${starsHtml}</div>
         <div class="complete-xp">+${xp} XP</div>
-        <div class="complete-title">Review complete!</div>
+        <div class="complete-title">${t('Review complete!')}</div>
         <div class="complete-sub">${APP.reviewCorrect} of ${APP.reviewTotal} on first try</div>
         <div class="review-notes-list">${notesHtml}</div>
         <div class="gap-lg"></div>
-        <button class="btn btn-primary btn-wide" data-action="finish-lesson">Continue</button>
+        <button class="btn btn-primary btn-wide" data-action="finish-lesson">${t('Continue')}</button>
       </div>`;
   }
 
@@ -3200,27 +3200,27 @@ function renderCompletePhase(inst, lesson) {
   const isSong = isSongLesson(lesson);
 
   const messages = {
-    new: 'You got the basics down!',
-    learning: 'Getting there — keep practicing!',
-    practiced: 'Solid understanding of this note.',
-    mastered: 'You really know this note well!',
+    new: t('You got the basics down!'),
+    learning: t('Getting there — keep practicing!'),
+    practiced: t('Solid understanding of this note.'),
+    mastered: t('You really know this note well!'),
   };
 
-  const exportBtn = isSong ? `<button class="btn btn-secondary" data-action="export-musicxml" style="width:100%;margin-bottom:8px">Export MusicXML</button>` : '';
+  const exportBtn = isSong ? `<button class="btn btn-secondary" data-action="export-musicxml" style="width:100%;margin-bottom:8px">${t('Export MusicXML')}</button>` : '';
   // Mastery is tracked per note, so it is meaningless for a song (whose id is
   // not a note) — only show the badge for regular note lessons.
-  const masteryBadge = isSong ? '' : `<div style="margin-top:8px;padding:6px 14px;border-radius:20px;background:${masteryColor}22;color:${masteryColor};font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:0.06em">${getMasteryLabel(masteryLevel)} — ${mastery} correct</div>`;
+  const masteryBadge = isSong ? '' : `<div style="margin-top:8px;padding:6px 14px;border-radius:20px;background:${masteryColor}22;color:${masteryColor};font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:0.06em">${getMasteryLabel(masteryLevel)} — ${mastery} ${t('correct')}</div>`;
 
   return `
     <div class="complete-layout">
       <div class="complete-stars">${starsHtml}</div>
       <div class="complete-xp">+${xp} XP</div>
-      <div class="complete-title">${alreadyDone ? 'Review complete!' : 'Lesson complete!'}</div>
+      <div class="complete-title">${alreadyDone ? t('Review complete!') : t('Lesson complete!')}</div>
       <div class="complete-sub">${isSong ? t('Song complete!') : messages[masteryLevel]}</div>
       ${masteryBadge}
       <div class="gap-lg"></div>
       ${exportBtn}
-      <button class="btn btn-primary btn-wide" data-action="finish-lesson">Continue</button>
+      <button class="btn btn-primary btn-wide" data-action="finish-lesson">${t('Continue')}</button>
     </div>`;
 }
 
@@ -3409,11 +3409,11 @@ function stopTuner() {
 
 function startTuner() {
   if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
-    showToast('Microphone not available for tuning.');
+    showToast(t('Microphone not available for tuning.'));
     return;
   }
   const Ctx = window.AudioContext || window.webkitAudioContext;
-  if (!Ctx) { showToast('Audio analysis not supported here.'); return; }
+  if (!Ctx) { showToast(t('Audio analysis not supported here.')); return; }
   stopListen();
   stopTuner();
   APP.tuner = { running: true, freq: -1, ctx: null, stream: null, frame: null };
@@ -3438,7 +3438,7 @@ function startTuner() {
     loop();
   }).catch(() => {
     if (APP.tuner) APP.tuner.running = false;
-    showToast('Could not access the microphone.');
+    showToast(t('Could not access the microphone.'));
     renderToolWidget();
   });
 }
@@ -3481,11 +3481,11 @@ function startListen() {
   const lesson = getLesson(instrumentId, APP.lessonIndex);
   if (!lesson || isSongLesson(lesson) || isReviewLesson(lesson) || !lesson.freq) return;
   if (!navigator.mediaDevices || typeof navigator.mediaDevices.getUserMedia !== 'function') {
-    showToast('Microphone not available here.');
+    showToast(t('Microphone not available here.'));
     return;
   }
   const Ctx = window.AudioContext || window.webkitAudioContext;
-  if (!Ctx) { showToast('Audio analysis not supported here.'); return; }
+  if (!Ctx) { showToast(t('Audio analysis not supported here.')); return; }
 
   stopTuner();
   cleanupRecording();
@@ -3532,7 +3532,7 @@ function startListen() {
     render();
   }).catch(() => {
     stopListen();
-    showToast('Could not access the microphone.');
+    showToast(t('Could not access the microphone.'));
     render();
   });
 }
@@ -3809,7 +3809,7 @@ function handleAction(action, el) {
       saveMotivation();
       APP.screen = 'select';
       render();
-      showToast('Progress reset.');
+      showToast(t('Progress reset.'));
       break;
     }
 
@@ -4034,7 +4034,7 @@ function handleAction(action, el) {
     }
 
     case 'locked-node':
-      showToast('Finish the previous note first.');
+      showToast(t('Finish the previous note first.'));
       break;
 
     case 'plan-start': {
@@ -4068,7 +4068,7 @@ function handleAction(action, el) {
 
     case 'open-ear': {
       if (getLearnedNotes(APP.instrumentId).length < 2) {
-        showToast('Learn two notes to unlock ear training.');
+        showToast(t('Learn two notes to unlock ear training.'));
         break;
       }
       startEarRound(APP.instrumentId);
@@ -4097,7 +4097,7 @@ function handleAction(action, el) {
       submitEarPick(APP.instrumentId, el.dataset.id);
       render();
       if (APP.ear && APP.ear.finished && APP.ear.graded && earScore(APP.ear.graded) === APP.ear.phrase.length) {
-        showToast('\u{1F442} Golden ear! Perfect echo.');
+        showToast(t('\u{1F442} Golden ear! Perfect echo.'));
       }
       break;
     }
@@ -4442,7 +4442,7 @@ function handleAction(action, el) {
       const allImported = JSON.parse(LS.getItem(IMPORTED_SONGS_KEY) || '{}');
       const songs = allImported[APP.instrumentId] || [];
       const song = songs[idx];
-      if (!song) { showToast('Song not found.'); break; }
+      if (!song) { showToast(t('Song not found.')); break; }
       APP.importedSong = song;
       APP.lessonIndex = -1;
       APP.phase = 'present';
@@ -4540,13 +4540,13 @@ document.addEventListener('change', (e) => {
   reader.onload = () => {
     try {
       const song = importSongFromMusicXML(reader.result, capturedInstrumentId);
-      showToast('Imported "' + song.noteName + '"');
+      showToast(tFill('Imported "{name}"', { name: song.noteName }));
       render();
     } catch (err) {
-      showToast('Import error: ' + err.message);
+      showToast(tFill('Import error: {message}', { message: err.message }));
     }
   };
-  reader.onerror = () => showToast('Error reading file.');
+  reader.onerror = () => showToast(t('Error reading file.'));
   reader.readAsText(file);
   input.value = '';
 });
@@ -4564,7 +4564,7 @@ maybeRemindDigest();
 // ── SERVICE WORKER UPDATE NOTIFICATION ──────────────────────────────────────
 if (typeof navigator !== 'undefined' && 'serviceWorker' in navigator) {
   navigator.serviceWorker.addEventListener('controllerchange', () => {
-    if (typeof showToast === 'function') showToast('Update available — reload to get the latest version.');
+    if (typeof showToast === 'function') showToast(t('Update available — reload to get the latest version.'));
   });
   navigator.serviceWorker.ready.then(reg => {
     reg.addEventListener('updatefound', () => {
@@ -4572,7 +4572,7 @@ if (typeof navigator !== 'undefined' && 'serviceWorker' in navigator) {
       if (newWorker) {
         newWorker.addEventListener('statechange', () => {
           if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
-            if (typeof showToast === 'function') showToast('Update available — reload to get the latest version.');
+            if (typeof showToast === 'function') showToast(t('Update available — reload to get the latest version.'));
           }
         });
       }
