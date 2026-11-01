@@ -1618,11 +1618,13 @@ function renderSelectScreen() {
     <div class="screen active select-screen">
       <div class="select-hero">
         <div class="wordmark">
-          <svg class="wordmark-logo" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <ellipse cx="10" cy="24" rx="6" ry="4.5" fill="#FF8C42" transform="rotate(-20 10 24)"/>
-            <line x1="15" y1="22" x2="15" y2="5" stroke="#FF8C42" stroke-width="2.4"/>
-            <path d="M15 5 Q24 6 24 14" stroke="#FF8C42" stroke-width="2.4" fill="none"/>
-          </svg>
+<svg class="wordmark-logo" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg"><g transform="translate(-1.22 0.13) scale(0.3394)"><g transform="rotate(-14 50 50)" fill="none" stroke="#17325C" stroke-linecap="round" stroke-linejoin="round">
+<path d="M12 45 H64" stroke-width="5"/>
+<path d="M64 41 C74 41 80 35 92 27 V63 C80 55 74 49 64 49 Z" fill="#17325C" stroke-width="2"/>
+<rect x="27" y="47.5" width="38" height="19" rx="9.5" stroke-width="4.2"/>
+<path d="M36 31 V66 M46 31 V66 M56 31 V66" stroke-width="3.8"/>
+<circle cx="36" cy="29.5" r="3.3" fill="#17325C" stroke="none"/><circle cx="46" cy="29.5" r="3.3" fill="#17325C" stroke="none"/><circle cx="56" cy="29.5" r="3.3" fill="#17325C" stroke="none"/>
+<circle cx="10" cy="45" r="3.6" fill="#17325C" stroke="none"/></g></svg>
           <span class="wordmark-text">Preludio <span>Band</span></span>
         </div>
         <div class="select-headline">${headline}</div>
