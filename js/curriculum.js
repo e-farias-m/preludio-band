@@ -41,7 +41,7 @@ const CURRICULUM = {
         freq: 233.08,
         fingeringState: [false, false, false],
         description: 'The tonic — no valves! Also known as concert Bb, the fundamental resonance of the trumpet.',
-        prompt: 'No valves. C is the 4th partial of the Bb bugle. Buzz a firm middle-register pitch.'
+        prompt: 'No valves. Buzz a firm middle-register pitch.'
       },
       {
         id: 'tr-song-1',
@@ -110,8 +110,8 @@ const CURRICULUM = {
         accidental: null,
         freq: 349.23,
         fingeringState: [false, false, false],
-        description: 'Your first note — no valves, the 6th partial of the open tube.',
-        prompt: 'No valves. Faster, more focused air for the 6th partial.'
+        description: 'Your first note — no valves, just the open tube.',
+        prompt: 'No valves. Faster, more focused air.'
       },
       {
         id: 'tr-6',
@@ -123,7 +123,7 @@ const CURRICULUM = {
         accidental: null,
         freq: 392.00,
         fingeringState: [true, true, false],
-        description: 'Valves 1 and 2 from the 8th partial.',
+        description: 'Valves 1 and 2.',
         prompt: 'Valves 1 and 2. Faster air than G.'
       },
       {
@@ -1257,7 +1257,7 @@ const CURRICULUM = {
         freq: 196.00,
         fingeringState: 4,
         description: 'G — 4th position. Fourth harmonic.',
-        prompt: '4th position. G is the 4th partial. Keep the air speed up.'
+        prompt: '4th position. Keep the air speed up.'
       },
       {
         id: 'tb-7',
@@ -1281,7 +1281,7 @@ const CURRICULUM = {
         freq: 233.08,
         fingeringState: 1,
         description: 'Bb — 1st position. An octave above your low Bb!',
-        prompt: '1st position. Bb is the 4th partial — one octave above Bb2. Faster air, firmer buzz.'
+        prompt: '1st position. Bb — one octave above Bb2. Faster air, firmer buzz.'
       },
       {
         id: 'tb-song-5', type: 'song',
@@ -1332,7 +1332,7 @@ const CURRICULUM = {
         freq: 174.61,
         fingeringState: [false, false, false],
         description: 'No valves — the fundamental resonance of the F horn.',
-        prompt: 'No valves. C is the 4th partial of the F horn.'
+        prompt: 'No valves. Buzz a firm pitch.'
       },
       {
         id: 'fh-song-1',
@@ -1354,7 +1354,7 @@ const CURRICULUM = {
         freq: 196.00,
         fingeringState: [true, false, false],
         description: 'Valve 1 — whole step above C.',
-        prompt: 'Valve 1. Fifth partial with first valve down.'
+        prompt: 'Valve 1. First valve down.'
       },
       {
         id: 'fh-song-2',
@@ -1375,8 +1375,8 @@ const CURRICULUM = {
         accidental: null,
         freq: 220.00,
         fingeringState: [false, false, false],
-        description: 'No valves — E is the 5th partial of the open series.',
-        prompt: 'No valves. E is the 5th partial of the open series.'
+        description: 'No valves — E, open.',
+        prompt: 'No valves. E, open.'
       },
       {
         id: 'fh-4',
@@ -1401,8 +1401,8 @@ const CURRICULUM = {
         accidental: null,
         freq: 261.63,
         fingeringState: [false, false, false],
-        description: 'No valves — the 6th partial.',
-        prompt: 'No valves. 6th partial. Faster air than E.'
+        description: 'No valves — just the open note.',
+        prompt: 'No valves. Faster air than E.'
       },
       {
         id: 'fh-6',
@@ -1440,8 +1440,8 @@ const CURRICULUM = {
         accidental: null,
         freq: 349.23,
         fingeringState: [false, false, false],
-        description: 'No valves — the 8th partial. Octave above your first C.',
-        prompt: 'No valves. 8th partial. Firm embouchure, fast air.'
+        description: 'No valves — an octave above your first C.',
+        prompt: 'No valves. Firm embouchure, fast air.'
       },
       // ── Song 1 ──────────────────────────────────────────────────────────
       {
@@ -1520,7 +1520,7 @@ const CURRICULUM = {
         freq: 116.54,
         fingeringState: [false, false, false],
         description: 'Open — no valves. Let the horn ring.',
-        prompt: 'No valves. Bb is the 2nd partial of the Bb bugle. Deep breath, steady air.'
+        prompt: 'No valves. Deep breath, steady air.'
       },
       {
         id: 'eu-song-1',
@@ -1766,7 +1766,7 @@ const CURRICULUM = {
         freq: 87.31,
         fingeringState: [false, false, false],
         description: 'Your first note — open, the 3rd harmonic of the Bb bugle.',
-        prompt: 'No valves. F is the 3rd partial. First note on the staff.'
+        prompt: 'No valves. First note on the staff.'
       },
       {
         id: 'tu-6',
@@ -2021,14 +2021,14 @@ const EXTENDED_NOTES = {
   // pitch it actually sounds, so `freq` = written pitch − 7 semitones.
   'french-horn': {
     '1':  extNote('F', 4, null, 1, 233.08, [true, false, false], 0, 'F — your first note, valve 1.', 'Valve 1. Buzz a firm middle-register pitch.', 'B\u266d3'),
-    '2':  extNote('G', 4, null, 2, 261.63, [false, false, false], 0, 'G — open, a whole step below A.', 'No valves. 6th partial.', 'C4'),
+    '2':  extNote('G', 4, null, 2, 261.63, [false, false, false], 0, 'G — open, a whole step below A.', 'No valves.', 'C4'),
     '3':  extNote('A', 4, null, 3, 293.66, [true, true, false], 0, 'A — valves 1 and 2.', 'Valves 1 and 2.', 'D4'),
     '4':  extNote('B\u266d', 4, '\u266d', 4, 311.13, [true, false, false], 0, 'Bb — valve 1, the flat of the written key.', 'Valve 1.', 'E\u266d4'),
-    '5':  extNote('C', 5, null, 5, 349.23, [false, false, false], 0, 'C — open, the 8th partial.', 'No valves. Faster air.', 'F4'),
-    '6':  extNote('D', 5, null, 6, 392.00, [false, false, false], 0, 'D — open, the 9th partial.', 'No valves. Keep the air fast.', 'G4'),
-    '7':  extNote('E', 5, null, 7, 440.00, [false, false, false], 0, 'E — open, the 10th partial.', 'No valves.', 'A4'),
+    '5':  extNote('C', 5, null, 5, 349.23, [false, false, false], 0, 'C — open.', 'No valves. Faster air.', 'F4'),
+    '6':  extNote('D', 5, null, 6, 392.00, [false, false, false], 0, 'D — open.', 'No valves. Keep the air fast.', 'G4'),
+    '7':  extNote('E', 5, null, 7, 440.00, [false, false, false], 0, 'E — open.', 'No valves.', 'A4'),
     '8':  extNote('F', 5, null, 8, 466.16, [true, false, false], 0, 'F — an octave above your first note, valve 1.', 'Valve 1. Firm embouchure.', 'B\u266d4'),
-    '0':  extNote('E', 4, null, 0, 220.00, [false, false, false], 0, 'Low E — open, the 5th partial.', 'No valves.', 'A3'),
+    '0':  extNote('E', 4, null, 0, 220.00, [false, false, false], 0, 'Low E — open.', 'No valves.', 'A3'),
     '-1': extNote('D', 4, null, -1, 196.00, [true, false, false], 0, 'Low D — valve 1.', 'Valve 1.', 'G3'),
     '0b': extNote('E\u266d', 4, '\u266d', 0, 207.65, [false, true, false], -1, 'Eb — valve 2, your first flat.', 'Valve 2.', 'A\u266d3'),
     '7b': extNote('E\u266d', 5, '\u266d', 7, 415.30, [false, true, false], -1, 'Eb above the staff — valve 2.', 'Valve 2.', 'A\u266d4'),
