@@ -167,14 +167,14 @@ check(Graphics.instrumentIconSVG('flute', 56).includes('<ellipse'),
   check(barLines(Graphics.melodySVG({ notes: q(3), accentColor: '#e0a020' })) === 1,
     'an incomplete pickup bar draws only the closing bar line');
   // 5 beats (a 1-beat pickup + a full bar): exactly one interior bar line.
-  check(barLines(Graphics.melodySVG({ notes: q(5), accentColor: '#e0a020' })) === 2,
+  check(barLines(Graphics.melodySVG({ notes: q(5), accentColor: '#e0a020', pickup: 1 })) === 2,
     'a 1-beat pickup plus a full bar draws one interior bar line');
   // A half note must never be split by a bar line: [1,1,1,2] is a 1-beat
   // pickup (bar 1) then a full bar whose last two beats hold the half note,
   // so the bar line lands on the note's end, not through it: one interior
   // bar line (after the pickup) plus the closing line.
   const half = [{ pos: 2, duration: 1 }, { pos: 2, duration: 1 }, { pos: 2, duration: 1 }, { pos: 2, duration: 2 }];
-  check(barLines(Graphics.melodySVG({ notes: half, accentColor: '#e0a020' })) === 2,
+  check(barLines(Graphics.melodySVG({ notes: half, accentColor: '#e0a020', pickup: 1 })) === 2,
     'a half note is never split by a bar line');
 }
 
