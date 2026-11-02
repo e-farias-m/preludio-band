@@ -1,4 +1,4 @@
-const CACHE = 'preludio-band-v57';
+const CACHE = 'preludio-band-v58';
 const FILES = [
   './',
   './index.html',
