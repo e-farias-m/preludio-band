@@ -1885,7 +1885,7 @@ const CANONICAL_SONGS = {
   // tune, so it stays within the first three notes the student has learned.
   'Merrily We Roll Along': {
     degrees: [3,2,1,2,3,3,3, 2,2,2, 3,3,3, 3,2,1,2,3,3,3, 2,2,3,2,1],
-    durations: [1,1,1,1,1,1,2, 1,1,2, 1,1,2, 1,1,1,1,1,1,2, 1,1,1,1,2],
+    durations: [1,1,1,1,1,1,2, 1,1,2, 1,1,2, 1,1,1,1,1,1,2, 1,1,1,1,4],
   },
   // The familiar first section of the German folk song ("Hänschen klein"),
   // stepping through the first five notes of the scale.
@@ -2244,6 +2244,48 @@ for (const inst of Object.values(CURRICULUM)) {
     lesson.noteIds = noteIds;
     lesson.durations = song.durations.slice();
     lesson.prerequisiteIds = [...new Set(noteIds)];
+  }
+}
+
+// Time signature of every song (and its pickup, in beats, if it has one).
+const SONG_METERS = {
+  'My First Note': { timeSig: { num: 4, den: 4 } },
+  'Step Up and Down': { timeSig: { num: 2, den: 4 } },
+  'Hot Cross Buns': { timeSig: { num: 4, den: 4 } },
+  'Merrily We Roll Along': { timeSig: { num: 4, den: 4 } },
+  'Lightly Row': { timeSig: { num: 2, den: 4 } },
+  'Climb the Ladder': { timeSig: { num: 4, den: 4 }, pickup: 1 },
+  'Bounce Back': { timeSig: { num: 3, den: 4 } },
+  'Deep Down': { timeSig: { num: 4, den: 4 }, pickup: 1 },
+  'Blue Note': { timeSig: { num: 4, den: 4 }, pickup: 1 },
+  'High and Low': { timeSig: { num: 4, den: 4 }, pickup: 1 },
+  'Octave Leap': { timeSig: { num: 3, den: 4 } },
+  'Sharp Turn': { timeSig: { num: 4, den: 4 }, pickup: 1 },
+  'Seventh Heaven': { timeSig: { num: 3, den: 4 } },
+  'Flat Third': { timeSig: { num: 4, den: 4 }, pickup: 1 },
+  'Top Note': { timeSig: { num: 4, den: 4 }, pickup: 1 },
+  'Trumpet Tune': { timeSig: { num: 4, den: 4 } },
+  'Reach Higher': { timeSig: { num: 3, den: 4 } },
+  'Almost There': { timeSig: { num: 3, den: 4 } },
+  'Top of the Range': { timeSig: { num: 3, den: 4 } },
+  'Flute Song': { timeSig: { num: 4, den: 4 } },
+  'Clarinet Song': { timeSig: { num: 4, den: 4 } },
+  'Saxophone Song': { timeSig: { num: 4, den: 4 } },
+  'Oboe Song': { timeSig: { num: 4, den: 4 } },
+  'Bassoon Song': { timeSig: { num: 4, den: 4 } },
+  'Slide Serenade': { timeSig: { num: 4, den: 4 } },
+  'Horn Calls': { timeSig: { num: 4, den: 4 } },
+  'Euphonium Air': { timeSig: { num: 4, den: 4 } },
+  'Tuba Foundation': { timeSig: { num: 4, den: 4 } },
+};
+
+for (const inst of Object.values(CURRICULUM)) {
+  for (const lesson of inst.lessons || []) {
+    if (lesson.type !== 'song') continue;
+    const meter = SONG_METERS[lesson.noteName];
+    if (!meter) continue;
+    lesson.timeSig = meter.timeSig;
+    if (meter.pickup) lesson.pickup = meter.pickup;
   }
 }
 
