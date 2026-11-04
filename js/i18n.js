@@ -1195,7 +1195,6 @@ const PT_EXTRA = {
   "▶ Start count-in": "▶ Iniciar a contagem",
   "❔ How this app works": "❔ Como este app funciona",
   "🌙 Dark theme": "🌙 Tema escuro",
-  "🎧 Listen & match": "🎧 Ouvir e combinar",
   "🎼 Fingering chart": "🎼 Tabela de digitação",
   "👂 Golden ear! Perfect echo.": "👂 Ouvido de ouro! Eco perfeito.",
   "📈 Your week in music is ready!": "📈 Sua semana na música está pronta!",
