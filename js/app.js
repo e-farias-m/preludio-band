@@ -3235,6 +3235,8 @@ function render() {
   else if (APP.screen === 'lesson') app.innerHTML = renderLessonScreen();
   if (typeof applyI18nToDOM === 'function') applyI18nToDOM();
   renderToolWidget();
+  const _logoFixed = document.getElementById('app-logo-fixed');
+  if (_logoFixed) _logoFixed.style.display = (APP.screen === 'select') ? 'none' : 'block';
 }
 
 // ── PLAY PHASE SEQUENCE ─────────────────────────────────────────────────

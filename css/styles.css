@@ -2668,3 +2668,16 @@ button:focus-visible { outline: 2px solid var(--border-focus); outline-offset: 2
 
 
 
+
+/* ── FIXED LOGO (every non-home screen) ─────────────────────────────── */
+.app-logo-fixed {
+  position: fixed;
+  top: 8px;
+  right: 8px;
+  height: 20px;
+  width: auto;
+  opacity: 0.6;
+  pointer-events: none;
+  z-index: 40;
+  display: none;
+}
