@@ -1348,6 +1348,19 @@ const FIRST_SOUND_CONTENT = {
     ],
     tip: 'If there is no crow, open your jaw and use more air. If it is tight and pinched, relax your lips around the reed.',
   },
+  'keyboard': {
+    emoji: '\u{1F3B9}',
+    title: 'Make your first sound',
+    intro: 'A glockenspiel makes sound when you strike a metal bar with a mallet. The bar rings on its own — you just start it.',
+    steps: [
+      'Hold a mallet loosely, like a pencil, between your thumb and first two fingers.',
+      'Strike the centre of a bar with a quick, controlled wrist motion.',
+      'Let the mallet bounce off — do not rest it on the bar.',
+      'Listen for a clear, ringing tone that sustains.',
+      'Alternate hands (left, right, left) for an even, flowing sound.',
+    ],
+    tip: 'No ring? Strike a little harder and let the mallet rebound. Too harsh? Loosen your grip and use less force.',
+  },
 };
 
 function renderFingeringLegend() {

@@ -595,10 +595,31 @@ const Graphics = (() => {
     return svg;
   }
 
+  // ── GLOCKENSPIEL FINGERING (mallet hand indicator) ───────────────────────
+  function glockenspielFingeringSVG(fingeringState, accentColor = 'var(--accent-warm)', size = 130) {
+    const [left, right] = fingeringState || [true, false];
+    const hand = right ? 'R' : 'L';
+    const cx = 65;
+    let svg = `<svg viewBox="0 0 130 130" width="${size}" height="${size}" xmlns="http://www.w3.org/2000/svg">`;
+    // A row of bars (keyboard)
+    const barW = 12, gap = 4, startX = 14;
+    for (let i = 0; i < 8; i++) {
+      const x = startX + i * (barW + gap);
+      svg += `<rect x="${x}" y="40" width="${barW}" height="40" rx="3" fill="#21204A" stroke="#524F70" stroke-width="1.2"/>`;
+    }
+    // Hand indicator circle
+    svg += `<circle cx="${cx}" cy="100" r="22" fill="${accentColor}" />`;
+    svg += `<text x="${cx}" y="107" font-size="20" font-weight="700" fill="#fff" text-anchor="middle">${hand}</text>`;
+    svg += `<text x="${cx}" y="128" font-size="9" fill="#8986A8" text-anchor="middle" font-weight="600">HAND</text>`;
+    svg += `</svg>`;
+    return svg;
+  }
+
   function fingeringSVG(fingeringType, fingeringState, accentColor, size = 130) {
     if (fingeringType === 'recorder') return recorderFingeringSVG(fingeringState, accentColor, size);
     if (fingeringType === 'trombone') return tromboneFingeringSVG(fingeringState, accentColor, size);
     if (fingeringType === 'flute') return fluteFingeringSVG(fingeringState, accentColor, size);
+    if (fingeringType === 'glockenspiel') return glockenspielFingeringSVG(fingeringState, accentColor, size);
     if (['clarinet', 'saxophone', 'oboe', 'bassoon'].includes(fingeringType)) {
       return woodwindFingeringSVG(fingeringState, accentColor, size);
     }

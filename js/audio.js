@@ -195,6 +195,26 @@ const AudioEngine = (() => {
     osc2.stop(t0 + duration + 0.1);
   }
 
+  // ── GLOCKENSPIEL VOICE (bell tone) ─────────────────────────────────────
+  function playGlockenspiel(freq, duration = 1.1) {
+    const c = getCtx();
+    const t0 = c.currentTime + 0.02;
+    // Fundamental + octave partial, fast attack, exponential decay.
+    [1, 2].forEach((mult, i) => {
+      const osc = c.createOscillator();
+      osc.type = 'sine';
+      osc.frequency.value = freq * mult;
+      const g = c.createGain();
+      const peak = i === 0 ? 0.5 : 0.15;
+      g.gain.setValueAtTime(0.0001, t0);
+      g.gain.exponentialRampToValueAtTime(peak, t0 + 0.005);
+      g.gain.exponentialRampToValueAtTime(0.0001, t0 + Math.max(duration, 0.3));
+      osc.connect(g).connect(c.destination);
+      osc.start(t0);
+      osc.stop(t0 + Math.max(duration, 0.3) + 0.05);
+    });
+  }
+
   // ── METRONOME CLICK ──────────────────────────────────────────────────────
   // `opts.sound` picks the timbre ('click' | 'wood' | 'beep') and `opts.volume`
   // scales the level (0…1). Both default so existing callers are unaffected.
@@ -234,6 +254,8 @@ const AudioEngine = (() => {
     const c = getCtx();
     if (fingeringType === 'recorder') {
       playRecorder(freq, duration);
+    } else if (fingeringType === 'glockenspiel') {
+      playGlockenspiel(freq, duration);
     } else if (BRASS_TYPES.includes(fingeringType)) {
       playBrass(freq, duration);
     } else if (WOODWIND_TYPES.includes(fingeringType)) {
@@ -251,6 +273,8 @@ const AudioEngine = (() => {
       if (freq == null) return;
       if (fingeringType === 'recorder') {
         playRecorder(freq, duration);
+      } else if (fingeringType === 'glockenspiel') {
+        playGlockenspiel(freq, duration);
       } else if (BRASS_TYPES.includes(fingeringType)) {
         playBrass(freq, duration);
       } else if (WOODWIND_TYPES.includes(fingeringType)) {

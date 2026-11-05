@@ -41,7 +41,7 @@ const DIA = { C: 0, D: 1, E: 2, F: 3, G: 4, A: 5, B: 6 };
 // Each instrument must declare a family so the "make your first sound" guide
 // can pick the right embouchure instructions (brass buzz vs. flute airstream
 // vs. single/double reed). Unknown families would fall back to brass silently.
-const VALID_FAMILIES = new Set(['brass', 'flute', 'single-reed', 'double-reed']);
+const VALID_FAMILIES = new Set(['brass', 'flute', 'single-reed', 'double-reed', 'keyboard', 'percussion']);
 for (const inst of Object.values(CURRICULUM)) {
   check(VALID_FAMILIES.has(inst.family),
     `${inst.id} must declare a valid family (got ${JSON.stringify(inst.family)})`);
@@ -231,6 +231,7 @@ const REF = {
     'tb-ext-3flat': 5,  // Db3
     'tb-ext-9': 3,      // C4
   },
+  'glockenspiel': {},
 };
 
 for (const inst of Object.values(CURRICULUM)) {

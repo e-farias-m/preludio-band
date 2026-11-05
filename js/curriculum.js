@@ -1866,8 +1866,116 @@ const CURRICULUM = {
     ]
   },
 
+  // ── GLOCKENSPIEL (C) ────────────────────────────────────────────────────
+  'glockenspiel': {
+    id: 'glockenspiel', name: 'Glockenspiel', shortName: 'Glock',
+    clef: 'treble', fingeringType: 'glockenspiel', isTransposing: false, available: true,
+    accentColor: '#F2C24E', family: 'keyboard',
+    lessons: [
+      {
+        id: 'gl-1', degree: 1, noteName: 'C', octave: 5, staffStep: 5, accidental: null, freq: 523.25,
+        fingeringState: [true, false],
+        description: 'Your first glockenspiel note — middle C. Strike with the left mallet.',
+        prompt: 'Left hand (L). Strike the C bar with a clean, controlled stroke. Let it ring.'
+      },
+      {
+        id: 'gl-song-1', type: 'song', audioUrl: null, bpm: 100, noteName: 'My First Note',
+        description: 'A short warm-up on your very first note. Relax and keep the tone steady!',
+        prompt: 'Play the note a few times, long and even. Listen for a clear, centred sound.',
+      },
+      {
+        id: 'gl-2', degree: 2, noteName: 'D', octave: 5, staffStep: 6, accidental: null, freq: 587.33,
+        fingeringState: [false, true],
+        description: 'D — right hand. The next bar up.',
+        prompt: 'Right hand (R). Keep the wrist relaxed; let the mallet bounce.'
+      },
+      {
+        id: 'gl-song-2', type: 'song', audioUrl: null, bpm: 100, noteName: 'Step Up and Down',
+        description: 'A two-note song that steps from your first note to your second and back.',
+        prompt: 'Move smoothly between just two notes. Keep each pitch centred!',
+      },
+      {
+        id: 'gl-3', degree: 3, noteName: 'E', octave: 5, staffStep: 7, accidental: null, freq: 659.25,
+        fingeringState: [true, false],
+        description: 'E — left hand. You now know CDE!',
+        prompt: 'Left hand (L). Alternate cleanly: L, R, L.'
+      },
+      {
+        id: 'gl-song-3', type: 'song', audioUrl: null, bpm: 100, noteName: 'Hot Cross Buns',
+        description: 'A classic English nursery rhyme using C, D, and E.',
+        prompt: 'Step through each note slowly. Alternate hands: L, R, L…',
+        noteIds: ['gl-1', 'gl-2', 'gl-3', 'gl-1', 'gl-2', 'gl-3', 'gl-3', 'gl-3', 'gl-3', 'gl-3', 'gl-2', 'gl-2', 'gl-2', 'gl-2', 'gl-1', 'gl-2', 'gl-3'],
+        durations: ['h', 'h', 'w', 'h', 'h', 'w', 'q', 'q', 'q', 'q', 'q', 'q', 'q', 'q', 'h', 'h', 'w'],
+        keySig: 1, timeSig: { num: 4, den: 4 },
+      },
+      {
+        id: 'gl-4', degree: 4, noteName: 'F', octave: 5, staffStep: 8, accidental: null, freq: 698.46,
+        fingeringState: [false, true],
+        description: 'F — right hand.',
+        prompt: 'Right hand (R). Strike cleanly between the bars.'
+      },
+      {
+        id: 'gl-5', degree: 5, noteName: 'G', octave: 5, staffStep: 9, accidental: null, freq: 784.00,
+        fingeringState: [true, false],
+        description: 'G — left hand. Halfway up the first octave.',
+        prompt: 'Left hand (L). Keep the mallet relaxed and bouncy.'
+      },
+      {
+        id: 'gl-song-4', type: 'song', audioUrl: null, bpm: 100, noteName: 'Row, Row, Row Your Boat',
+        description: 'A classic round using C, D, E, F, and G.',
+        prompt: 'Alternate hands and keep an even tempo.',
+        noteIds: ['gl-1', 'gl-1', 'gl-1', 'gl-2', 'gl-3', 'gl-3', 'gl-2', 'gl-3', 'gl-4', 'gl-5', 'gl-1', 'gl-1', 'gl-1', 'gl-5', 'gl-5', 'gl-5', 'gl-3', 'gl-3', 'gl-3', 'gl-1', 'gl-1', 'gl-1', 'gl-5', 'gl-4', 'gl-3', 'gl-2', 'gl-1'],
+        durations: [1.5, 1.5, 1, 0.5, 1.5, 1, 0.5, 1, 0.5, 3, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 1, 0.5, 1, 0.5, 3],
+        keySig: 0, timeSig: { num: 6, den: 8 },
+      },
+      {
+        id: 'gl-6', degree: 6, noteName: 'A', octave: 5, staffStep: 10, accidental: null, freq: 880.00,
+        fingeringState: [false, true],
+        description: 'A — right hand. The top of the staff.',
+        prompt: 'Right hand (R). Fast, light strokes for the higher bars.'
+      },
+      {
+        id: 'gl-7', degree: 7, noteName: 'B', octave: 5, staffStep: 11, accidental: null, freq: 987.77,
+        fingeringState: [true, false],
+        description: 'B — left hand. Almost at the top.',
+        prompt: 'Left hand (L). Keep the alternating pattern clean.'
+      },
+      {
+        id: 'gl-song-5', type: 'song', audioUrl: null, bpm: 100, noteName: 'Merrily We Roll Along',
+        description: 'The tune behind "Mary Had a Little Lamb" using B, A, and G.',
+        prompt: 'Alternate hands and keep an even tempo.',
+        noteIds: ['gl-7', 'gl-6', 'gl-5', 'gl-6', 'gl-7', 'gl-7', 'gl-7', 'gl-6', 'gl-6', 'gl-6', 'gl-7', 'gl-7', 'gl-7', 'gl-7', 'gl-6', 'gl-5', 'gl-6', 'gl-7', 'gl-7', 'gl-7', 'gl-7', 'gl-6', 'gl-6', 'gl-7', 'gl-6', 'gl-5'],
+        durations: ['q', 'q', 'q', 'q', 'q', 'q', 'h', 'q', 'q', 'h', 'q', 'q', 'h', 'q', 'q', 'q', 'q', 'q', 'q', 'q', 'q', 'q', 'q', 'q', 'q', 'w'],
+        keySig: 1, timeSig: { num: 4, den: 4 },
+      },
+      {
+        id: 'gl-8', degree: 8, noteName: 'C', octave: 6, staffStep: 12, accidental: null, freq: 1046.50,
+        fingeringState: [false, true],
+        description: 'High C — right hand. The top of your first octave.',
+        prompt: 'Right hand (R). Light, focused strokes for this high, bright bar.'
+      },
+      {
+        id: 'gl-song-6', type: 'song', audioUrl: null, bpm: 100, noteName: 'Ode to Joy',
+        description: 'Beethoven\u2019s famous melody using G, F, E, D, and C.',
+        prompt: 'Alternate hands and keep a steady, singing tone.',
+        noteIds: ['gl-5', 'gl-5', 'gl-1', 'gl-2', 'gl-2', 'gl-1', 'gl-5', 'gl-6', 'gl-7', 'gl-7', 'gl-6', 'gl-5', 'gl-5', 'gl-6', 'gl-6'],
+        durations: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2],
+        keySig: 0, timeSig: { num: 4, den: 4 },
+        libraryOnly: true,
+      },
+      {
+        id: 'gl-review-1', type: 'review',
+        reviewLessonIds: ['gl-song-1', 'gl-song-2', 'gl-1', 'gl-2', 'gl-3', 'gl-4', 'gl-5', 'gl-6', 'gl-7', 'gl-8'],
+        noteName: 'Review 1',
+        description: 'Mix up all eight glockenspiel notes.',
+        prompt: '',
+      },
+    ]
+  },
+
 };
 
+// ── Shared songs ────────────────────────────────────────────────────────────
 // ── Shared songs ────────────────────────────────────────────────────────────
 // The shared tunes are defined once here, as scale degrees relative to each
 // instrument's own notes (degree 1 = that instrument's tonic note lesson).
@@ -2292,5 +2400,6 @@ for (const inst of Object.values(CURRICULUM)) {
 // Ordered list for the home screen
 const INSTRUMENT_ORDER = [
   'flute', 'clarinet', 'alto-saxophone', 'oboe', 'bassoon',
-  'trumpet', 'trombone', 'french-horn', 'euphonium', 'tuba'
+  'trumpet', 'trombone', 'french-horn', 'euphonium', 'tuba',
+  'glockenspiel'
 ];
