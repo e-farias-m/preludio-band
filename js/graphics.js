@@ -764,6 +764,29 @@ const Graphics = (() => {
           <circle cx="28" cy="15" r="2.5" fill="currentColor"/>
           <circle cx="38" cy="15" r="2.5" fill="currentColor"/>
         `);
+      case 'glockenspiel':
+        return s(`
+          <rect x="10" y="22" width="8" height="30" rx="2"/>
+          <rect x="20" y="22" width="8" height="30" rx="2"/>
+          <rect x="30" y="22" width="8" height="30" rx="2"/>
+          <rect x="40" y="22" width="8" height="30" rx="2"/>
+          <rect x="50" y="22" width="8" height="30" rx="2"/>
+          <line x1="14" y1="14" x2="18" y2="22" stroke-width="2"/>
+          <line x1="50" y1="14" x2="54" y2="22" stroke-width="2"/>
+          <circle cx="16" cy="12" r="2.5" fill="currentColor"/>
+          <circle cx="52" cy="12" r="2.5" fill="currentColor"/>
+        `);
+      case 'snare-drum':
+        return s(`
+          <ellipse cx="32" cy="36" rx="20" ry="8"/>
+          <ellipse cx="32" cy="32" rx="20" ry="8" fill="none"/>
+          <line x1="12" y1="36" x2="12" y2="44" stroke-width="2"/>
+          <line x1="52" y1="36" x2="52" y2="44" stroke-width="2"/>
+          <line x1="20" y1="18" x2="28" y2="32" stroke-width="2.5"/>
+          <line x1="44" y1="18" x2="36" y2="32" stroke-width="2.5"/>
+          <circle cx="20" cy="16" r="2" fill="currentColor"/>
+          <circle cx="44" cy="16" r="2" fill="currentColor"/>
+        `);
       default:
         return s(`<circle cx="32" cy="32" r="20"/>`);
     }
