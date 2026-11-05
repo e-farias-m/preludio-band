@@ -1292,7 +1292,8 @@ const PT_EXTRA = {
 Object.assign(TRANSLATIONS.pt, Object.fromEntries(Object.entries(PT_EXTRA).filter(([k]) => !(k in TRANSLATIONS.pt))));
 
 const PT_INSTRUMENTS = { 'Flute': 'Flauta', 'Clarinet': 'Clarinete', 'Alto Sax': 'Sax alto', 'Oboe': 'Oboé', 'Bassoon': 'Fagote',
-  'Trumpet': 'Trompete', 'Trombone': 'Trombone', 'Fr. Horn': 'Trompa', 'Euph.': 'Eufônio', 'Tuba': 'Tuba' };
+  'Trumpet': 'Trompete', 'Trombone': 'Trombone', 'Fr. Horn': 'Trompa', 'Euph.': 'Eufônio', 'Tuba': 'Tuba',
+  'Glock': 'Glockenspiel', 'Snare': 'Caixa' };
 const ptInst = s => PT_INSTRUMENTS[s] || t(s);
 const ptNote = s => {
   const m = s.trim().match(/^([A-G])([#b♯♭]?)(\d*)$/);
