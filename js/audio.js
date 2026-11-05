@@ -215,6 +215,29 @@ const AudioEngine = (() => {
     });
   }
 
+  // ── SNARE DRUM (noise burst) ───────────────────────────────────────────
+  function playSnare(duration = 0.15) {
+    const c = getCtx();
+    const t0 = c.currentTime + 0.005;
+    const len = Math.max(0.05, Math.min(duration, 0.4));
+    const bufLen = Math.floor(c.sampleRate * len);
+    const buf = c.createBuffer(1, Math.max(bufLen, 128), c.sampleRate);
+    const data = buf.getChannelData(0);
+    for (let i = 0; i < data.length; i++) data[i] = (Math.random() * 2 - 1) * (1 - i / data.length);
+    const src = c.createBufferSource();
+    src.buffer = buf;
+    const bp = c.createBiquadFilter();
+    bp.type = 'bandpass';
+    bp.frequency.value = 1800;
+    bp.Q.value = 0.8;
+    const g = c.createGain();
+    g.gain.setValueAtTime(0.6, t0);
+    g.gain.exponentialRampToValueAtTime(0.0001, t0 + len);
+    src.connect(bp).connect(g).connect(c.destination);
+    src.start(t0);
+    src.stop(t0 + len + 0.05);
+  }
+
   // ── METRONOME CLICK ──────────────────────────────────────────────────────
   // `opts.sound` picks the timbre ('click' | 'wood' | 'beep') and `opts.volume`
   // scales the level (0…1). Both default so existing callers are unaffected.
@@ -256,6 +279,8 @@ const AudioEngine = (() => {
       playRecorder(freq, duration);
     } else if (fingeringType === 'glockenspiel') {
       playGlockenspiel(freq, duration);
+    } else if (fingeringType === 'snare') {
+      playSnare(duration);
     } else if (BRASS_TYPES.includes(fingeringType)) {
       playBrass(freq, duration);
     } else if (WOODWIND_TYPES.includes(fingeringType)) {
@@ -275,6 +300,8 @@ const AudioEngine = (() => {
         playRecorder(freq, duration);
       } else if (fingeringType === 'glockenspiel') {
         playGlockenspiel(freq, duration);
+      } else if (fingeringType === 'snare') {
+        playSnare(duration);
       } else if (BRASS_TYPES.includes(fingeringType)) {
         playBrass(freq, duration);
       } else if (WOODWIND_TYPES.includes(fingeringType)) {

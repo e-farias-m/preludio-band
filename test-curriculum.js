@@ -232,9 +232,11 @@ const REF = {
     'tb-ext-9': 3,      // C4
   },
   'glockenspiel': {},
+  'snare-drum': {},
 };
 
 for (const inst of Object.values(CURRICULUM)) {
+  if (inst.family === 'percussion') continue;
   const ref = REF[inst.id];
   check(!!ref, `missing reference table for ${inst.id}`);
 
@@ -465,6 +467,7 @@ for (const inst of Object.values(CURRICULUM)) {
 // chords. Degrees may fall below the tonic (0, -1, ...) or above the octave
 // (> 8); `alter` (-1 flat / +1 sharp) marks chromatic notes.
 for (const inst of Object.values(CURRICULUM)) {
+  if (inst.family === 'percussion') continue; // unpitched: no scale degrees
   const keys = [];
   const naturals = [];
   const alters = [];
@@ -497,6 +500,7 @@ for (const inst of Object.values(CURRICULUM)) {
 // Every note's actual concert pitch must agree with its own scale degree, so a
 // newly added note cannot carry a plausible-looking degree and a wrong pitch.
 for (const inst of Object.values(CURRICULUM)) {
+  if (inst.family === 'percussion') continue;
   const tonic = (inst.lessons || []).find(l => !l.type && l.degree === 1 && !(l.alter || 0));
   if (!tonic) continue;
   const tonicConcert = midiFor(tonic.noteName, tonic.octave, tonic.accidental) + (inst.transposeSemitones || 0);
@@ -513,6 +517,7 @@ for (const inst of Object.values(CURRICULUM)) {
 // every played noteId must carry the degree the tune asked for. This is what
 // lets the teaching order change without the melodies following the id suffix.
 for (const inst of Object.values(CURRICULUM)) {
+  if (inst.family === 'percussion') continue;
   const byId = {};
   for (const l of inst.lessons || []) byId[l.id] = l;
   for (const lesson of inst.lessons || []) {
@@ -535,6 +540,7 @@ for (const inst of Object.values(CURRICULUM)) {
 // against the major scale (an external reference). A mode error such as
 // D-Dorian therefore cannot hide behind self-consistent written data.
 for (const inst of Object.values(CURRICULUM)) {
+  if (inst.family === 'percussion') continue;
   const byId = {};
   for (const l of inst.lessons || []) byId[l.id] = l;
   const tonic = (inst.lessons || []).find(l => !l.type && l.degree === 1 && !(l.alter || 0));

@@ -156,21 +156,30 @@ const Graphics = (() => {
   // ── STAFF NOTATION ──────────────────────────────────────────────────────
   function staffSVG({ pos, accidental = null, clef = 'treble', accentColor = 'var(--accent-warm)', width = 130 }) {
     const noteX = (STAFF_LEFT_X + STAFF_RIGHT_X) / 2 + 8;
-    const noteY = yForPos(pos);
-    const stemUp = pos <= 4;
+    const isPercussion = (clef === 'percussion');
+    const renderPos = isPercussion ? 4 : pos; // single line sits at the middle line
+    const noteY = yForPos(renderPos);
+    const stemUp = renderPos <= 4;
     const lineColor = INK;
     const renderH = width * (220 / 130);
 
     let svg = `<svg viewBox="0 0 130 220" width="${width}" height="${renderH}" xmlns="http://www.w3.org/2000/svg">`;
 
     // Staff lines
-    for (let i = 0; i <= 8; i += 2) {
-      const y = yForPos(i);
+    if (isPercussion) {
+      const y = yForPos(4);
       svg += `<line x1="${STAFF_LEFT_X}" y1="${y}" x2="${STAFF_RIGHT_X}" y2="${y}" stroke="${lineColor}" stroke-width="1.5"/>`;
+    } else {
+      for (let i = 0; i <= 8; i += 2) {
+        const y = yForPos(i);
+        svg += `<line x1="${STAFF_LEFT_X}" y1="${y}" x2="${STAFF_RIGHT_X}" y2="${y}" stroke="${lineColor}" stroke-width="1.5"/>`;
+      }
     }
 
-    // Clef glyph (G clef for treble; simplified bass clef dots+curve otherwise)
-    if (clef === 'treble') {
+    // Clef glyph (G clef for treble; simplified bass clef dots+curve otherwise; percussion has no clef)
+    if (isPercussion) {
+      // no clef glyph
+    } else if (clef === 'treble') {
       svg += `<text x="${STAFF_LEFT_X - 8}" y="${STAFF_BOTTOM_Y + 8}" font-size="110" font-family="Georgia, 'Apple Symbols', serif" fill="${lineColor}">&#119070;</text>`;
     } else {
       svg += `<text x="${STAFF_LEFT_X - 6}" y="${yForPos(2)}" font-size="66" font-family="Georgia, 'Apple Symbols', serif" fill="${lineColor}">&#119074;</text>`;
@@ -615,11 +624,30 @@ const Graphics = (() => {
     return svg;
   }
 
+  // ── SNARE DRUM FINGERING (stick hands) ──────────────────────────────────
+  function snareFingeringSVG(fingeringState, accentColor = 'var(--accent-warm)', size = 130) {
+    const [left, right] = fingeringState || [true, false];
+    const hand = right ? 'R' : 'L';
+    const cx = 65;
+    let svg = `<svg viewBox="0 0 130 130" width="${size}" height="${size}" xmlns="http://www.w3.org/2000/svg">`;
+    // Snare drum (circle)
+    svg += `<ellipse cx="${cx}" cy="55" rx="42" ry="14" fill="#21204A" stroke="#524F70" stroke-width="2"/>`;
+    svg += `<ellipse cx="${cx}" cy="50" rx="42" ry="14" fill="#161530" stroke="${accentColor}" stroke-width="2"/>`;
+    // Stick (hand indicator)
+    svg += `<line x1="${cx - 10}" y1="20" x2="${cx}" y2="48" stroke="${accentColor}" stroke-width="3" stroke-linecap="round"/>`;
+    svg += `<circle cx="${cx}" cy="95" r="20" fill="${accentColor}" />`;
+    svg += `<text x="${cx}" y="102" font-size="18" font-weight="700" fill="#fff" text-anchor="middle">${hand}</text>`;
+    svg += `<text x="${cx}" y="126" font-size="9" fill="#8986A8" text-anchor="middle" font-weight="600">HAND</text>`;
+    svg += `</svg>`;
+    return svg;
+  }
+
   function fingeringSVG(fingeringType, fingeringState, accentColor, size = 130) {
     if (fingeringType === 'recorder') return recorderFingeringSVG(fingeringState, accentColor, size);
     if (fingeringType === 'trombone') return tromboneFingeringSVG(fingeringState, accentColor, size);
     if (fingeringType === 'flute') return fluteFingeringSVG(fingeringState, accentColor, size);
     if (fingeringType === 'glockenspiel') return glockenspielFingeringSVG(fingeringState, accentColor, size);
+    if (fingeringType === 'snare') return snareFingeringSVG(fingeringState, accentColor, size);
     if (['clarinet', 'saxophone', 'oboe', 'bassoon'].includes(fingeringType)) {
       return woodwindFingeringSVG(fingeringState, accentColor, size);
     }

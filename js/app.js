@@ -1136,6 +1136,11 @@ function isSongLesson(lesson) {
   return lesson && lesson.type === 'song';
 }
 
+function isPercussionLesson(lesson) {
+  const inst = getInstrument(APP.instrumentId);
+  return !!(inst && inst.fingeringType === 'snare' && lesson && !lesson.type);
+}
+
 function isLessonUnlocked(instrumentId, index) {
   const instrument = CURRICULUM[instrumentId];
   const lesson = instrument.lessons[index];
@@ -1360,6 +1365,19 @@ const FIRST_SOUND_CONTENT = {
       'Alternate hands (left, right, left) for an even, flowing sound.',
     ],
     tip: 'No ring? Strike a little harder and let the mallet rebound. Too harsh? Loosen your grip and use less force.',
+  },
+  'percussion': {
+    emoji: '\u{1F941}',
+    title: 'Make your first sound',
+    intro: 'A percussion instrument makes sound when you strike it. The stick starts the vibration \u2014 your job is to control the bounce.',
+    steps: [
+      'Hold the stick loosely, like a pencil, between your thumb and first two fingers.',
+      'Strike the centre of the drum with a quick, controlled wrist motion.',
+      'Let the stick rebound \u2014 do not rest it on the head.',
+      'Listen for a clear, crisp tone.',
+      'Alternate hands (right, left) for an even, flowing sound.',
+    ],
+    tip: 'No sound? Strike a little harder and let the stick rebound. Too harsh? Loosen your grip and use less force.',
   },
 };
 
@@ -4123,8 +4141,13 @@ function handleAction(action, el) {
 
     case 'goto-quiz':
       stopAudioPlayback();
-      APP.phase = 'quiz';
-      APP.quiz = null;
+      const _lesson = getLesson(APP.instrumentId, APP.lessonIndex);
+      if (isPercussionLesson(_lesson)) {
+        APP.phase = 'play';
+      } else {
+        APP.phase = 'quiz';
+        APP.quiz = null;
+      }
       render();
       break;
 
