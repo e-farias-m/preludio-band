@@ -331,7 +331,7 @@ TRANSLATIONS.pt = {
   "No valves. E, open.": "Sem válvulas. Mi, solta.",
   "No valves. F is the 3rd harmonic. Faster air.": "Sem válvulas. Fá é o 3º harmônico. Ar mais rápido.",
   "No valves. First note on the staff.": "Sem válvulas. Primeira nota na pauta.",
-  "No valves. Faster, more focused air.": "Sem válvulas. Ar mais rápido e focado.",
+  "No valves. Buzz a steady, centred pitch — this open note is your home base.": "Sem válvulas. Sopre um som firme e centrado — esta nota aberta é a sua base.",
   "No valves. Full, relaxed breath. Slow, wide air stream.": "Sem válvulas. Respiração cheia e relaxada. Fluxo de ar lento e amplo.",
   "No valves. Tighten the embouchure. Fast, supported air.": "Sem válvulas. Feche a embocadura. Ar rápido e apoiado.",
   "Open again — C above the staff completes the octave.": "Aberto novamente — Dó acima da pauta completa a oitava.",
@@ -1046,6 +1046,7 @@ TRANSLATIONS.fr = {
   "Play the rudiment a few times, long and even. Listen for a clear, centred sound.": "Jouez le rudiment plusieurs fois, long et régulier. Écoutez un son clair et centré.",
   "A two-rudiment pattern that steps from your first rudiment to your second and back.": "Un motif de deux rudiments qui va du premier rudiment au second et revient.",
   "Move smoothly between just two rudiments. Keep each stroke centred!": "Passez en douceur entre seulement deux rudiments. Gardez chaque coup centré !",
+  "No valves. Buzz a steady, centred pitch — this open note is your home base.": "Sans valves. Soufflez un son ferme et centré — cette note ouverte est votre base.",
 };
 
 const PT_EXTRA = {

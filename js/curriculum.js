@@ -111,7 +111,7 @@ const CURRICULUM = {
         freq: 349.23,
         fingeringState: [false, false, false],
         description: 'Your first note — no valves, just the open tube.',
-        prompt: 'No valves. Faster, more focused air.'
+        prompt: 'No valves. Buzz a steady, centred pitch — this open note is your home base.'
       },
       {
         id: 'tr-6',
