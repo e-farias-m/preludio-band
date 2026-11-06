@@ -3212,7 +3212,13 @@ function runPlaySequence(inst, lesson) {
     clearActive();
     const playCell = document.querySelector('.beat-cell[data-beat="play"]');
     if (playCell) playCell.classList.add('active');
-    AudioEngine.playInstrumentNote(lesson.freq, inst.fingeringType, 1.3);
+    if (isPercussionLesson(lesson)) {
+      for (let _i = 0; _i < 4; _i++) {
+        setTimeout(() => AudioEngine.playInstrumentNote(lesson.freq, inst.fingeringType, 0.25), _i * 220);
+      }
+    } else {
+      AudioEngine.playInstrumentNote(lesson.freq, inst.fingeringType, 1.3);
+    }
     status.textContent = t('Play now!');
   }, 4 * beatMs);
   APP.playSequenceTimeouts.push(t2);
@@ -4126,7 +4132,12 @@ function handleAction(action, el) {
       AudioEngine.unlock();
       const inst = getInstrument(APP.instrumentId);
       const lesson = getLesson(APP.instrumentId, APP.lessonIndex);
-      if (isSongLesson(lesson)) {
+      if (isPercussionLesson(lesson)) {
+        // Snare rudiments are practised in groups of four strokes.
+        for (let _i = 0; _i < 4; _i++) {
+          setTimeout(() => AudioEngine.playInstrumentNote(lesson.freq, inst.fingeringType, 0.25), _i * 220);
+        }
+      } else if (isSongLesson(lesson)) {
         const note = getResolvedSongNote(APP.instrumentId, lesson);
         const chordFreqs = getChordFrequencies(APP.instrumentId, lesson, APP.songNoteIndex);
         if (chordFreqs.length > 0) {
