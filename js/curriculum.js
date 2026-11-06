@@ -1958,7 +1958,7 @@ const CURRICULUM = {
         id: 'gl-song-6', type: 'song', audioUrl: null, bpm: 100, noteName: 'Ode to Joy',
         description: 'Beethoven\u2019s famous melody using G, F, E, D, and C.',
         prompt: 'Alternate hands and keep a steady, singing tone.',
-        noteIds: ['gl-5', 'gl-5', 'gl-1', 'gl-2', 'gl-2', 'gl-1', 'gl-5', 'gl-6', 'gl-7', 'gl-7', 'gl-6', 'gl-5', 'gl-5', 'gl-6', 'gl-6'],
+        noteIds: ['gl-7', 'gl-7', 'gl-1', 'gl-2', 'gl-2', 'gl-1', 'gl-7', 'gl-6', 'gl-5', 'gl-5', 'gl-6', 'gl-7', 'gl-7', 'gl-6', 'gl-6'],
         durations: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2],
         keySig: 0, timeSig: { num: 4, den: 4 },
         libraryOnly: true,
