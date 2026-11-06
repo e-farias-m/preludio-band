@@ -1980,10 +1980,16 @@ const CURRICULUM = {
     accentColor: '#E85D5D', family: 'percussion',
     lessons: [
       {
-        id: 'sd-1', degree: 1, noteName: 'Single Stroke', octave: 0, staffStep: 4, accidental: null, freq: 100,
+        id: 'sd-1l', degree: 1, noteName: 'Single Stroke — Left', octave: 0, staffStep: 4, accidental: null, freq: 100,
         fingeringState: [true, false],
-        description: 'Alternate hands: right, left, right, left. The foundation of all drumming.',
-        prompt: 'Strike with the right stick, then the left. Keep the strokes even and relaxed.'
+        description: 'Four single strokes with the left hand. The foundation of all drumming.',
+        prompt: 'Strike with the left stick four times. Keep the strokes even and relaxed.'
+      },
+      {
+        id: 'sd-1r', degree: 2, noteName: 'Single Stroke — Right', octave: 0, staffStep: 4, accidental: null, freq: 100,
+        fingeringState: [false, true],
+        description: 'Four single strokes with the right hand. The foundation of all drumming.',
+        prompt: 'Strike with the right stick four times. Keep the strokes even and relaxed.'
       },
       {
         id: 'sd-song-1', type: 'song', audioUrl: null, bpm: 100, noteName: 'My First Note',
@@ -1991,7 +1997,7 @@ const CURRICULUM = {
         prompt: 'Play the rudiment a few times, long and even. Listen for a clear, centred sound.',
       },
       {
-        id: 'sd-2', degree: 2, noteName: 'Double Stroke', octave: 0, staffStep: 4, accidental: null, freq: 100,
+        id: 'sd-2', degree: 3, noteName: 'Double Stroke', octave: 0, staffStep: 4, accidental: null, freq: 100,
         fingeringState: [true, true],
         description: 'Two strokes per hand: right-right, left-left. Builds speed and control.',
         prompt: 'Two strokes with the right, two with the left. Let the second stroke rebound.'
@@ -2002,32 +2008,32 @@ const CURRICULUM = {
         prompt: 'Move smoothly between just two rudiments. Keep each stroke centred!',
       },
       {
-        id: 'sd-3', degree: 3, noteName: 'Paradiddle', octave: 0, staffStep: 4, accidental: null, freq: 100,
+        id: 'sd-3', degree: 4, noteName: 'Paradiddle', octave: 0, staffStep: 4, accidental: null, freq: 100,
         fingeringState: [true, false],
         description: 'Right-left-right-right, left-right-left-left. The classic hand-to-hand pattern.',
         prompt: 'RLRR LRLL. Accent the first stroke of each group. Keep it even.'
       },
       {
-        id: 'sd-4', degree: 4, noteName: 'Flam', octave: 0, staffStep: 4, accidental: null, freq: 100,
+        id: 'sd-4', degree: 5, noteName: 'Flam', octave: 0, staffStep: 4, accidental: null, freq: 100,
         fingeringState: [true, false],
         description: 'A grace note just before the main note. Right hand leads, left follows.',
         prompt: 'Play a soft grace note with the left, then the main note with the right. Tight and clean.'
       },
       {
-        id: 'sd-5', degree: 5, noteName: 'Drag', octave: 0, staffStep: 4, accidental: null, freq: 100,
+        id: 'sd-5', degree: 6, noteName: 'Drag', octave: 0, staffStep: 4, accidental: null, freq: 100,
         fingeringState: [true, true],
         description: 'Two grace notes before the main note. A wider, fuller flam.',
         prompt: 'Play two soft grace notes, then the main note. Keep the grace notes tight.'
       },
       {
-        id: 'sd-6', degree: 6, noteName: 'Single Stroke 4', octave: 0, staffStep: 4, accidental: null, freq: 100,
+        id: 'sd-6', degree: 7, noteName: 'Single Stroke 4', octave: 0, staffStep: 4, accidental: null, freq: 100,
         fingeringState: [true, false],
         description: 'Four single strokes: R L R L. The building block of rolls.',
         prompt: 'Even strokes, even spacing. Speed up gradually without losing control.'
       },
       {
         id: 'sd-review-1', type: 'review',
-        reviewLessonIds: ['sd-song-1', 'sd-song-2', 'sd-1', 'sd-2', 'sd-3', 'sd-4', 'sd-5', 'sd-6'],
+        reviewLessonIds: ['sd-song-1', 'sd-song-2', 'sd-1l', 'sd-1r', 'sd-2', 'sd-3', 'sd-4', 'sd-5', 'sd-6'],
         noteName: 'Review 1',
         description: 'Mix up all six rudiments.',
         prompt: '',
