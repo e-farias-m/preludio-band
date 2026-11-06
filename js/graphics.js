@@ -226,7 +226,7 @@ const Graphics = (() => {
   // The note at `highlightIndex` is drawn in the accent colour with a soft halo
   // so the tune reads like sheet music with the student's current note called
   // out; the rest stay in ink.
-  function melodySVG({ notes = [], highlightIndex = -1, clef = 'treble', accentColor = 'var(--accent-warm)', width = 320, perSystem = 6, beatsPerBar = 4, timeSig = null, pickup = 0, gaps = [] }) {
+  function melodySVG({ notes = [], highlightIndex = -1, clef = 'treble', accentColor = 'var(--accent-warm)', width = 320, perSystem = 6, beatsPerBar = 4, timeSig = null, pickup = 0, gaps = [], percussion = false }) {
     if (!notes.length) return '';
     const VB_W = 360;
     // Each system leaves room for the clef, which overhangs the staff.
@@ -282,12 +282,16 @@ const Graphics = (() => {
       const topLineY = TOP_LINE_Y + s * SYSTEM_H;
       const y = pos => topLineY + (8 - pos) * HALF;
 
-      for (let p = 0; p <= 8; p += 2) {
-        svg += `<line x1="${lineStartX}" y1="${y(p)}" x2="${rightX}" y2="${y(p)}" stroke="${INK}" stroke-width="1.3"/>`;
+      if (percussion) {
+        svg += `<line x1="${lineStartX}" y1="${y(4)}" x2="${rightX}" y2="${y(4)}" stroke="${INK}" stroke-width="1.3"/>`;
+      } else {
+        for (let p = 0; p <= 8; p += 2) {
+          svg += `<line x1="${lineStartX}" y1="${y(p)}" x2="${rightX}" y2="${y(p)}" stroke="${INK}" stroke-width="1.3"/>`;
+        }
+        const clefName = CLEF_GLYPH[clef] ? clef : 'treble';
+        const cmet = CLEF_GLYPH[clefName];
+        svg += clefAt(clefName, CLEF_MELODY_LEFT[clefName], STAFF_SPACE * CLEF_MELODY_SCALE, y(cmet.refPos), INK);
       }
-      const clefName = CLEF_GLYPH[clef] ? clef : 'treble';
-      const cmet = CLEF_GLYPH[clefName];
-      svg += clefAt(clefName, CLEF_MELODY_LEFT[clefName], STAFF_SPACE * CLEF_MELODY_SCALE, y(cmet.refPos), INK);
       // Time signature: "4" over "4" centred on the middle of the staff.
       if (s === 0) {
         const sigX = lineStartX + 76;
