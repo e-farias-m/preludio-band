@@ -3366,7 +3366,6 @@ function startTuner() {
   }
   const Ctx = window.AudioContext || window.webkitAudioContext;
   if (!Ctx) { showToast(t('Audio analysis not supported here.')); return; }
-  stopListen();
   stopTuner();
   APP.tuner = { running: true, freq: -1, ctx: null, stream: null, frame: null };
   const t = APP.tuner;
