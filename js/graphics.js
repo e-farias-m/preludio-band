@@ -295,8 +295,13 @@ const Graphics = (() => {
       // Time signature: "4" over "4" centred on the middle of the staff.
       if (s === 0) {
         const sigX = lineStartX + 76;
-        svg += `<text x="${sigX}" y="${y(4) - 1}" font-size="26" font-weight="700" text-anchor="middle" font-family="Georgia, serif" fill="${INK}">${sigNum}</text>`;
-        svg += `<text x="${sigX}" y="${y(2) + 15}" font-size="26" font-weight="700" text-anchor="middle" font-family="Georgia, serif" fill="${INK}">${sigDen}</text>`;
+        if (percussion) {
+          svg += `<text x="${sigX}" y="${y(4) - 12}" font-size="26" font-weight="700" text-anchor="middle" font-family="Georgia, serif" fill="${INK}">${sigNum}</text>`;
+          svg += `<text x="${sigX}" y="${y(4) + 16}" font-size="26" font-weight="700" text-anchor="middle" font-family="Georgia, serif" fill="${INK}">${sigDen}</text>`;
+        } else {
+          svg += `<text x="${sigX}" y="${y(4) - 1}" font-size="26" font-weight="700" text-anchor="middle" font-family="Georgia, serif" fill="${INK}">${sigNum}</text>`;
+          svg += `<text x="${sigX}" y="${y(2) + 15}" font-size="26" font-weight="700" text-anchor="middle" font-family="Georgia, serif" fill="${INK}">${sigDen}</text>`;
+        }
       }
 
       let globalIndex = systems.slice(0, s).reduce((a, sys) => a + sys.length, 0);
@@ -320,7 +325,11 @@ const Graphics = (() => {
         // Bar line just before this note when the previous note ended a bar.
         if (k > 0 && barOf[g] !== barOf[g - 1]) {
           const bx = x - ((rightX - leftX) / systemNotes.length) / 2;
-          svg += `<line x1="${bx}" y1="${y(8)}" x2="${bx}" y2="${y(0)}" stroke="${INK}" stroke-width="1.3"/>`;
+          if (percussion) {
+            svg += `<line x1="${bx}" y1="${y(4) - 12}" x2="${bx}" y2="${y(4) + 12}" stroke="${INK}" stroke-width="1.3"/>`;
+          } else {
+            svg += `<line x1="${bx}" y1="${y(8)}" x2="${bx}" y2="${y(0)}" stroke="${INK}" stroke-width="1.3"/>`;
+          }
         }
 
         if (lit) svg += `<circle cx="${x}" cy="${noteY}" r="13" fill="${accentColor}" opacity="0.18"/>`;
@@ -352,7 +361,11 @@ const Graphics = (() => {
       });
 
       // Bar line at the end of every system.
-      svg += `<line x1="${rightX}" y1="${y(8)}" x2="${rightX}" y2="${y(0)}" stroke="${INK}" stroke-width="1.3"/>`;
+      if (percussion) {
+        svg += `<line x1="${rightX}" y1="${y(4) - 12}" x2="${rightX}" y2="${y(4) + 12}" stroke="${INK}" stroke-width="1.3"/>`;
+      } else {
+        svg += `<line x1="${rightX}" y1="${y(8)}" x2="${rightX}" y2="${y(0)}" stroke="${INK}" stroke-width="1.3"/>`;
+      }
     });
 
     svg += `</svg>`;
