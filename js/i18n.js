@@ -1432,6 +1432,10 @@ Object.assign(TRANSLATIONS.pt, Object.fromEntries(Object.entries(PT_EXTRA).filte
 const PT_INSTRUMENTS = { 'Flute': 'Flauta', 'Clarinet': 'Clarinete', 'Alto Sax': 'Sax alto', 'Oboe': 'Oboé', 'Bassoon': 'Fagote',
   'Trumpet': 'Trompete', 'Trombone': 'Trombone', 'Fr. Horn': 'Trompa', 'Euph.': 'Eufônio', 'Tuba': 'Tuba',
   'Glockenspiel': 'Glockenspiel', 'Snare': 'Caixa' };
+const PT_WELCOME = { "Welcome!": "Bem-vindo!" };
+Object.assign(TRANSLATIONS.pt, PT_WELCOME);
+const FR_WELCOME = { "Welcome!": "Bienvenue !" };
+Object.assign(TRANSLATIONS.fr, FR_WELCOME);
 const ptInst = s => PT_INSTRUMENTS[s] || t(s);
 const ptNote = s => {
   const m = s.trim().match(/^([A-G])([#b♯♭]?)(\d*)$/);
