@@ -1868,7 +1868,7 @@ const CURRICULUM = {
 
   // ── GLOCKENSPIEL (C) ────────────────────────────────────────────────────
   'glockenspiel': {
-    id: 'glockenspiel', name: 'Glockenspiel', shortName: 'Glock',
+    id: 'glockenspiel', name: 'Glockenspiel', shortName: 'Glockenspiel',
     clef: 'treble', fingeringType: 'glockenspiel', isTransposing: false, available: true,
     accentColor: '#F2C24E', family: 'keyboard',
     lessons: [
@@ -2035,7 +2035,7 @@ const CURRICULUM = {
         id: 'sd-review-1', type: 'review',
         reviewLessonIds: ['sd-song-1', 'sd-song-2', 'sd-1l', 'sd-1r', 'sd-2', 'sd-3', 'sd-4', 'sd-5', 'sd-6'],
         noteName: 'Review 1',
-        description: 'Mix up all six rudiments.',
+        description: 'Mix up all seven rudiments.',
         prompt: '',
       },
     ]

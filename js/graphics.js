@@ -608,22 +608,39 @@ const Graphics = (() => {
     return svg;
   }
 
-  // ── GLOCKENSPIEL FINGERING (mallet hand indicator) ───────────────────────
+  // ── GLOCKENSPIEL FINGERING (two-tiered bars + mallet + hand) ─────────────
   function glockenspielFingeringSVG(fingeringState, accentColor = 'var(--accent-warm)', size = 130) {
     const [left, right] = fingeringState || [true, false];
     const hand = right ? 'R' : 'L';
     const cx = 65;
     let svg = `<svg viewBox="0 0 130 130" width="${size}" height="${size}" xmlns="http://www.w3.org/2000/svg">`;
-    // A row of bars (keyboard)
-    const barW = 12, gap = 4, startX = 14;
+    // Frame (resonator box)
+    svg += `<rect x="6" y="88" width="118" height="14" rx="4" fill="#161530" stroke="#524F70" stroke-width="1.2"/>`;
+    // Top tier: natural bars (C D E F G A B C) — 8 bars
+    const topW = 11, topGap = 3.5, topStart = 10, topY = 38, topH = 52;
     for (let i = 0; i < 8; i++) {
-      const x = startX + i * (barW + gap);
-      svg += `<rect x="${x}" y="40" width="${barW}" height="40" rx="3" fill="#21204A" stroke="#524F70" stroke-width="1.2"/>`;
+      const x = topStart + i * (topW + topGap);
+      // bar body
+      svg += `<rect x="${x}" y="${topY}" width="${topW}" height="${topH}" rx="2" fill="#2A2860" stroke="#8986A8" stroke-width="1"/>`;
+      // shine
+      svg += `<rect x="${x + 1.5}" y="${topY + 2}" width="2" height="${topH - 4}" rx="1" fill="#F2C24E" opacity="0.35"/>`;
     }
+    // Bottom tier: accidental bars (C# D# F# G# A#) — raised, staggered
+    const botW = 7, botY = 24, botH = 40;
+    const accIndices = [0, 1, 3, 4, 5]; // between top bars 0-1,1-2,3-4,4-5,5-6
+    for (const i of accIndices) {
+      const x = topStart + i * (topW + topGap) + (topW + topGap) / 2 - botW / 2 + topW / 2;
+      svg += `<rect x="${x}" y="${botY}" width="${botW}" height="${botH}" rx="2" fill="#0E0D1C" stroke="#524F70" stroke-width="1"/>`;
+      svg += `<rect x="${x + 1}" y="${botY + 2}" width="1.5" height="${botH - 4}" rx="0.5" fill="#F2C24E" opacity="0.25"/>`;
+    }
+    // Mallet
+    const malletX = hand === 'R' ? cx + 18 : cx - 18;
+    svg += `<line x1="${cx}" y1="108" x2="${malletX}" y2="46" stroke="${accentColor}" stroke-width="2.5" stroke-linecap="round"/>`;
+    svg += `<circle cx="${malletX}" cy="44" r="5" fill="${accentColor}" stroke="#fff" stroke-width="1.5"/>`;
     // Hand indicator circle
-    svg += `<circle cx="${cx}" cy="100" r="22" fill="${accentColor}" />`;
-    svg += `<text x="${cx}" y="107" font-size="20" font-weight="700" fill="#fff" text-anchor="middle">${hand}</text>`;
-    svg += `<text x="${cx}" y="128" font-size="9" fill="#8986A8" text-anchor="middle" font-weight="600">HAND</text>`;
+    svg += `<circle cx="${cx}" cy="112" r="14" fill="${accentColor}" />`;
+    svg += `<text x="${cx}" y="117" font-size="14" font-weight="700" fill="#fff" text-anchor="middle">${hand}</text>`;
+    svg += `<text x="${cx}" y="98" font-size="8" fill="#8986A8" text-anchor="middle" font-weight="600">HAND</text>`;
     svg += `</svg>`;
     return svg;
   }
