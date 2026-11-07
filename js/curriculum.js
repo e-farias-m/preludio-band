@@ -1998,6 +1998,15 @@ const CURRICULUM = {
         prompt: 'Even strokes, even spacing. Speed up gradually without losing control.'
       },
       {
+        id: 'sd-song-3', type: 'song', audioUrl: null, bpm: 100, noteName: 'Alternating Roll',
+        description: 'Eight single strokes alternating right and left. The single-stroke roll.',
+        prompt: 'R L R L R L R L. Keep the strokes even and relaxed; let the sticks rebound.',
+        noteIds: ['sd-1r', 'sd-1l', 'sd-1r', 'sd-1l', 'sd-1r', 'sd-1l', 'sd-1r', 'sd-1l'],
+        durations: [1, 1, 1, 1, 1, 1, 1, 1],
+        keySig: 0, timeSig: { num: 4, den: 4 },
+        prerequisiteIds: ['sd-1r', 'sd-1l'],
+      },
+      {
         id: 'sd-song-1', type: 'song', audioUrl: null, bpm: 100, noteName: 'My First Note',
         description: 'A short warm-up on your very first rudiment. Relax and keep the strokes even!',
         prompt: 'Play the rudiment a few times, long and even. Listen for a clear, centred sound.',
@@ -2007,6 +2016,15 @@ const CURRICULUM = {
         fingeringState: [true, true],
         description: 'Two strokes per hand: right-right, left-left. Builds speed and control.',
         prompt: 'Two strokes with the right, two with the left. Let the second stroke rebound.'
+      },
+      {
+        id: 'sd-song-4', type: 'song', audioUrl: null, bpm: 100, noteName: 'Double Stroke Roll',
+        description: 'Four double strokes: right-right, left-left. Builds speed and control.',
+        prompt: 'RR LL RR LL. Let the second stroke of each pair rebound naturally.',
+        noteIds: ['sd-2', 'sd-2', 'sd-2', 'sd-2'],
+        durations: [1, 1, 1, 1],
+        keySig: 0, timeSig: { num: 4, den: 4 },
+        prerequisiteIds: ['sd-2'],
       },
       {
         id: 'sd-song-2', type: 'song', audioUrl: null, bpm: 100, noteName: 'Step Up and Down',
@@ -2020,10 +2038,28 @@ const CURRICULUM = {
         prompt: 'RLRR LRLL. Accent the first stroke of each group. Keep it even.'
       },
       {
+        id: 'sd-song-5', type: 'song', audioUrl: null, bpm: 100, noteName: 'Paradiddle Drill',
+        description: 'Four paradiddles in a row. The classic hand-to-hand pattern.',
+        prompt: 'RLRR LRLL, repeated. Accent the first stroke of each group; keep it even.',
+        noteIds: ['sd-3', 'sd-3', 'sd-3', 'sd-3'],
+        durations: [1, 1, 1, 1],
+        keySig: 0, timeSig: { num: 4, den: 4 },
+        prerequisiteIds: ['sd-3'],
+      },
+      {
         id: 'sd-4', degree: 6, noteName: 'Flam', octave: 0, staffStep: 4, accidental: null, freq: 100,
         fingeringState: [true, false],
         description: 'A grace note just before the main note. Right hand leads, left follows.',
         prompt: 'Play a soft grace note with the left, then the main note with the right. Tight and clean.'
+      },
+      {
+        id: 'sd-song-6', type: 'song', audioUrl: null, bpm: 100, noteName: 'Flam Exercise',
+        description: 'Four flams in a row. A grace note just before the main note.',
+        prompt: 'Soft grace note, then the main note. Tight and clean; right hand leads.',
+        noteIds: ['sd-4', 'sd-4', 'sd-4', 'sd-4'],
+        durations: [1, 1, 1, 1],
+        keySig: 0, timeSig: { num: 4, den: 4 },
+        prerequisiteIds: ['sd-4'],
       },
       {
         id: 'sd-5', degree: 7, noteName: 'Drag', octave: 0, staffStep: 4, accidental: null, freq: 100,
@@ -2032,8 +2068,17 @@ const CURRICULUM = {
         prompt: 'Play two soft grace notes, then the main note. Keep the grace notes tight.'
       },
       {
+        id: 'sd-song-7', type: 'song', audioUrl: null, bpm: 100, noteName: 'Drag Exercise',
+        description: 'Four drags in a row. Two grace notes before the main note.',
+        prompt: 'Two soft grace notes, then the main note. Keep the grace notes tight.',
+        noteIds: ['sd-5', 'sd-5', 'sd-5', 'sd-5'],
+        durations: [1, 1, 1, 1],
+        keySig: 0, timeSig: { num: 4, den: 4 },
+        prerequisiteIds: ['sd-5'],
+      },
+      {
         id: 'sd-review-1', type: 'review',
-        reviewLessonIds: ['sd-song-1', 'sd-song-2', 'sd-1l', 'sd-1r', 'sd-6', 'sd-2', 'sd-3', 'sd-4', 'sd-5'],
+        reviewLessonIds: ['sd-song-1', 'sd-song-2', 'sd-song-3', 'sd-song-4', 'sd-song-5', 'sd-song-6', 'sd-song-7', 'sd-1l', 'sd-1r', 'sd-6', 'sd-2', 'sd-3', 'sd-4', 'sd-5'],
         noteName: 'Review 1',
         description: 'Mix up all seven rudiments.',
         prompt: '',
