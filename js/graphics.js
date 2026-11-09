@@ -439,7 +439,7 @@ const Graphics = (() => {
   // ── WOODWIND KEY DIAGRAM (flute, clarinet, sax, oboe, bassoon) ──────────
   // Simplified key pads on a tube — same visual language as recorder but with
   // a distinct label and smaller "key" circles to suggest pads not holes.
-  function woodwindFingeringSVG(fingeringState, accentColor = 'var(--accent-flute)', size = 130) {
+  function woodwindFingeringSVG(fingeringState, accentColor = 'var(--accent-flute)', size = 130, instrument = 'clarinet') {
     const [thumb, h1, h2, h3, h4, h5, h6, h7, extra, extra2, sideKey, lhp2, rthumb, rp2, halfHole] = fingeringState;
     const cx = 65;
     const tubeTop = 18, tubeBottom = 215, tubeW = 30;
@@ -448,11 +448,34 @@ const Graphics = (() => {
 
     let svg = `<svg viewBox="0 0 130 230" width="${size}" height="${size * 230 / 130}" xmlns="http://www.w3.org/2000/svg">`;
 
-    // Mouthpiece notch
-    svg += `<path d="M ${cx - 14} ${tubeTop} Q ${cx} ${tubeTop - 10} ${cx + 14} ${tubeTop} L ${cx + 15} ${tubeTop + 14} L ${cx - 15} ${tubeTop + 14} Z" fill="${HOUSING}" stroke="${INK_DIM}" stroke-width="1.5"/>`;
+    // Instrument-specific top/bottom silhouettes
+    if (instrument === 'bassoon') {
+      // crook: curved tube at the top
+      svg += `<path d="M ${cx - 20} ${tubeTop + 4} Q ${cx - 6} ${tubeTop - 12} ${cx + 14} ${tubeTop - 2} Q ${cx + 22} ${tubeTop + 6} ${cx + 12} ${tubeTop + 16}" stroke="${INK_DIM}" stroke-width="3" fill="none" stroke-linecap="round"/>`;
+    } else if (instrument === 'saxophone') {
+      // sax neck hook
+      svg += `<path d="M ${cx + 14} ${tubeTop + 2} Q ${cx + 24} ${tubeTop + 2} ${cx + 24} ${tubeTop + 14}" stroke="${INK_DIM}" stroke-width="3" fill="none" stroke-linecap="round"/>`;
+    } else if (instrument === 'oboe') {
+      // double reed (pointed)
+      svg += `<path d="M ${cx - 6} ${tubeTop + 12} L ${cx} ${tubeTop - 2} L ${cx + 6} ${tubeTop + 12} Z" fill="${INK}" stroke="${INK_DIM}" stroke-width="1"/>`;
+    } else {
+      // Mouthpiece notch (clarinet beak)
+      svg += `<path d="M ${cx - 14} ${tubeTop} Q ${cx} ${tubeTop - 10} ${cx + 14} ${tubeTop} L ${cx + 15} ${tubeTop + 14} L ${cx - 15} ${tubeTop + 14} Z" fill="${HOUSING}" stroke="${INK_DIM}" stroke-width="1.5"/>`;
+    }
 
     // Tube body
     svg += `<rect x="${cx - tubeW/2}" y="${tubeTop + 12}" width="${tubeW}" height="${tubeBottom - tubeTop - 12}" rx="10" fill="${HOUSING}" stroke="${HOUSING_EDGE}" stroke-width="1.5"/>`;
+
+    // Bottom silhouettes: bell / curved sax body / oboe bell / bassoon boot
+    if (instrument === 'clarinet') {
+      svg += `<polygon points="${cx - 15},${tubeBottom - 4} ${cx + 15},${tubeBottom - 4} ${cx + 22},${tubeBottom + 10} ${cx - 22},${tubeBottom + 10}" fill="${HOUSING}" stroke="${HOUSING_EDGE}" stroke-width="1.5"/>`;
+    } else if (instrument === 'saxophone') {
+      svg += `<path d="M ${cx - 15} ${tubeBottom - 2} Q ${cx - 16} ${tubeBottom + 12} ${cx + 4} ${tubeBottom + 12} Q ${cx + 22} ${tubeBottom + 12} ${cx + 22} ${tubeBottom - 6} L ${cx + 15} ${tubeBottom - 6} Q ${cx + 22} ${tubeBottom + 6} ${cx + 12} ${tubeBottom + 6} L ${cx - 2} ${tubeBottom + 6} Q ${cx - 8} ${tubeBottom + 2} ${cx - 8} ${tubeBottom - 8} Z" fill="${HOUSING}" stroke="${HOUSING_EDGE}" stroke-width="1.2"/>`;
+    } else if (instrument === 'oboe') {
+      svg += `<polygon points="${cx - 15},${tubeBottom - 4} ${cx + 15},${tubeBottom - 4} ${cx + 20},${tubeBottom + 10} ${cx - 20},${tubeBottom + 10}" fill="${HOUSING}" stroke="${HOUSING_EDGE}" stroke-width="1.5"/>`;
+    } else if (instrument === 'bassoon') {
+      svg += `<path d="M ${cx - 15} ${tubeBottom - 4} Q ${cx} ${tubeBottom + 10} ${cx + 15} ${tubeBottom - 4}" stroke="${INK_DIM}" stroke-width="3" fill="none" stroke-linecap="round"/>`;
+    }
 
     // Joint lines (decorative, suggests upper/middle/lower joint)
     svg += `<line x1="${cx - tubeW/2}" y1="70" x2="${cx + tubeW/2}" y2="70" stroke="${INK_DIM}" stroke-width="1.5"/>`;
@@ -463,7 +486,8 @@ const Graphics = (() => {
     if (extra !== undefined) {
       const exX = cx + tubeW/2 + 22, exY = 46;
       svg += `<line x1="${cx + tubeW/2 + 2}" y1="${exY}" x2="${exX - 13}" y2="${exY}" stroke="${INK_DIM}" stroke-width="1" stroke-dasharray="2,2"/>`;
-      svg += labeledKey(exX, exY, 13, extra, accentColor, 'R');
+      const regLabel = (instrument === 'saxophone' || instrument === 'oboe') ? '8va' : 'R';
+      svg += labeledKey(exX, exY, 13, extra, accentColor, regLabel);
     }
 
     // Thumb / whisper key (offset left of tube)
@@ -512,6 +536,14 @@ const Graphics = (() => {
       const rpX = cx + tubeW/2 + 22, rpY = keyYs[4];
       svg += `<line x1="${cx + tubeW/2 + 2}" y1="${rpY}" x2="${rpX - 11}" y2="${rpY}" stroke="${INK_DIM}" stroke-width="1" stroke-dasharray="2,2"/>`;
       svg += labeledKey(rpX, rpY, 11, rp2, accentColor, 'Eb');
+    }
+
+    // Hand divider between left-hand (1-3) and right-hand (4-7) keys
+    {
+      const divY = (keyYs[2] + keyYs[3]) / 2;
+      svg += `<line x1="${cx - tubeW/2 - 26}" y1="${divY}" x2="${cx + tubeW/2 + 26}" y2="${divY}" stroke="${INK_DIM}" stroke-width="1" stroke-dasharray="4,3"/>`;
+      svg += `<text x="${cx - tubeW/2 - 28}" y="${divY + 3}" font-size="7" font-weight="700" fill="${INK_DIM}" text-anchor="middle">L</text>`;
+      svg += `<text x="${cx + tubeW/2 + 28}" y="${divY + 3}" font-size="7" font-weight="700" fill="${INK_DIM}" text-anchor="middle">R</text>`;
     }
 
     // Finger keys 1-7 down the tube — circles for key pads. `halfHole` draws the
@@ -749,7 +781,7 @@ const Graphics = (() => {
     if (fingeringType === 'glockenspiel') return glockenspielFingeringSVG(fingeringState, accentColor, size, highlightIdx);
     if (fingeringType === 'snare') return snareFingeringSVG(fingeringState, accentColor, size);
     if (['clarinet', 'saxophone', 'oboe', 'bassoon'].includes(fingeringType)) {
-      return woodwindFingeringSVG(fingeringState, accentColor, size);
+      return woodwindFingeringSVG(fingeringState, accentColor, size * 1.15, fingeringType);
     }
     return valveFingeringSVG(fingeringState, accentColor, size);
   }
