@@ -697,11 +697,14 @@ const Graphics = (() => {
 
     let svg = `<svg viewBox="0 0 140 110" width="${size}" height="${size * 110 / 140}" xmlns="http://www.w3.org/2000/svg">`;
 
-    // Bell section (left) + mouthpiece
-    svg += `<rect x="${tubeLeft - 10}" y="${tubeTop - 2}" width="10" height="6" rx="3" fill="${HOUSING_EDGE}"/>`;
+    // Bell section (left) — the bell, not the mouthpiece
     svg += `<line x1="${tubeLeft}" y1="${tubeTop}" x2="${slideBaseX + 6}" y2="${tubeTop}" stroke="${INK_DIM}" stroke-width="2.5"/>`;
     svg += `<line x1="${tubeLeft}" y1="${tubeBot}" x2="${slideBaseX + 6}" y2="${tubeBot}" stroke="${INK_DIM}" stroke-width="2.5"/>`;
     svg += `<path d="M${tubeLeft} ${tubeTop} Q${tubeLeft - 12} ${tubeTop - 10} ${tubeLeft - 12} ${tubeTop - 16} L ${tubeLeft - 12} ${tubeTop + 16} Q ${tubeLeft - 12} ${tubeTop + 20} ${tubeLeft} ${tubeBot} Z" fill="${HOUSING}" stroke="${INK_DIM}" stroke-width="1.5"/>`;
+    svg += `<text x="${tubeLeft - 6}" y="${tubeTop - 22}" font-size="7" font-weight="600" fill="${INK_DIM}" text-anchor="middle">Bell</text>`;
+    // Mouthpiece: small cup at the back of the leadpipe, next to the slide
+    svg += `<rect x="${slideBaseX - 2}" y="${tubeTop - 4}" width="10" height="8" rx="3" fill="${HOUSING_EDGE}"/>`;
+    svg += `<text x="${slideBaseX + 3}" y="${tubeTop - 10}" font-size="7" font-weight="600" fill="${INK_DIM}" text-anchor="middle">Mouthpiece</text>`;
 
     // Stationary inner slide tubes (fixed)
     svg += `<line x1="${slideBaseX}" y1="${tubeTop}" x2="${slideMaxX + 6}" y2="${tubeTop}" stroke="${INK_DIM}" stroke-width="2" stroke-dasharray="3,2"/>`;
@@ -713,17 +716,21 @@ const Graphics = (() => {
     svg += `<path d="M${slideEnd} ${tubeTop} Q${slideEnd + 12} ${(tubeTop + tubeBot) / 2} ${slideEnd} ${tubeBot}" stroke="${accentColor}" stroke-width="4" fill="none" stroke-linecap="round"/>`;
     svg += `<line x1="${slideBaseX + 8}" y1="${tubeTop}" x2="${slideBaseX + 8}" y2="${tubeBot}" stroke="${accentColor}" stroke-width="2"/>`;
 
-    // Position ruler + numbers + note cues
-    for (let i = 1; i <= posCount; i++) {
-      const x = posStart + (i - 1) * posSpacing;
-      const isActive = i === pos;
-      svg += `<line x1="${x}" y1="68" x2="${x}" y2="74" stroke="${isActive ? accentColor : INK_DIM}" stroke-width="${isActive ? 2 : 1}"/>`;
-      svg += `<circle cx="${x}" cy="80" r="${isActive ? 8 : 6.5}" fill="${isActive ? accentColor : OPEN}" stroke="${isActive ? '#fff' : INK_DIM}" stroke-width="1"/>`;
-      svg += `<text x="${x}" y="84" font-size="8" font-weight="${isActive ? '800' : '600'}" fill="${isActive ? '#fff' : INK_DIM}" text-anchor="middle">${i}</text>`;
-      svg += `<text x="${x}" y="95" font-size="7" fill="${isActive ? accentColor : INK_DIM}" text-anchor="middle" font-weight="600">${noteNames[i]}</text>`;
-      if (i === pos && cues[i]) {
-        svg += `<text x="${x}" y="104" font-size="7" font-weight="700" fill="${accentColor}" text-anchor="middle">${cues[i]}</text>`;
-      }
+    // Bounds (fully in / fully out) as faint reference ticks only
+    svg += `<line x1="${posStart}" y1="70" x2="${posStart}" y2="76" stroke="${INK_DIM}" stroke-width="1"/>`;
+    svg += `<text x="${posStart}" y="82" font-size="6.5" fill="${INK_DIM}" text-anchor="middle">1st in</text>`;
+    svg += `<line x1="${slideMaxX}" y1="70" x2="${slideMaxX}" y2="76" stroke="${INK_DIM}" stroke-width="1"/>`;
+    svg += `<text x="${slideMaxX}" y="82" font-size="6.5" fill="${INK_DIM}" text-anchor="middle">7th out</text>`;
+
+    // Single position marker (no full ruler) — only the student's
+    // position, with its note and distance cue.
+    const px = slideEnd;
+    svg += `<line x1="${px}" y1="68" x2="${px}" y2="74" stroke="${accentColor}" stroke-width="2"/>`;
+    svg += `<circle cx="${px}" cy="80" r="9" fill="${accentColor}" stroke="#fff" stroke-width="1"/>`;
+    svg += `<text x="${px}" y="84" font-size="9" font-weight="800" fill="#fff" text-anchor="middle">${pos}</text>`;
+    svg += `<text x="${px}" y="96" font-size="8" fill="${accentColor}" text-anchor="middle" font-weight="700">${noteNames[pos]}</text>`;
+    if (cues[pos]) {
+      svg += `<text x="${px}" y="105" font-size="7" font-weight="700" fill="${accentColor}" text-anchor="middle">${cues[pos]}</text>`;
     }
 
     svg += `</svg>`;
