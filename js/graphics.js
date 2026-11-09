@@ -446,40 +446,56 @@ const Graphics = (() => {
     const allKeys = [h1, h2, h3, h4, h5, h6, h7];
     const keyYs = [62, 84, 106, 132, 154, 176, 198]; // h1..h7
 
+    const BODY = { clarinet: '#23232B', saxophone: '#C9A227', oboe: '#3B2F2F', bassoon: '#8B6D3B' }[instrument] || HOUSING;
+    const BODY_EDGE = { clarinet: '#555', saxophone: '#7A5A10', oboe: '#1F1A1A', bassoon: '#4A3517' }[instrument] || HOUSING_EDGE;
     let svg = `<svg viewBox="0 0 130 230" width="${size}" height="${size * 230 / 130}" xmlns="http://www.w3.org/2000/svg">`;
 
     // Instrument-specific top/bottom silhouettes
     if (instrument === 'bassoon') {
       // crook: curved tube at the top
-      svg += `<path d="M ${cx - 20} ${tubeTop + 4} Q ${cx - 6} ${tubeTop - 12} ${cx + 14} ${tubeTop - 2} Q ${cx + 22} ${tubeTop + 6} ${cx + 12} ${tubeTop + 16}" stroke="${INK_DIM}" stroke-width="3" fill="none" stroke-linecap="round"/>`;
+      svg += `<path d="M ${cx - 20} ${tubeTop + 4} Q ${cx - 6} ${tubeTop - 12} ${cx + 14} ${tubeTop - 2} Q ${cx + 22} ${tubeTop + 6} ${cx + 12} ${tubeTop + 16}" stroke="#C9C9C9" stroke-width="3" fill="none" stroke-linecap="round"/>`;
     } else if (instrument === 'saxophone') {
       // sax neck hook
-      svg += `<path d="M ${cx + 14} ${tubeTop + 2} Q ${cx + 24} ${tubeTop + 2} ${cx + 24} ${tubeTop + 14}" stroke="${INK_DIM}" stroke-width="3" fill="none" stroke-linecap="round"/>`;
+      svg += `<path d="M ${cx + 14} ${tubeTop + 2} Q ${cx + 24} ${tubeTop + 2} ${cx + 24} ${tubeTop + 14}" stroke="#7A5A10" stroke-width="3" fill="none" stroke-linecap="round"/>`;
     } else if (instrument === 'oboe') {
       // double reed (pointed)
-      svg += `<path d="M ${cx - 6} ${tubeTop + 12} L ${cx} ${tubeTop - 2} L ${cx + 6} ${tubeTop + 12} Z" fill="${INK}" stroke="${INK_DIM}" stroke-width="1"/>`;
+      svg += `<path d="M ${cx - 6} ${tubeTop + 12} L ${cx} ${tubeTop - 2} L ${cx + 6} ${tubeTop + 12} Z" fill="#1F1A1A" stroke="#555" stroke-width="1"/>`;
     } else {
-      // Mouthpiece notch (clarinet beak)
-      svg += `<path d="M ${cx - 14} ${tubeTop} Q ${cx} ${tubeTop - 10} ${cx + 14} ${tubeTop} L ${cx + 15} ${tubeTop + 14} L ${cx - 15} ${tubeTop + 14} Z" fill="${HOUSING}" stroke="${INK_DIM}" stroke-width="1.5"/>`;
+      // Clarinet beak (angled mouthpiece)
+      svg += `<polygon points="${cx - 14},${tubeTop + 14} ${cx + 14},${tubeTop + 14} ${cx + 10},${tubeTop - 2} ${cx - 10},${tubeTop - 2}" fill="#111" stroke="#555" stroke-width="1.2"/>`;
+      svg += `<rect x="${cx - 11}" y="${tubeTop + 8}" width="22" height="4" rx="1" fill="#888" stroke="#555" stroke-width="0.8"/>`;
     }
 
-    // Tube body
-    svg += `<rect x="${cx - tubeW/2}" y="${tubeTop + 12}" width="${tubeW}" height="${tubeBottom - tubeTop - 12}" rx="10" fill="${HOUSING}" stroke="${HOUSING_EDGE}" stroke-width="1.5"/>`;
+    // Tube body — shape varies by instrument (not a generic rectangle)
+    if (instrument === 'oboe') {
+      // conical bore: narrower at the top
+      svg += `<polygon points="${cx - 11},${tubeTop + 12} ${cx + 11},${tubeTop + 12} ${cx + 16},${tubeBottom - 4} ${cx - 16},${tubeBottom - 4}" fill="${BODY}" stroke="${BODY_EDGE}" stroke-width="1.5"/>`;
+    } else if (instrument === 'bassoon') {
+      // folded body: long joint + bass joint side by side, joined at the boot
+      svg += `<rect x="${cx - 4}" y="${tubeTop + 12}" width="18" height="${tubeBottom - tubeTop - 12}" rx="8" fill="${BODY}" stroke="${BODY_EDGE}" stroke-width="1.5"/>`;
+      svg += `<rect x="${cx - 20}" y="${tubeTop + 30}" width="16" height="${tubeBottom - tubeTop - 34}" rx="8" fill="${BODY}" stroke="${BODY_EDGE}" stroke-width="1.5"/>`;
+    } else if (instrument === 'saxophone') {
+      // straight top, bow curving at the bottom
+      svg += `<rect x="${cx - tubeW/2}" y="${tubeTop + 12}" width="${tubeW}" height="150" rx="10" fill="${BODY}" stroke="${BODY_EDGE}" stroke-width="1.5"/>`;
+      svg += `<path d="M ${cx - tubeW/2} 180 L ${cx + tubeW/2} 180 Q ${cx + tubeW/2 + 8} 200 ${cx + 4} ${tubeBottom + 8} Q ${cx - 24} ${tubeBottom + 8} ${cx - 22} 195 L ${cx - tubeW/2} 180 Z" fill="${BODY}" stroke="${BODY_EDGE}" stroke-width="1.5"/>`;
+    } else {
+      svg += `<rect x="${cx - tubeW/2}" y="${tubeTop + 12}" width="${tubeW}" height="${tubeBottom - tubeTop - 12}" rx="10" fill="${BODY}" stroke="${BODY_EDGE}" stroke-width="1.5"/>`;
+    }
 
     // Bottom silhouettes: bell / curved sax body / oboe bell / bassoon boot
     if (instrument === 'clarinet') {
-      svg += `<polygon points="${cx - 15},${tubeBottom - 4} ${cx + 15},${tubeBottom - 4} ${cx + 22},${tubeBottom + 10} ${cx - 22},${tubeBottom + 10}" fill="${HOUSING}" stroke="${HOUSING_EDGE}" stroke-width="1.5"/>`;
+      svg += `<polygon points="${cx - 15},${tubeBottom - 4} ${cx + 15},${tubeBottom - 4} ${cx + 24},${tubeBottom + 10} ${cx - 24},${tubeBottom + 10}" fill="${BODY}" stroke="${BODY_EDGE}" stroke-width="1.5"/>`;
     } else if (instrument === 'saxophone') {
-      svg += `<path d="M ${cx - 15} ${tubeBottom - 2} Q ${cx - 16} ${tubeBottom + 12} ${cx + 4} ${tubeBottom + 12} Q ${cx + 22} ${tubeBottom + 12} ${cx + 22} ${tubeBottom - 6} L ${cx + 15} ${tubeBottom - 6} Q ${cx + 22} ${tubeBottom + 6} ${cx + 12} ${tubeBottom + 6} L ${cx - 2} ${tubeBottom + 6} Q ${cx - 8} ${tubeBottom + 2} ${cx - 8} ${tubeBottom - 8} Z" fill="${HOUSING}" stroke="${HOUSING_EDGE}" stroke-width="1.2"/>`;
+      svg += `<polygon points="${cx - 22},${tubeBottom + 2} ${cx + 28},${tubeBottom + 2} ${cx + 34},${tubeBottom + 14} ${cx - 28},${tubeBottom + 14}" fill="${BODY}" stroke="${BODY_EDGE}" stroke-width="1.5"/>`;
     } else if (instrument === 'oboe') {
-      svg += `<polygon points="${cx - 15},${tubeBottom - 4} ${cx + 15},${tubeBottom - 4} ${cx + 20},${tubeBottom + 10} ${cx - 20},${tubeBottom + 10}" fill="${HOUSING}" stroke="${HOUSING_EDGE}" stroke-width="1.5"/>`;
+      svg += `<polygon points="${cx - 16},${tubeBottom - 4} ${cx + 16},${tubeBottom - 4} ${cx + 22},${tubeBottom + 10} ${cx - 22},${tubeBottom + 10}" fill="${BODY}" stroke="${BODY_EDGE}" stroke-width="1.5"/>`;
     } else if (instrument === 'bassoon') {
-      svg += `<path d="M ${cx - 15} ${tubeBottom - 4} Q ${cx} ${tubeBottom + 10} ${cx + 15} ${tubeBottom - 4}" stroke="${INK_DIM}" stroke-width="3" fill="none" stroke-linecap="round"/>`;
+      svg += `<path d="M ${cx - 15} ${tubeBottom - 4} Q ${cx} ${tubeBottom + 10} ${cx + 15} ${tubeBottom - 4}" stroke="#C9C9C9" stroke-width="3" fill="none" stroke-linecap="round"/>`;
     }
 
     // Joint lines (decorative, suggests upper/middle/lower joint)
-    svg += `<line x1="${cx - tubeW/2}" y1="70" x2="${cx + tubeW/2}" y2="70" stroke="${INK_DIM}" stroke-width="1.5"/>`;
-    svg += `<line x1="${cx - tubeW/2}" y1="188" x2="${cx + tubeW/2}" y2="188" stroke="${INK_DIM}" stroke-width="1.5"/>`;
+    svg += `<line x1="${cx - tubeW/2}" y1="70" x2="${cx + tubeW/2}" y2="70" stroke="#C9C9C9" stroke-width="1.5"/>`;
+    svg += `<line x1="${cx - tubeW/2}" y1="188" x2="${cx + tubeW/2}" y2="188" stroke="#C9C9C9" stroke-width="1.5"/>`;
 
     // Register / octave key — offset right, mirrored with the thumb so the two
     // side keys read as a pair.
@@ -546,12 +562,17 @@ const Graphics = (() => {
       svg += `<text x="${cx + tubeW/2 + 28}" y="${divY + 3}" font-size="7" font-weight="700" fill="${INK_DIM}" text-anchor="middle">R</text>`;
     }
 
-    // Finger keys 1-7 down the tube — circles for key pads. `halfHole` draws the
+    // Finger keys 1-7 down the tube — metallic key cups: silver rim,
+    // dark pad when open, accent fill when pressed. `halfHole` draws the
     // top key as half-covered (a vent), which no filled/open pad can express.
     allKeys.forEach((pressed, i) => {
       const y = keyYs[i];
       const r = i < 3 ? 9 : 7.5;
-      svg += `<circle cx="${cx}" cy="${y}" r="${r}" fill="${pressed ? accentColor : OPEN}" stroke="${accentColor}" stroke-width="2.5"/>`;
+      const rimFill = pressed ? accentColor : '#C8C8C8';
+      const padFill = pressed ? accentColor : '#3A3A3A';
+      svg += `<circle cx="${cx}" cy="${y}" r="${r}" fill="${rimFill}" stroke="#333" stroke-width="1.2"/>`;
+      svg += `<ellipse cx="${cx}" cy="${y - r * 0.28}" rx="${r * 0.55}" ry="${r * 0.32}" fill="#fff" opacity="0.35"/>`;
+      svg += `<circle cx="${cx}" cy="${y}" r="${r * 0.55}" fill="${padFill}" stroke="#111" stroke-width="0.8"/>`;
       if (i === 0 && halfHole) {
         svg += `<path d="M ${cx} ${y - r} A ${r} ${r} 0 0 0 ${cx} ${y + r} Z" fill="${accentColor}" stroke="${accentColor}" stroke-width="2.5" class="fingering-key" data-action="fingering-key" data-key="HALF"/>`;
       }
