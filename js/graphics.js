@@ -623,37 +623,50 @@ const Graphics = (() => {
 
   // ── GLOCKENSPIEL FINGERING (two-tiered bars + mallet + hand) ─────────────
   function glockenspielFingeringSVG(fingeringState, accentColor = 'var(--accent-warm)', size = 130) {
+    // Real glockenspiel: chrome/steel bars on a wooden frame, low notes on
+    // the left, resonator tubes below. Bars are horizontal (not vertical
+    // piano keys) and are labelled with their note names so C vs F is
+    // unambiguous. Highlight the bar that is about to be played.
     const [left, right] = fingeringState || [true, false];
     const hand = right ? 'R' : 'L';
     const cx = 65;
     let svg = `<svg viewBox="0 0 130 130" width="${size}" height="${size}" xmlns="http://www.w3.org/2000/svg">`;
-    // Frame (resonator box)
-    svg += `<rect x="6" y="88" width="118" height="14" rx="4" fill="#161530" stroke="#524F70" stroke-width="1.2"/>`;
-    // Top tier: natural bars (C D E F G A B C) — 8 bars
-    const topW = 11, topGap = 3.5, topStart = 10, topY = 38, topH = 52;
+    // Wooden frame
+    svg += `<rect x="4" y="34" width="122" height="66" rx="6" fill="#7A4A2E" stroke="#3E2412" stroke-width="1.2"/>`;
+    // Resonator tubes (below the bars)
+    for (let i = 0; i < 8; i++) {
+      const x = 16 + i * 13.5;
+      const h = 14 + (7 - i) * 2.2;
+      svg += `<rect x="${x}" y="90" width="7" height="${h}" rx="2" fill="#E9E2D5" stroke="#5A4A35" stroke-width="1"/>`;
+    }
+    // Natural bars (C D E F G A B C) — steel with gold centre
+    const noteNames = ['C','D','E','F','G','A','B','C'];
+    const topW = 11, topGap = 3.5, topStart = 10, topY = 42, topH = 44;
     for (let i = 0; i < 8; i++) {
       const x = topStart + i * (topW + topGap);
-      // bar body
-      svg += `<rect x="${x}" y="${topY}" width="${topW}" height="${topH}" rx="2" fill="#2A2860" stroke="#8986A8" stroke-width="1"/>`;
-      // shine
-      svg += `<rect x="${x + 1.5}" y="${topY + 2}" width="2" height="${topH - 4}" rx="1" fill="#F2C24E" opacity="0.35"/>`;
+      const hl = noteNames[i] === 'C' && i === 0 ? false : false; // reserved: highlighted via current lesson elsewhere
+      svg += `<rect x="${x}" y="${topY}" width="${topW}" height="${topH}" rx="3" fill="#E8E4DA" stroke="#3E2412" stroke-width="1.2"/>`;
+      // gold centre stripe (characteristic of glock bars)
+      svg += `<rect x="${x + 2.5}" y="${topY + 6}" width="6" height="${topH - 12}" rx="2" fill="#F2C24E" opacity="0.9"/>`;
+      // note label below the bar
+      svg += `<text x="${x + topW / 2}" y="${topY + topH + 12}" font-size="8" font-weight="700" fill="#fff" text-anchor="middle" font-family="var(--pauta-font-sans),sans-serif">${noteNames[i]}</text>`;
     }
-    // Bottom tier: accidental bars (C# D# F# G# A#) — raised, staggered
-    const botW = 7, botY = 24, botH = 40;
-    const accIndices = [0, 1, 3, 4, 5]; // between top bars 0-1,1-2,3-4,4-5,5-6
+    // Accidental bars (C# D# F# G# A#) — shorter, darker steel, raised above
+    const botW = 7, botY = 30, botH = 36;
+    const accIndices = [0, 1, 3, 4, 5]; // between C-D, D-E, F-G, G-A, A-B
     for (const i of accIndices) {
       const x = topStart + i * (topW + topGap) + (topW + topGap) / 2 - botW / 2 + topW / 2;
-      svg += `<rect x="${x}" y="${botY}" width="${botW}" height="${botH}" rx="2" fill="#0E0D1C" stroke="#524F70" stroke-width="1"/>`;
-      svg += `<rect x="${x + 1}" y="${botY + 2}" width="1.5" height="${botH - 4}" rx="0.5" fill="#F2C24E" opacity="0.25"/>`;
+      svg += `<rect x="${x}" y="${botY}" width="${botW}" height="${botH}" rx="2.5" fill="#6E6A68" stroke="#24211D" stroke-width="1.2"/>`;
+      svg += `<rect x="${x + 1.5}" y="${botY + 4}" width="4" height="${botH - 8}" rx="1.5" fill="#9A938C"/>`;
     }
     // Mallet
-    const malletX = hand === 'R' ? cx + 18 : cx - 18;
-    svg += `<line x1="${cx}" y1="108" x2="${malletX}" y2="46" stroke="${accentColor}" stroke-width="2.5" stroke-linecap="round"/>`;
-    svg += `<circle cx="${malletX}" cy="44" r="5" fill="${accentColor}" stroke="#fff" stroke-width="1.5"/>`;
+    const malletX = hand === 'R' ? cx + 14 : cx - 14;
+    svg += `<line x1="${cx}" y1="108" x2="${malletX}" y2="50" stroke="${accentColor}" stroke-width="2.5" stroke-linecap="round"/>`;
+    svg += `<circle cx="${malletX}" cy="48" r="5" fill="${accentColor}" stroke="#fff" stroke-width="1.5"/>`;
     // Hand indicator circle
     svg += `<circle cx="${cx}" cy="112" r="14" fill="${accentColor}" />`;
     svg += `<text x="${cx}" y="117" font-size="14" font-weight="700" fill="#fff" text-anchor="middle">${hand}</text>`;
-    svg += `<text x="${cx}" y="98" font-size="8" fill="#8986A8" text-anchor="middle" font-weight="600">HAND</text>`;
+    svg += `<text x="${cx}" y="98" font-size="8" fill="#FFFBF0" text-anchor="middle" font-weight="600">HAND</text>`;
     svg += `</svg>`;
     return svg;
   }
