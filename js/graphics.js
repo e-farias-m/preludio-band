@@ -745,7 +745,7 @@ const Graphics = (() => {
   function fingeringSVG(fingeringType, fingeringState, accentColor, size = 130, highlightIdx = -1) {
     if (fingeringType === 'recorder') return recorderFingeringSVG(fingeringState, accentColor, size);
     if (fingeringType === 'trombone') return tromboneFingeringSVG(fingeringState, accentColor, size);
-    if (fingeringType === 'flute') return fluteFingeringSVG(fingeringState, accentColor, size);
+    if (fingeringType === 'flute') return fluteFingeringSVG(fingeringState, accentColor, size * 1.15);
     if (fingeringType === 'glockenspiel') return glockenspielFingeringSVG(fingeringState, accentColor, size, highlightIdx);
     if (fingeringType === 'snare') return snareFingeringSVG(fingeringState, accentColor, size);
     if (['clarinet', 'saxophone', 'oboe', 'bassoon'].includes(fingeringType)) {
