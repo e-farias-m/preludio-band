@@ -65,9 +65,13 @@ check(diagrams > 0, 'no fingering diagrams rendered');
   const flute = CURRICULUM.flute;
   const note = flute.lessons.find(l => l.id === 'fl-1');
   const svg = Graphics.fingeringSVG('flute', note.fingeringState, flute.accentColor, 100);
-  check(svg.includes('viewBox="0 0 240 130"'), 'flute diagram should use a horizontal viewBox');
+  check(svg.includes('viewBox="0 0 280 130"'), 'flute diagram should use a horizontal viewBox');
   check(svg.includes('<ellipse'), 'flute diagram should show an embouchure');
   check(svg.includes('>TH<'), 'flute diagram should label the thumb Bb lever');
+  check(svg.includes('>G#<'), 'flute diagram should show the G# key');
+  check(svg.includes('>Eb<'), 'flute diagram should show the Eb key');
+  check(svg.includes('>C#<'), 'flute diagram should show the low C# key');
+  check(svg.includes('>C<'), 'flute diagram should show the low C foot key');
   check(svg.includes('data-action="fingering-key"') && svg.includes('data-key="TH"'),
     'the labelled thumb key should be tappable for an explanation');
 }

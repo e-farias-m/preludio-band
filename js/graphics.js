@@ -534,48 +534,88 @@ const Graphics = (() => {
   // horizontal: embouchure at the left, keys across the body, thumb Bb lever
   // hanging below. (The flute data never uses the generic register/little-
   // finger slots, so they are not drawn here.)
+  // Full Boehm (closed-G#) flute, player perspective.
+  // fingeringState = [Thumb(Bb lever), L1, L2, L3, R1, R2, R3, C-foot, Eb]
+  // G#, C#, B lever and trill keys have no separate state in the curriculum,
+  // so they are drawn for completeness in their usual resting state (open)
+  // for these beginner notes — band directors can still identify each key.
   function fluteFingeringSVG(fingeringState, accentColor = 'var(--accent-flute)', size = 130) {
-    const [thumb, h1, h2, h3, h4, h5, h6, h7, rp2] = fingeringState;
-    const tubeY = 62, tubeH = 26, tubeLeft = 16, tubeRight = 224;
-    const keys = [h1, h2, h3, h4, h5, h6, h7];
-    const keyXs = [86, 108, 128, 154, 176, 196, 214];
+    const [thumb, h1, h2, h3, h4, h5, h6, h7, rp2] = fingeringState || [];
+    const tubeY = 62, tubeH = 24, tubeLeft = 16, tubeRight = 250;
+    const midY = tubeY + tubeH / 2;
+    // Main tone holes: L1 L2 L3 | R1 R2 R3
+    const L = [88, 110, 132], R = [162, 184, 206];
+    const mainXs = [...L, ...R];
+    const mainStates = [h1, h2, h3, h4, h5, h6];
 
-    let svg = `<svg viewBox="0 0 240 130" width="${size}" height="${size * 130 / 240}" xmlns="http://www.w3.org/2000/svg">`;
+    let svg = `<svg viewBox="0 0 280 130" width="${size}" height="${size * 130 / 280}" xmlns="http://www.w3.org/2000/svg">`;
 
-    // Body tube
+    // Body tube (head + body + foot joints)
     svg += `<rect x="${tubeLeft}" y="${tubeY}" width="${tubeRight - tubeLeft}" height="${tubeH}" rx="${tubeH / 2}" fill="${HOUSING}" stroke="${HOUSING_EDGE}" stroke-width="1.5"/>`;
-
-    // Joint lines (head / body / foot)
     svg += `<line x1="70" y1="${tubeY}" x2="70" y2="${tubeY + tubeH}" stroke="${INK_DIM}" stroke-width="1.5"/>`;
-    svg += `<line x1="188" y1="${tubeY}" x2="188" y2="${tubeY + tubeH}" stroke="${INK_DIM}" stroke-width="1.5"/>`;
+    svg += `<line x1="196" y1="${tubeY}" x2="196" y2="${tubeY + tubeH}" stroke="${INK_DIM}" stroke-width="1.5"/>`;
+    // Crown (left end cap)
+    svg += `<path d="M${tubeLeft} ${tubeY + 2} Q${tubeLeft - 8} ${midY} ${tubeLeft} ${tubeY + tubeH - 2}" stroke="${INK_DIM}" stroke-width="3" fill="none" stroke-linecap="round"/>`;
+    // Embouchure / lip plate
+    svg += `<ellipse cx="44" cy="${midY}" rx="12" ry="8" fill="${HOUSING}" stroke="${INK_DIM}" stroke-width="1.5"/>`;
+    svg += `<ellipse cx="44" cy="${midY}" rx="5" ry="3" fill="${OPEN}"/>`;
 
-    // Embouchure / lip plate (left end)
-    svg += `<ellipse cx="44" cy="${tubeY + tubeH / 2}" rx="12" ry="9" fill="${HOUSING}" stroke="${INK_DIM}" stroke-width="1.5"/>`;
-    svg += `<ellipse cx="44" cy="${tubeY + tubeH / 2}" rx="5" ry="3.5" fill="${OPEN}"/>`;
+    // ── Thumb levers (B natural + Bb lever, the TH key) ──
+    // B lever: small key above the tube near the head; TH (Bb): below.
+    const bX = 60, thX = 66;
+    svg += `<line x1="${bX}" y1="${tubeY}" x2="${bX}" y2="${tubeY - 14}" stroke="${INK_DIM}" stroke-width="1"/>`;
+    svg += labeledKey(bX, tubeY - 20, 7, false, accentColor, 'B');
+    svg += `<line x1="${thX}" y1="${tubeY + tubeH}" x2="${thX}" y2="${tubeY + tubeH + 12}" stroke="${INK_DIM}" stroke-width="1" stroke-dasharray="2,2"/>`;
+    svg += labeledKey(thX, tubeY + tubeH + 20, 10, thumb, accentColor, 'TH');
 
-    // Keys across the body (filled = pressed)
-    keys.forEach((pressed, i) => {
-      const r = i < 3 ? 10 : 8.5;
-      svg += `<circle cx="${keyXs[i]}" cy="${tubeY + tubeH / 2}" r="${r}" fill="${pressed ? accentColor : OPEN}" stroke="${accentColor}" stroke-width="2.5"/>`;
+    // ── Left-hand main holes 1-3 + G# key ──
+    mainStates.forEach((pressed, i) => {
+      const x = mainXs[i], r = i < 3 ? 10 : 8.5;
+      svg += `<circle cx="${x}" cy="${midY}" r="${r}" fill="${pressed ? accentColor : OPEN}" stroke="${accentColor}" stroke-width="2.5"/>`;
     });
-
-    // Thumb Bb lever (hangs below the left-hand section)
+    // G# key: left pinky, sits above the tube just right of L3
     {
-      const thX = keyXs[0], thY = tubeY + tubeH + 26;
-      svg += `<line x1="${thX}" y1="${tubeY + tubeH}" x2="${thX}" y2="${thY - 13}" stroke="${INK_DIM}" stroke-width="1" stroke-dasharray="2,2"/>`;
-      svg += labeledKey(thX, thY, 13, thumb, accentColor, 'TH');
+      const gx = 146;
+      svg += `<line x1="${gx}" y1="${tubeY}" x2="${gx}" y2="${tubeY - 14}" stroke="${INK_DIM}" stroke-width="1"/>`;
+      svg += labeledKey(gx, tubeY - 20, 7, false, accentColor, 'G#');
+    }
+    // Bb trill: small key between L1 and L2 (above)
+    {
+      const tx = 99;
+      svg += `<line x1="${tx}" y1="${tubeY}" x2="${tx}" y2="${tubeY - 9}" stroke="${INK_DIM}" stroke-width="1"/>`;
+      svg += labeledKey(tx, tubeY - 15, 5, false, accentColor, 'Bb');
+    }
+    // D / D# trill keys between RH fingers (above)
+    {
+      const dX = 173, d2X = 195;
+      svg += `<line x1="${dX}" y1="${tubeY}" x2="${dX}" y2="${tubeY - 9}" stroke="${INK_DIM}" stroke-width="1"/>`;
+      svg += labeledKey(dX, tubeY - 15, 5, false, accentColor, 'D');
+      svg += `<line x1="${d2X}" y1="${tubeY}" x2="${d2X}" y2="${tubeY - 9}" stroke="${INK_DIM}" stroke-width="1"/>`;
+      svg += labeledKey(d2X, tubeY - 15, 5, false, accentColor, 'D#');
     }
 
-    // Second right little-finger key (the low E-flat key) — hangs below the
-    // foot joint, so the E-flat no longer looks like the low C.
+    // ── Right-hand little-finger keys: Eb, C#, C ──
+    // Eb (D#) key: below/right of R3
     if (rp2 !== undefined) {
-      const rpX = keyXs[6], rpY = tubeY + tubeH + 26;
-      svg += `<line x1="${rpX}" y1="${tubeY + tubeH}" x2="${rpX}" y2="${rpY - 11}" stroke="${INK_DIM}" stroke-width="1" stroke-dasharray="2,2"/>`;
-      svg += labeledKey(rpX, rpY, 11, rp2, accentColor, 'Eb');
+      const ebX = 220, ebY = tubeY + tubeH + 18;
+      svg += `<line x1="${ebX}" y1="${tubeY + tubeH}" x2="${ebX}" y2="${ebY - 9}" stroke="${INK_DIM}" stroke-width="1" stroke-dasharray="2,2"/>`;
+      svg += labeledKey(ebX, ebY, 8, rp2, accentColor, 'Eb');
+    }
+    // Low C# key: just right of Eb, below the tube
+    {
+      const csX = 237, csY = tubeY + tubeH + 18;
+      svg += `<line x1="${csX}" y1="${tubeY + tubeH}" x2="${csX}" y2="${csY - 9}" stroke="${INK_DIM}" stroke-width="1" stroke-dasharray="2,2"/>`;
+      svg += labeledKey(csX, csY, 8, false, accentColor, 'C#');
+    }
+    // Low C foot key: at the far foot end, below the tube (h7 = C foot)
+    {
+      const cX = 252, cY = tubeY + tubeH + 18;
+      svg += `<line x1="${cX}" y1="${tubeY + tubeH}" x2="${cX}" y2="${cY - 9}" stroke="${INK_DIM}" stroke-width="1" stroke-dasharray="2,2"/>`;
+      svg += labeledKey(cX, cY, 8, h7, accentColor, 'C');
     }
 
     // Foot joint hint (right end)
-    svg += `<path d="M${tubeRight} ${tubeY + 2} Q${tubeRight + 10} ${tubeY + tubeH / 2} ${tubeRight} ${tubeY + tubeH - 2}" stroke="${INK_DIM}" stroke-width="3" fill="none" stroke-linecap="round"/>`;
+    svg += `<path d="M${tubeRight} ${tubeY + 2} Q${tubeRight + 10} ${midY} ${tubeRight} ${tubeY + tubeH - 2}" stroke="${INK_DIM}" stroke-width="3" fill="none" stroke-linecap="round"/>`;
 
     svg += `</svg>`;
     return svg;
