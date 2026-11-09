@@ -1103,6 +1103,7 @@ function playRecording() {
 }
 
 function cleanupRecording() {
+  if (typeof stopMicGate === 'function') stopMicGate();
   if (APP.recorder) {
     try { stopRecording(); } catch (e) { /* ignore */ }
     APP.recorder = null;
@@ -3188,6 +3189,144 @@ function render() {
   if (_logoFixed) _logoFixed.style.display = (APP.screen === 'select') ? 'none' : 'block';
 }
 
+// ── PLAY PHASE MIC GATE ────────────────────────────────────────────────
+// Note lessons (not songs) are gated: after the count-in, the mic listens.
+// Pitched instruments need the right pitch (±80 cents, sustained); snare
+// (percussion) needs sound only — four distinct hits for a 4-stroke
+// rudiment. Songs stay self-reported. Mic unavailable/missed offers a
+// "Continue anyway" fallback so nobody is stuck.
+const GATE_CENTS = 80;
+const GATE_FRAMES_NEEDED = 4;
+const GATE_SNARE_HITS_NEEDED = 4;
+const GATE_SNARE_RMS = 0.08;
+const GATE_SNARE_DEBOUNCE = 250;
+
+function setGateStatus(msg, kind) {
+  const status = document.getElementById('play-status');
+  if (!status) return;
+  status.textContent = msg;
+  status.style.color = kind === 'ok' ? '#16a34a' : kind === 'warn' ? '#b45309' : '';
+}
+
+function stopMicGate() {
+  if (APP._gateRAF) cancelAnimationFrame(APP._gateRAF);
+  APP._gateRAF = null;
+  if (APP._gateStream) { APP._gateStream.getTracks().forEach(tr => tr.stop()); APP._gateStream = null; }
+  if (APP._gateCtx && APP._gateCtx.close) { try { APP._gateCtx.close().catch(() => {}); } catch(e) {} APP._gateCtx = null; }
+  APP._gateAnalyser = null;
+}
+
+function startMicGate(lesson) {
+  stopMicGate();
+  APP._gateState = 'listening';
+  APP._gateFrames = 0;
+  APP._gateHits = 0;
+  APP._gateLastHitMs = 0;
+  APP._gateStartedAt = Date.now();
+  const isPerc = isPercussionLesson(lesson);
+  const Ctx = window.AudioContext || window.webkitAudioContext;
+  if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia || !Ctx) {
+    APP._gateState = 'unavailable';
+    APP.play.micGate = 'unavailable';
+    setGateStatus(t('Microphone not available — you can continue below.'), 'warn');
+    renderMicGateArea();
+    return;
+  }
+  navigator.mediaDevices.getUserMedia({ audio: true }).then(stream => {
+    if (APP._gateState !== 'listening') { stream.getTracks().forEach(tr => tr.stop()); return; }
+    APP._gateStream = stream;
+    APP._gateCtx = new Ctx();
+    if (APP._gateCtx.state === 'suspended' && typeof APP._gateCtx.resume === 'function') {
+      APP._gateCtx.resume().catch(() => {});
+    }
+    const source = APP._gateCtx.createMediaStreamSource(stream);
+    const analyser = APP._gateCtx.createAnalyser();
+    analyser.fftSize = 2048;
+    source.connect(analyser);
+    APP._gateAnalyser = analyser;
+    const buf = new Float32Array(analyser.fftSize);
+    const targetFreq = lesson.freq;
+    const loop = () => {
+      if (APP._gateState !== 'listening') return;
+      analyser.getFloatTimeDomainData(buf);
+      let energy = 0;
+      for (let i = 0; i < buf.length; i++) energy += buf[i] * buf[i];
+      const rms = Math.sqrt(energy / buf.length);
+      const ms = Date.now() - APP._gateStartedAt;
+      if (isPerc) {
+        // Snare: sound recognition only — count distinct hits by RMS.
+        if (rms >= GATE_SNARE_RMS) {
+          if (Date.now() - APP._gateLastHitMs > GATE_SNARE_DEBOUNCE) {
+            APP._gateHits++;
+            APP._gateLastHitMs = Date.now();
+            setGateStatus(t(`Heard ${APP._gateHits} / ${GATE_SNARE_HITS_NEEDED} strokes`), '');
+            if (APP._gateHits >= GATE_SNARE_HITS_NEEDED) {
+              APP._gateState = 'heard';
+              APP.play.hasPlayed = true;
+              APP.play.micGate = 'heard';
+              setGateStatus(t('Heard it! ✓'), 'ok');
+              renderMicGateArea();
+              stopMicGate();
+              return;
+            }
+          }
+        } else if (ms > 10000 && APP._gateState === 'listening') {
+          APP._gateState = 'missed';
+          APP.play.micGate = 'missed';
+          setGateStatus(t('I didn’t hear any drum sounds — try again, or continue below.'), 'warn');
+          renderMicGateArea();
+        }
+      } else if (targetFreq) {
+        const freq = detectPitch(buf, APP._gateCtx.sampleRate);
+        if (freq > 0) {
+          const cents = 1200 * Math.log2(freq / targetFreq);
+          if (Math.abs(cents) <= GATE_CENTS) {
+            APP._gateFrames++;
+            if (APP._gateFrames >= GATE_FRAMES_NEEDED) {
+              APP._gateState = 'heard';
+              APP.play.hasPlayed = true;
+              APP.play.micGate = 'heard';
+              setGateStatus(t('Heard it! ✓'), 'ok');
+              renderMicGateArea();
+              stopMicGate();
+              return;
+            }
+            setGateStatus(t('Playing…'), '');
+          } else {
+            APP._gateFrames = 0;
+            setGateStatus(t('Listening…'), '');
+          }
+        } else if (ms > 10000 && APP._gateState === 'listening') {
+          APP._gateState = 'missed';
+          APP.play.micGate = 'missed';
+          setGateStatus(t('I didn’t hear that note — try again, or continue below.'), 'warn');
+          renderMicGateArea();
+        } else {
+          setGateStatus(t('Listening…'), '');
+        }
+      }
+      APP._gateRAF = requestAnimationFrame(loop);
+    };
+    APP._gateRAF = requestAnimationFrame(loop);
+  }).catch(() => {
+    if (APP._gateState !== 'listening') return;
+    APP._gateState = 'unavailable';
+    APP.play.micGate = 'unavailable';
+    setGateStatus(t('Microphone unavailable — you can continue below.'), 'warn');
+    renderMicGateArea();
+  });
+}
+
+function renderMicGateArea() {
+  const bar = document.querySelector('.action-bar');
+  if (bar) {
+    bar.innerHTML = `<button class="btn btn-success btn-wide" data-action="play-confirm" ${APP.play.hasPlayed ? '' : 'disabled'}>${t('I played it!')}</button>` +
+      ((APP._gateState === 'unavailable' || APP._gateState === 'missed') && !APP.play.hasPlayed
+        ? `<button class="btn btn-ghost btn-wide" data-action="play-confirm-anyway" style="margin-top:8px">${t('Continue anyway')}</button>`
+        : '');
+  }
+}
+
 // ── PLAY PHASE SEQUENCE ─────────────────────────────────────────────────
 function runPlaySequence(inst, lesson) {
   const btn = document.getElementById('play-start-btn');
@@ -3229,12 +3368,16 @@ function runPlaySequence(inst, lesson) {
 
   const t3 = setTimeout(() => {
     clearActive();
-    status.textContent = t('Nice. Tap Start to try again, or confirm below.');
     btn.disabled = false;
     btn.textContent = t('▶ Replay count-in');
-    APP.play.hasPlayed = true;
-    const confirmBtn = document.querySelector('[data-action="play-confirm"]');
-    if (confirmBtn) confirmBtn.disabled = false;
+    if (isSongLesson(lesson)) {
+      status.textContent = t('Nice. Tap Start to try again, or confirm below.');
+      APP.play.hasPlayed = true;
+      renderMicGateArea();
+    } else {
+      status.textContent = t('Play it now — I’m listening…');
+      startMicGate(lesson);
+    }
   }, 4 * beatMs + 1500);
   APP.playSequenceTimeouts.push(t3);
 }
@@ -4266,7 +4409,12 @@ function handleAction(action, el) {
       render();
       break;
 
+    case 'play-confirm-anyway': {
+      APP.play.hasPlayed = true;
+      APP.play.micGate = (APP._gateState || 'bypassed');
+    }
     case 'play-confirm': {
+      stopMicGate();
       const mistakes = (APP.quizQueue || []).reduce((sum, item) => sum + item.wrongIds.length, 0);
       const stars = mistakes === 0 ? 3 : (mistakes <= 2 ? 2 : 1);
       const xp = 10 + (stars * 5);
