@@ -1656,7 +1656,7 @@ function renderSettingsScreen() {
 function buildTutorialSlides(inst) {
   const firstNote = getNoteLessons(inst.id)[0];
   const noteArt = firstNote
-    ? `<div class="tutorial-visual">${Graphics.fingeringSVG(inst.fingeringType, firstNote.fingeringState, instAccent(inst), 92)}${Graphics.staffSVG({ pos: firstNote.staffStep, accidental: firstNote.accidental, clef: inst.clef, accentColor: instAccent(inst), width: 74 })}</div>`
+    ? `<div class="tutorial-visual">${Graphics.fingeringSVG(inst.fingeringType, firstNote.fingeringState, instAccent(inst), 92, (firstNote.degree != null ? firstNote.degree - 1 : -1))}${Graphics.staffSVG({ pos: firstNote.staffStep, accidental: firstNote.accidental, clef: inst.clef, accentColor: instAccent(inst), width: 74 })}</div>`
     : '';
   const instrumentArt = `<div class="tutorial-visual tutorial-visual-icon">${Graphics.instrumentIconSVG(inst.id, 96)}</div>`;
   return [
@@ -1952,7 +1952,7 @@ function renderLookupScreen() {
   if (!selected) selected = notes[0];
   APP.lookupId = selected.id;
 
-  const bigFingering = Graphics.fingeringSVG(inst.fingeringType, selected.fingeringState, instAccent(inst), 120);
+  const bigFingering = Graphics.fingeringSVG(inst.fingeringType, selected.fingeringState, instAccent(inst), 120, (selected.degree != null ? selected.degree - 1 : -1));
   const staffSvg = Graphics.staffSVG({ pos: selected.staffStep, accidental: selected.accidental, clef: inst.clef, accentColor: instAccent(inst), width: 130 });
 
   const cards = notes.map(l => {
@@ -2552,7 +2552,7 @@ function renderLessonScreen() {
 }
 
 function renderPresentPhase(inst, lesson) {
-  const fingeringSvg = Graphics.fingeringSVG(inst.fingeringType, lesson.fingeringState, instAccent(inst), 84);
+  const fingeringSvg = Graphics.fingeringSVG(inst.fingeringType, lesson.fingeringState, instAccent(inst), 84, (lesson.degree != null ? lesson.degree - 1 : -1));
   const isPerc = isPercussionLesson(lesson);
   const staffSvg = isPerc
     ? Graphics.melodySVG({ notes: [{ pos: 4, accidental: null, duration: 1 }, { pos: 4, accidental: null, duration: 1 }, { pos: 4, accidental: null, duration: 1 }, { pos: 4, accidental: null, duration: 1 }], clef: 'percussion', accentColor: instAccent(inst), width: 96, percussion: true, perSystem: 4, beatsPerBar: 4 })
@@ -2626,7 +2626,7 @@ function renderSongPresentPhase(inst, lesson) {
   const isLast = APP.songNoteIndex >= totalNotes - 1;
   const hasAudio = !!lesson.audioUrl;
 
-  const fingeringSvg = Graphics.fingeringSVG(inst.fingeringType, note.fingeringState, instAccent(inst), 84);
+  const fingeringSvg = Graphics.fingeringSVG(inst.fingeringType, note.fingeringState, instAccent(inst), 84, (note && note.degree != null ? note.degree - 1 : -1));
   const staffSvg = Graphics.staffSVG({ pos: note.staffStep, accidental: note.accidental, clef: inst.clef, accentColor: instAccent(inst), width: 96 });
 
   const melodyNotes = [];
@@ -2812,7 +2812,7 @@ function startSongAudioPlayback(inst, lesson) {
       totalBeats += durations[i];
       const t = setTimeout(() => {
         const note = findLessonById(APP.instrumentId, id);
-        if (fingEl) fingEl.innerHTML = Graphics.fingeringSVG(inst.fingeringType, note.fingeringState, instAccent(inst), 84);
+        if (fingEl) fingEl.innerHTML = Graphics.fingeringSVG(inst.fingeringType, note.fingeringState, instAccent(inst), 84, (note && note.degree != null ? note.degree - 1 : -1));
         if (staffEl) staffEl.innerHTML = Graphics.staffSVG({ pos: note.staffStep, accidental: note.accidental, clef: inst.clef, accentColor: instAccent(inst), width: 96 });
         if (nameEl) nameEl.textContent = note.noteName;
         if (progEl) progEl.textContent = tFill('Note {current} of {total}', { current: i + 1, total: noteIds.length });
@@ -3053,7 +3053,7 @@ function renderQuizPhase(inst, lesson) {
 
 
 function renderPlayPhase(inst, lesson) {
-  const fingeringSvg = Graphics.fingeringSVG(inst.fingeringType, lesson.fingeringState, instAccent(inst), 120);
+  const fingeringSvg = Graphics.fingeringSVG(inst.fingeringType, lesson.fingeringState, instAccent(inst), 120, (lesson.degree != null ? lesson.degree - 1 : -1));
   const cells = [1, 2, 3, 4].map(n => `<div class="beat-cell count-in" data-beat="${n}"><span class="beat-num">${n}</span></div>`).join('');
   const playCell = `<div class="beat-cell" data-beat="play">♪</div>`;
 

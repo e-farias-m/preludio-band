@@ -621,52 +621,42 @@ const Graphics = (() => {
     return svg;
   }
 
-  // ── GLOCKENSPIEL FINGERING (two-tiered bars + mallet + hand) ─────────────
-  function glockenspielFingeringSVG(fingeringState, accentColor = 'var(--accent-warm)', size = 130) {
-    // Real glockenspiel: chrome/steel bars on a wooden frame, low notes on
-    // the left, resonator tubes below. Bars are horizontal (not vertical
-    // piano keys) and are labelled with their note names so C vs F is
-    // unambiguous. Highlight the bar that is about to be played.
+  // ── GLOCKENSPIEL FINGERING (front view: horizontal bars) ─────────────
+  // Front view, not a top-down piano: 8 horizontal chrome bars stacked
+  // front-to-back (low C at the bottom/front, high C at the top/back),
+  // each labelled with its note. highlightIdx marks the bar to play
+  // (0 = low C … 7 = high C). Sharps are omitted (basic octave has none).
+  function glockenspielFingeringSVG(fingeringState, accentColor = 'var(--accent-warm)', size = 130, highlightIdx = -1) {
     const [left, right] = fingeringState || [true, false];
     const hand = right ? 'R' : 'L';
     const cx = 65;
     let svg = `<svg viewBox="0 0 130 130" width="${size}" height="${size}" xmlns="http://www.w3.org/2000/svg">`;
     // Wooden frame
-    svg += `<rect x="4" y="34" width="122" height="66" rx="6" fill="#7A4A2E" stroke="#3E2412" stroke-width="1.2"/>`;
-    // Resonator tubes (below the bars)
-    for (let i = 0; i < 8; i++) {
-      const x = 16 + i * 13.5;
-      const h = 14 + (7 - i) * 2.2;
-      svg += `<rect x="${x}" y="90" width="7" height="${h}" rx="2" fill="#E9E2D5" stroke="#5A4A35" stroke-width="1"/>`;
-    }
-    // Natural bars (C D E F G A B C) — steel with gold centre
+    svg += `<rect x="6" y="20" width="118" height="84" rx="6" fill="#7A4A2E" stroke="#3E2412" stroke-width="1.2"/>`;
     const noteNames = ['C','D','E','F','G','A','B','C'];
-    const topW = 11, topGap = 3.5, topStart = 10, topY = 42, topH = 44;
+    const barX = 16, barW = 78, barH = 7, barPitch = 9.5, barTop = 26;
+    // bars: i=0 low C (bottom) … i=7 high C (top)
     for (let i = 0; i < 8; i++) {
-      const x = topStart + i * (topW + topGap);
-      const hl = noteNames[i] === 'C' && i === 0 ? false : false; // reserved: highlighted via current lesson elsewhere
-      svg += `<rect x="${x}" y="${topY}" width="${topW}" height="${topH}" rx="3" fill="#E8E4DA" stroke="#3E2412" stroke-width="1.2"/>`;
-      // gold centre stripe (characteristic of glock bars)
-      svg += `<rect x="${x + 2.5}" y="${topY + 6}" width="6" height="${topH - 12}" rx="2" fill="#F2C24E" opacity="0.9"/>`;
-      // note label below the bar
-      svg += `<text x="${x + topW / 2}" y="${topY + topH + 12}" font-size="8" font-weight="700" fill="#fff" text-anchor="middle" font-family="var(--pauta-font-sans),sans-serif">${noteNames[i]}</text>`;
+      const y = barTop + (7 - i) * barPitch;
+      const isHl = highlightIdx === i;
+      const fill = isHl ? '#F2C24E' : '#D9D5C9';
+      const stroke = isHl ? accentColor : '#3E2412';
+      const sw = isHl ? 2.5 : 1.2;
+      svg += `<rect x="${barX}" y="${y}" width="${barW}" height="${barH}" rx="3.5" fill="${fill}" stroke="${stroke}" stroke-width="${sw}"/>`;
+      // hole/screw dots (characteristic of glock bars)
+      svg += `<circle cx="${barX + 7}" cy="${y + barH / 2}" r="2" fill="#8A8478"/><circle cx="${barX + barW - 7}" cy="${y + barH / 2}" r="2" fill="#8A8478"/>`;
+      svg += `<text x="${barX + barW + 7}" y="${y + barH / 2 + 3.5}" font-size="9" font-weight="${isHl ? '800' : '700'}" fill="${isHl ? '#111' : '#fff'}" text-anchor="middle" font-family="var(--pauta-font-sans),sans-serif">${noteNames[i]}${i === 7 ? '′' : ''}</text>`;
     }
-    // Accidental bars (C# D# F# G# A#) — shorter, darker steel, raised above
-    const botW = 7, botY = 30, botH = 36;
-    const accIndices = [0, 1, 3, 4, 5]; // between C-D, D-E, F-G, G-A, A-B
-    for (const i of accIndices) {
-      const x = topStart + i * (topW + topGap) + (topW + topGap) / 2 - botW / 2 + topW / 2;
-      svg += `<rect x="${x}" y="${botY}" width="${botW}" height="${botH}" rx="2.5" fill="#6E6A68" stroke="#24211D" stroke-width="1.2"/>`;
-      svg += `<rect x="${x + 1.5}" y="${botY + 4}" width="4" height="${botH - 8}" rx="1.5" fill="#9A938C"/>`;
-    }
-    // Mallet
-    const malletX = hand === 'R' ? cx + 14 : cx - 14;
-    svg += `<line x1="${cx}" y1="108" x2="${malletX}" y2="50" stroke="${accentColor}" stroke-width="2.5" stroke-linecap="round"/>`;
-    svg += `<circle cx="${malletX}" cy="48" r="5" fill="${accentColor}" stroke="#fff" stroke-width="1.5"/>`;
+    // resonator hint strip below the front bar
+    svg += `<rect x="16" y="98" width="78" height="3" rx="1.5" fill="#E9E2D5" opacity="0.7"/>`;
+    // mallet points at the highlighted bar (or centre if none)
+    const hlY = (highlightIdx >= 0 && highlightIdx <= 7) ? barTop + (7 - highlightIdx) * barPitch + barH / 2 : 55;
+    const malletX = hand === 'R' ? cx + 16 : cx - 16;
+    svg += `<line x1="${cx}" y1="118" x2="${malletX}" y2="${hlY}" stroke="${accentColor}" stroke-width="2.5" stroke-linecap="round"/>`;
+    svg += `<circle cx="${malletX}" cy="${hlY}" r="5" fill="${accentColor}" stroke="#fff" stroke-width="1.5"/>`;
     // Hand indicator circle
-    svg += `<circle cx="${cx}" cy="112" r="14" fill="${accentColor}" />`;
-    svg += `<text x="${cx}" y="117" font-size="14" font-weight="700" fill="#fff" text-anchor="middle">${hand}</text>`;
-    svg += `<text x="${cx}" y="98" font-size="8" fill="#FFFBF0" text-anchor="middle" font-weight="600">HAND</text>`;
+    svg += `<circle cx="${cx}" cy="118" r="10" fill="${accentColor}" />`;
+    svg += `<text x="${cx}" y="122" font-size="11" font-weight="700" fill="#fff" text-anchor="middle">${hand}</text>`;
     svg += `</svg>`;
     return svg;
   }
@@ -689,11 +679,11 @@ const Graphics = (() => {
     return svg;
   }
 
-  function fingeringSVG(fingeringType, fingeringState, accentColor, size = 130) {
+  function fingeringSVG(fingeringType, fingeringState, accentColor, size = 130, highlightIdx = -1) {
     if (fingeringType === 'recorder') return recorderFingeringSVG(fingeringState, accentColor, size);
     if (fingeringType === 'trombone') return tromboneFingeringSVG(fingeringState, accentColor, size);
     if (fingeringType === 'flute') return fluteFingeringSVG(fingeringState, accentColor, size);
-    if (fingeringType === 'glockenspiel') return glockenspielFingeringSVG(fingeringState, accentColor, size);
+    if (fingeringType === 'glockenspiel') return glockenspielFingeringSVG(fingeringState, accentColor, size, highlightIdx);
     if (fingeringType === 'snare') return snareFingeringSVG(fingeringState, accentColor, size);
     if (['clarinet', 'saxophone', 'oboe', 'bassoon'].includes(fingeringType)) {
       return woodwindFingeringSVG(fingeringState, accentColor, size);
