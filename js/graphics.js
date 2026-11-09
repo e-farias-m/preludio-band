@@ -499,11 +499,16 @@ const Graphics = (() => {
 
     // Register / octave key — offset right, mirrored with the thumb so the two
     // side keys read as a pair.
-    if (extra !== undefined) {
+    // All keys the instrument actually has are always drawn (greyed when not
+    // in use) so students recognise the full mechanism from day one; only
+    // the keys in the current fingering are highlighted.
+    const AUX_SHOW = { clarinet: [8, 9, 10], saxophone: [8, 9, 11, 13], oboe: [8, 9, 11, 13, 14], bassoon: [8, 12, 14] }[instrument] || [8];
+    const showIdx = (idx) => AUX_SHOW.includes(idx) || fingeringState[idx] !== undefined;
+    if (showIdx(8)) {
       const exX = cx + tubeW/2 + 22, exY = 46;
       svg += `<line x1="${cx + tubeW/2 + 2}" y1="${exY}" x2="${exX - 13}" y2="${exY}" stroke="${INK_DIM}" stroke-width="1" stroke-dasharray="2,2"/>`;
       const regLabel = (instrument === 'saxophone' || instrument === 'oboe') ? '8va' : 'R';
-      svg += labeledKey(exX, exY, 13, extra, accentColor, regLabel);
+      svg += labeledKey(exX, exY, 13, !!extra, accentColor, regLabel);
     }
 
     // Thumb / whisper key (offset left of tube)
@@ -515,34 +520,34 @@ const Graphics = (() => {
 
     // Auxiliary little-finger / resonance key (extra2) — offset right, lower.
     // Used by clarinet clarion (left little finger) and oboe F4 (resonance key).
-    if (extra2 !== undefined) {
+    if (showIdx(9)) {
       const ex2X = cx + tubeW/2 + 22, ex2Y = keyYs[6];
       svg += `<line x1="${cx + tubeW/2 + 2}" y1="${ex2Y}" x2="${ex2X - 12}" y2="${ex2Y}" stroke="${INK_DIM}" stroke-width="1" stroke-dasharray="2,2"/>`;
-      svg += labeledKey(ex2X, ex2Y, 12, extra2, accentColor, 'L');
+      svg += labeledKey(ex2X, ex2Y, 12, !!extra2, accentColor, 'L');
     }
 
     // Top side key (sideKey) — offset left at h2's height. Clarinet A/G# throat
     // key, worked by the left index finger.
-    if (sideKey !== undefined) {
+    if (showIdx(10)) {
       const skX = cx - tubeW/2 - 22, skY = keyYs[2];
       svg += `<line x1="${cx - tubeW/2 - 2}" y1="${skY}" x2="${skX + 11}" y2="${skY}" stroke="${INK_DIM}" stroke-width="1" stroke-dasharray="2,2"/>`;
-      svg += labeledKey(skX, skY, 11, sideKey, accentColor, 'A');
+      svg += labeledKey(skX, skY, 11, !!sideKey, accentColor, 'A');
     }
 
     // Second left little-finger key (lhp2) — offset left, lower. Used when the
     // standard left-pinky key is not enough (sax/oboe low B or Bb).
-    if (lhp2 !== undefined) {
+    if (showIdx(11)) {
       const lpX = cx - tubeW/2 - 22, lpY = keyYs[5];
       svg += `<line x1="${cx - tubeW/2 - 2}" y1="${lpY}" x2="${lpX + 11}" y2="${lpY}" stroke="${INK_DIM}" stroke-width="1" stroke-dasharray="2,2"/>`;
-      svg += labeledKey(lpX, lpY, 11, lhp2, accentColor, 'L2');
+      svg += labeledKey(lpX, lpY, 11, !!lhp2, accentColor, 'L2');
     }
 
     // Right-thumb key (rthumb) — offset right at h2's height. Bassoon right-thumb
     // keys (low Bb, F#, G#), worked by the right thumb.
-    if (rthumb !== undefined) {
+    if (showIdx(12)) {
       const rtX = cx + tubeW/2 + 22, rtY = keyYs[2];
       svg += `<line x1="${cx + tubeW/2 + 2}" y1="${rtY}" x2="${rtX - 11}" y2="${rtY}" stroke="${INK_DIM}" stroke-width="1" stroke-dasharray="2,2"/>`;
-      svg += labeledKey(rtX, rtY, 11, rthumb, accentColor, 'RT');
+      svg += labeledKey(rtX, rtY, 11, !!rthumb, accentColor, 'RT');
     }
 
     // Second right little-finger key (rp2, the low E-flat key) — offset right,
@@ -675,40 +680,51 @@ const Graphics = (() => {
   }
 
   // ── TROMBONE SLIDE POSITION DIAGRAM ──────────────────────────────────────
-  // Shows a tube with 7 position markers. The current position is highlighted.
+  // Draws the U-shaped slide with its two inner tubes and moving outer
+  // slide. Positions 1-7 run from fully in to fully out; the current
+  // position's outer slide is highlighted and a cue labels how far out
+  // the slide is (3rd is just out, 4th is half out, 7th fully out — 1st
+  // is all the way in, so no cue is needed there).
   function tromboneFingeringSVG(position, accentColor = 'var(--accent-trombone)', size = 130) {
-    const tubeY = 50;
-    const tubeLeft = 20, tubeRight = 110;
-    const tubeLen = tubeRight - tubeLeft;
+    const tubeTop = 44, tubeBot = 56, tubeLeft = 18, slideBaseX = 78, slideMaxX = 122;
     const posCount = 7;
-    const posSpacing = (tubeLen - 20) / (posCount - 1);
-    const posStart = tubeLeft + 10;
+    const posSpacing = (slideMaxX - slideBaseX) / (posCount - 1);
+    const posStart = slideBaseX;
+    const pos = Math.max(1, Math.min(7, position || 1));
+    const slideEnd = posStart + (pos - 1) * posSpacing;
+    const cues = { 2: 'a touch out', 3: 'just out', 4: 'half out', 5: 'mostly out', 6: 'nearly out', 7: 'fully out' };
+    const noteNames = { 1: 'B♭', 2: 'A', 3: 'A♭', 4: 'G', 5: 'G♭', 6: 'F', 7: 'E' };
 
-    let svg = `<svg viewBox="0 0 130 100" width="${size}" height="${size * 100 / 130}" xmlns="http://www.w3.org/2000/svg">`;
+    let svg = `<svg viewBox="0 0 140 110" width="${size}" height="${size * 110 / 140}" xmlns="http://www.w3.org/2000/svg">`;
 
-    // Slide tube
-    svg += `<line x1="${tubeLeft}" y1="${tubeY}" x2="${tubeRight}" y2="${tubeY}" stroke="${INK_DIM}" stroke-width="4" stroke-linecap="round"/>`;
-    // Inner slide (extends out to current position)
-    const slideEnd = posStart + (position - 1) * posSpacing;
-    svg += `<line x1="${tubeLeft}" y1="${tubeY}" x2="${slideEnd}" y2="${tubeY}" stroke="${accentColor}" stroke-width="6" stroke-linecap="round"/>`;
+    // Bell section (left) + mouthpiece
+    svg += `<rect x="${tubeLeft - 10}" y="${tubeTop - 2}" width="10" height="6" rx="3" fill="${HOUSING_EDGE}"/>`;
+    svg += `<line x1="${tubeLeft}" y1="${tubeTop}" x2="${slideBaseX + 6}" y2="${tubeTop}" stroke="${INK_DIM}" stroke-width="2.5"/>`;
+    svg += `<line x1="${tubeLeft}" y1="${tubeBot}" x2="${slideBaseX + 6}" y2="${tubeBot}" stroke="${INK_DIM}" stroke-width="2.5"/>`;
+    svg += `<path d="M${tubeLeft} ${tubeTop} Q${tubeLeft - 12} ${tubeTop - 10} ${tubeLeft - 12} ${tubeTop - 16} L ${tubeLeft - 12} ${tubeTop + 16} Q ${tubeLeft - 12} ${tubeTop + 20} ${tubeLeft} ${tubeBot} Z" fill="${HOUSING}" stroke="${INK_DIM}" stroke-width="1.5"/>`;
 
-    // Position markers and labels
+    // Stationary inner slide tubes (fixed)
+    svg += `<line x1="${slideBaseX}" y1="${tubeTop}" x2="${slideMaxX + 6}" y2="${tubeTop}" stroke="${INK_DIM}" stroke-width="2" stroke-dasharray="3,2"/>`;
+    svg += `<line x1="${slideBaseX}" y1="${tubeBot}" x2="${slideMaxX + 6}" y2="${tubeBot}" stroke="${INK_DIM}" stroke-width="2" stroke-dasharray="3,2"/>`;
+
+    // Moving outer slide (U-shape) — highlighted up to the current position
+    svg += `<line x1="${slideBaseX}" y1="${tubeTop}" x2="${slideEnd}" y2="${tubeTop}" stroke="${accentColor}" stroke-width="4"/>`;
+    svg += `<line x1="${slideBaseX}" y1="${tubeBot}" x2="${slideEnd}" y2="${tubeBot}" stroke="${accentColor}" stroke-width="4"/>`;
+    svg += `<path d="M${slideEnd} ${tubeTop} Q${slideEnd + 12} ${(tubeTop + tubeBot) / 2} ${slideEnd} ${tubeBot}" stroke="${accentColor}" stroke-width="4" fill="none" stroke-linecap="round"/>`;
+    svg += `<line x1="${slideBaseX + 8}" y1="${tubeTop}" x2="${slideBaseX + 8}" y2="${tubeBot}" stroke="${accentColor}" stroke-width="2"/>`;
+
+    // Position ruler + numbers + note cues
     for (let i = 1; i <= posCount; i++) {
       const x = posStart + (i - 1) * posSpacing;
-      const isActive = i === position;
-      const dotColor = isActive ? accentColor : OPEN;
-      svg += `<circle cx="${x}" cy="${tubeY}" r="${isActive ? 5 : 3.5}" fill="${dotColor}" stroke="${isActive ? accentColor : 'none'}" stroke-width="2"/>`;
-      svg += `<text x="${x}" y="${tubeY + 20}" font-size="10" font-weight="${isActive ? '800' : '500'}" fill="${isActive ? accentColor : INK_DIM}" text-anchor="middle">${i}</text>`;
+      const isActive = i === pos;
+      svg += `<line x1="${x}" y1="68" x2="${x}" y2="74" stroke="${isActive ? accentColor : INK_DIM}" stroke-width="${isActive ? 2 : 1}"/>`;
+      svg += `<circle cx="${x}" cy="80" r="${isActive ? 8 : 6.5}" fill="${isActive ? accentColor : OPEN}" stroke="${isActive ? '#fff' : INK_DIM}" stroke-width="1"/>`;
+      svg += `<text x="${x}" y="84" font-size="8" font-weight="${isActive ? '800' : '600'}" fill="${isActive ? '#fff' : INK_DIM}" text-anchor="middle">${i}</text>`;
+      svg += `<text x="${x}" y="95" font-size="7" fill="${isActive ? accentColor : INK_DIM}" text-anchor="middle" font-weight="600">${noteNames[i]}</text>`;
+      if (i === pos && cues[i]) {
+        svg += `<text x="${x}" y="104" font-size="7" font-weight="700" fill="${accentColor}" text-anchor="middle">${cues[i]}</text>`;
+      }
     }
-
-    // Mouthpiece hint
-    svg += `<rect x="${tubeLeft - 8}" y="${tubeY - 3}" width="8" height="6" rx="3" fill="${HOUSING_EDGE}"/>`;
-
-    // Bell hint
-    svg += `<path d="M${tubeRight} ${tubeY - 8} Q${tubeRight + 12} ${tubeY} ${tubeRight} ${tubeY + 8}" stroke="${INK_DIM}" stroke-width="3" fill="none" stroke-linecap="round"/>`;
-
-    // Label
-    svg += `<text x="65" y="${tubeY + 42}" font-size="9" font-weight="600" fill="${INK_DIM}" text-anchor="middle" letter-spacing="0.15em">POSITION</text>`;
 
     svg += `</svg>`;
     return svg;
