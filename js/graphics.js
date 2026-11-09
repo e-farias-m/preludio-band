@@ -630,17 +630,23 @@ const Graphics = (() => {
     const [left, right] = fingeringState || [true, false];
     const hand = right ? 'R' : 'L';
     const cx = 65;
+    // Lessons still teach C → C (degree 1..8), but the instrument's lowest
+    // physical bar is F, so the diagram runs F → F. Remap the highlight
+    // so degree 1 (C) lands on the C bar (5th from the left), etc.
+    const DEGREE_TO_BAR = { 1: 4, 2: 5, 3: 6, 4: 0, 5: 1, 6: 2, 7: 3, 8: 4 };
+    const barIdx = (highlightIdx >= 0 && highlightIdx <= 7)
+      ? (DEGREE_TO_BAR[highlightIdx + 1] ?? highlightIdx) : -1;
     let svg = `<svg viewBox="0 0 130 130" width="${size}" height="${size}" xmlns="http://www.w3.org/2000/svg">`;
     // Wooden case (light oak, like the photo)
     svg += `<rect x="4" y="16" width="122" height="88" rx="7" fill="#D9B380" stroke="#8A5A2B" stroke-width="1.4"/>`;
     // Inner recess
     svg += `<rect x="9" y="21" width="112" height="78" rx="4" fill="#E8CFA8" stroke="#8A5A2B" stroke-width="1"/>`;
-    // Front row: 8 natural bars (low C left … high C right)
-    const noteNames = ['C','D','E','F','G','A','B','C'];
+    // Front row: 8 natural bars, lowest = F (left … high F right). No resonators.
+    const noteNames = ['F','G','A','B','C','D','E','F'];
     const natW = 10.5, natGap = 2.6, natX0 = 13, natY = 52, natH = 44;
     for (let i = 0; i < 8; i++) {
       const x = natX0 + i * (natW + natGap);
-      const isHl = highlightIdx === i;
+      const isHl = barIdx === i;
       const fill = isHl ? '#F2C24E' : '#D8D8DC';
       const stroke = isHl ? '#8A6D1B' : '#55514A';
       const sw = isHl ? 2.2 : 1.1;
@@ -650,16 +656,20 @@ const Graphics = (() => {
       svg += `<circle cx="${x + natW / 2}" cy="${natY + 6}" r="1.6" fill="#2B2B2B"/><circle cx="${x + natW / 2}" cy="${natY + natH - 6}" r="1.6" fill="#2B2B2B"/>`;
       svg += `<text x="${x + natW / 2}" y="${natY + natH + 10}" font-size="8" font-weight="${isHl ? '800' : '700'}" fill="${isHl ? '#111' : '#3E2412'}" text-anchor="middle" font-family="var(--pauta-font-sans),sans-serif">${noteNames[i]}${i === 7 ? '′' : ''}</text>`;
     }
-    // Back row: 5 accidental bars (shorter, darker steel, offset like the photo)
+    // Back row: 5 accidental bars. Each sits between its two naturals,
+    // e.g. C♯ between C and D (index 4), D♯ between D and E (index 5).
     const accW = 8.5, accGap = 3.4, accY = 26, accH = 26;
-    const accStarts = [0, 1, 3, 4, 5]; // between C-D, D-E, F-G, G-A, A-B
-    for (const i of accStarts) {
+    const accStarts = [0, 1, 2, 4, 5]; // F# G# A# C# D#
+    const accNames = ['F♯','G♯','A♯','C♯','D♯'];
+    for (let k = 0; k < accStarts.length; k++) {
+      const i = accStarts[k];
       const x = natX0 + i * (natW + natGap) + (natW + natGap) / 2 - accW / 2;
       svg += `<rect x="${x}" y="${accY}" width="${accW}" height="${accH}" rx="2.5" fill="#6E6A68" stroke="#24211D" stroke-width="1.1"/>`;
       svg += `<circle cx="${x + accW / 2}" cy="${accY + 5}" r="1.4" fill="#24211D"/><circle cx="${x + accW / 2}" cy="${accY + accH - 5}" r="1.4" fill="#24211D"/>`;
+      svg += `<text x="${x + accW / 2}" y="${accY - 3}" font-size="6.5" font-weight="700" fill="#3E2412" text-anchor="middle" font-family="var(--pauta-font-sans),sans-serif">${accNames[k]}</text>`;
     }
     // mallet points at the highlighted bar (or centre if none); handle below
-    const hlX = (highlightIdx >= 0 && highlightIdx <= 7) ? natX0 + highlightIdx * (natW + natGap) + natW / 2 : cx;
+    const hlX = (barIdx >= 0 && barIdx <= 7) ? natX0 + barIdx * (natW + natGap) + natW / 2 : cx;
     const malletX = hand === 'R' ? cx + 18 : cx - 18;
     svg += `<line x1="${cx}" y1="118" x2="${malletX}" y2="${natY + 22}" stroke="${accentColor}" stroke-width="2.5" stroke-linecap="round"/>`;
     svg += `<circle cx="${hlX}" cy="${natY + 22}" r="5" fill="${accentColor}" stroke="#fff" stroke-width="1.5"/>`;
