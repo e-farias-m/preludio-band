@@ -1143,6 +1143,23 @@ function isPercussionLesson(lesson) {
   return !!(inst && inst.fingeringType === 'snare' && lesson && !lesson.type);
 }
 
+function percussionStrokeBeats(lesson) {
+  return Array.isArray(lesson && lesson.strokeBeats) && lesson.strokeBeats.length
+    ? lesson.strokeBeats : [0, 1, 2, 3];
+}
+
+function schedulePercussionPattern(inst, lesson, startDelay = 0, beatMs = msPerBeatAt(80, APP.songSpeed)) {
+  const beats = percussionStrokeBeats(lesson);
+  const hitDuration = Math.min(0.18, beatMs / 1000 * 0.2);
+  beats.forEach(beat => {
+    const timer = setTimeout(() => {
+      AudioEngine.playInstrumentNote(lesson.freq, inst.fingeringType, hitDuration);
+    }, startDelay + beat * beatMs);
+    APP.playSequenceTimeouts.push(timer);
+  });
+  return Math.max(...beats) * beatMs;
+}
+
 function isLessonUnlocked(instrumentId, index) {
   const instrument = CURRICULUM[instrumentId];
   const lesson = instrument.lessons[index];
@@ -3192,8 +3209,8 @@ function render() {
 // ── PLAY PHASE MIC GATE ────────────────────────────────────────────────
 // Note lessons (not songs) are gated: after the count-in, the mic listens.
 // Pitched instruments need the right pitch (±80 cents, sustained); snare
-// (percussion) needs sound only — four distinct hits for a 4-stroke
-// rudiment. Songs stay self-reported. Mic unavailable/missed offers a
+// (percussion) needs sound only — one distinct hit for every stroke in the
+// lesson pattern. Songs stay self-reported. Mic unavailable/missed offers a
 // "Continue anyway" fallback so nobody is stuck.
 const GATE_CENTS = 80;
 const GATE_FRAMES_NEEDED = 4;
@@ -3224,6 +3241,13 @@ function startMicGate(lesson) {
   APP._gateLastHitMs = 0;
   APP._gateStartedAt = Date.now();
   const isPerc = isPercussionLesson(lesson);
+  const strokeBeats = isPerc ? percussionStrokeBeats(lesson) : [];
+  const snareHitsNeeded = isPerc ? strokeBeats.length : GATE_SNARE_HITS_NEEDED;
+  const snareBeatMs = msPerBeatAt(80, APP.songSpeed);
+  const intervals = strokeBeats.slice(1).map((beat, i) => (beat - strokeBeats[i]) * snareBeatMs);
+  const snareDebounceMs = intervals.length
+    ? Math.min(GATE_SNARE_DEBOUNCE, Math.max(80, Math.min(...intervals) * 0.55))
+    : GATE_SNARE_DEBOUNCE;
   const Ctx = window.AudioContext || window.webkitAudioContext;
   if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia || !Ctx) {
     APP._gateState = 'unavailable';
@@ -3256,11 +3280,11 @@ function startMicGate(lesson) {
       if (isPerc) {
         // Snare: sound recognition only — count distinct hits by RMS.
         if (rms >= GATE_SNARE_RMS) {
-          if (Date.now() - APP._gateLastHitMs > GATE_SNARE_DEBOUNCE) {
+          if (Date.now() - APP._gateLastHitMs > snareDebounceMs) {
             APP._gateHits++;
             APP._gateLastHitMs = Date.now();
-            setGateStatus(t(`Heard ${APP._gateHits} / ${GATE_SNARE_HITS_NEEDED} strokes`), '');
-            if (APP._gateHits >= GATE_SNARE_HITS_NEEDED) {
+            setGateStatus(tFill('Heard {heard} / {needed} strokes', { heard: APP._gateHits, needed: snareHitsNeeded }), '');
+            if (APP._gateHits >= snareHitsNeeded) {
               APP._gateState = 'heard';
               APP.play.hasPlayed = true;
               APP.play.micGate = 'heard';
@@ -3356,9 +3380,7 @@ function runPlaySequence(inst, lesson) {
     const playCell = document.querySelector('.beat-cell[data-beat="play"]');
     if (playCell) playCell.classList.add('active');
     if (isPercussionLesson(lesson)) {
-      for (let _i = 0; _i < 4; _i++) {
-        setTimeout(() => AudioEngine.playInstrumentNote(lesson.freq, inst.fingeringType, beatMs / 1000 * 0.9), _i * beatMs);
-      }
+      schedulePercussionPattern(inst, lesson, 0, beatMs);
     } else {
       AudioEngine.playInstrumentNote(lesson.freq, inst.fingeringType, 1.3);
     }
@@ -3378,7 +3400,9 @@ function runPlaySequence(inst, lesson) {
       status.textContent = t('Play it now — I’m listening…');
       startMicGate(lesson);
     }
-  }, 4 * beatMs + 1500);
+  }, 4 * beatMs + (isPercussionLesson(lesson)
+    ? Math.max(1500, Math.max(...percussionStrokeBeats(lesson)) * beatMs + 500)
+    : 1500));
   APP.playSequenceTimeouts.push(t3);
 }
 
@@ -4282,11 +4306,8 @@ function handleAction(action, el) {
       const inst = getInstrument(APP.instrumentId);
       const lesson = getLesson(APP.instrumentId, APP.lessonIndex);
       if (isPercussionLesson(lesson)) {
-        // Snare rudiments are practised in groups of four strokes, one per beat.
         const _spb = msPerBeatAt(80, APP.songSpeed);
-        for (let _i = 0; _i < 4; _i++) {
-          setTimeout(() => AudioEngine.playInstrumentNote(lesson.freq, inst.fingeringType, _spb / 1000 * 0.9), _i * _spb);
-        }
+        schedulePercussionPattern(inst, lesson, 0, _spb);
       } else if (isSongLesson(lesson)) {
         const note = getResolvedSongNote(APP.instrumentId, lesson);
         const chordFreqs = getChordFrequencies(APP.instrumentId, lesson, APP.songNoteIndex);

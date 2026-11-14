@@ -1875,8 +1875,8 @@ const CURRICULUM = {
       {
         id: 'gl-1', degree: 1, noteName: 'C', octave: 5, staffStep: 5, accidental: null, freq: 523.25,
         fingeringState: [true, false],
-        description: 'Your first glockenspiel note — middle C. Strike with the left mallet.',
-        prompt: 'Left hand (L). Strike the C bar with a clean, controlled stroke. Let it ring.'
+        description: 'Your first glockenspiel note — C5, one octave above middle C. Strike with the left mallet.',
+        prompt: 'Left hand (L). Strike the C5 bar with a clean, controlled stroke. Let it ring.'
       },
       {
         id: 'gl-song-1', type: 'song', audioUrl: null, bpm: 100, noteName: 'My First Note',
@@ -1904,9 +1904,7 @@ const CURRICULUM = {
         id: 'gl-song-3', type: 'song', audioUrl: null, bpm: 100, noteName: 'Hot Cross Buns',
         description: 'A classic English nursery rhyme using C, D, and E.',
         prompt: 'Step through each note slowly. Alternate hands: L, R, L…',
-        noteIds: ['gl-1', 'gl-2', 'gl-3', 'gl-1', 'gl-2', 'gl-3', 'gl-3', 'gl-3', 'gl-3', 'gl-3', 'gl-2', 'gl-2', 'gl-2', 'gl-2', 'gl-1', 'gl-2', 'gl-3'],
-        durations: ['h', 'h', 'w', 'h', 'h', 'w', 'q', 'q', 'q', 'q', 'q', 'q', 'q', 'q', 'h', 'h', 'w'],
-        keySig: 1, timeSig: { num: 4, den: 4 },
+        keySig: 0, timeSig: { num: 4, den: 4 },
       },
       {
         id: 'gl-4', degree: 4, noteName: 'F', octave: 5, staffStep: 8, accidental: null, freq: 698.46,
@@ -1942,11 +1940,9 @@ const CURRICULUM = {
       },
       {
         id: 'gl-song-5', type: 'song', audioUrl: null, bpm: 100, noteName: 'Merrily We Roll Along',
-        description: 'The tune behind "Mary Had a Little Lamb" using B, A, and G.',
+        description: 'The tune behind "Mary Had a Little Lamb" using C, D, and E.',
         prompt: 'Alternate hands and keep an even tempo.',
-        noteIds: ['gl-7', 'gl-6', 'gl-5', 'gl-6', 'gl-7', 'gl-7', 'gl-7', 'gl-6', 'gl-6', 'gl-6', 'gl-7', 'gl-7', 'gl-7', 'gl-7', 'gl-6', 'gl-5', 'gl-6', 'gl-7', 'gl-7', 'gl-7', 'gl-7', 'gl-6', 'gl-6', 'gl-7', 'gl-6', 'gl-5'],
-        durations: ['q', 'q', 'q', 'q', 'q', 'q', 'h', 'q', 'q', 'h', 'q', 'q', 'h', 'q', 'q', 'q', 'q', 'q', 'q', 'q', 'q', 'q', 'q', 'q', 'q', 'w'],
-        keySig: 1, timeSig: { num: 4, den: 4 },
+        keySig: 0, timeSig: { num: 4, den: 4 },
       },
       {
         id: 'gl-8', degree: 8, noteName: 'C', octave: 6, staffStep: 12, accidental: null, freq: 1046.50,
@@ -1956,9 +1952,9 @@ const CURRICULUM = {
       },
       {
         id: 'gl-song-6', type: 'song', audioUrl: null, bpm: 100, noteName: 'Ode to Joy',
-        description: 'Beethoven\u2019s famous melody using G, F, E, D, and C.',
+        description: 'Beethoven\u2019s famous melody in C, using E, F, G, D, and C.',
         prompt: 'Alternate hands and keep a steady, singing tone.',
-        noteIds: ['gl-7', 'gl-7', 'gl-1', 'gl-2', 'gl-2', 'gl-1', 'gl-7', 'gl-6', 'gl-5', 'gl-5', 'gl-6', 'gl-7', 'gl-7', 'gl-6', 'gl-6'],
+        noteIds: ['gl-3', 'gl-3', 'gl-4', 'gl-5', 'gl-5', 'gl-4', 'gl-3', 'gl-2', 'gl-1', 'gl-1', 'gl-2', 'gl-3', 'gl-3', 'gl-2', 'gl-2'],
         durations: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2],
         keySig: 0, timeSig: { num: 4, den: 4 },
         libraryOnly: true,
@@ -1982,38 +1978,47 @@ const CURRICULUM = {
       {
         id: 'sd-1l', degree: 1, noteName: 'Single Stroke — Left', octave: 0, staffStep: 4, accidental: null, freq: 100,
         fingeringState: [true, false],
+        strokeBeats: [0, 1, 2, 3],
         description: 'Four single strokes with the left hand. The foundation of all drumming.',
         prompt: 'Strike with the left stick four times. Keep the strokes even and relaxed.'
       },
       {
+        id: 'sd-song-1', type: 'song', audioUrl: null, bpm: 100, noteName: 'My First Note',
+        description: 'A short warm-up of six steady left-hand strokes.',
+        prompt: 'Play six even left-hand strokes. Stay relaxed and let the stick rebound.',
+      },
+      {
         id: 'sd-1r', degree: 2, noteName: 'Single Stroke — Right', octave: 0, staffStep: 4, accidental: null, freq: 100,
         fingeringState: [false, true],
+        strokeBeats: [0, 1, 2, 3],
         description: 'Four single strokes with the right hand. The foundation of all drumming.',
         prompt: 'Strike with the right stick four times. Keep the strokes even and relaxed.'
       },
       {
-        id: 'sd-6', degree: 3, noteName: 'Single Stroke 4', octave: 0, staffStep: 4, accidental: null, freq: 100,
-        fingeringState: [true, false],
-        description: 'Four single strokes: R L R L. The building block of rolls.',
-        prompt: 'Even strokes, even spacing. Speed up gradually without losing control.'
+        id: 'sd-song-2', type: 'song', audioUrl: null, bpm: 100, noteName: 'Step Up and Down',
+        description: 'A steady pattern that alternates between left and right.',
+        prompt: 'L R L R, one stroke per beat. Keep both hands even and relaxed.',
       },
       {
-        id: 'sd-song-3', type: 'song', audioUrl: null, bpm: 100, noteName: 'Alternating Roll',
-        description: 'Eight single strokes alternating right and left. The single-stroke roll.',
+        id: 'sd-6', degree: 3, noteName: 'Alternating Singles', octave: 0, staffStep: 4, accidental: null, freq: 100,
+        fingeringState: [false, true],
+        strokeBeats: [0, 1, 2, 3],
+        description: 'Four even single strokes: R L R L. The building block of a roll.',
+        prompt: 'R L R L, one stroke per beat. Keep the spacing even and let each stick rebound.'
+      },
+      {
+        id: 'sd-song-3', type: 'song', audioUrl: null, bpm: 100, noteName: 'Single-Stroke Roll',
+        description: 'Eight single strokes alternating right and left.',
         prompt: 'R L R L R L R L. Keep the strokes even and relaxed; let the sticks rebound.',
         noteIds: ['sd-1r', 'sd-1l', 'sd-1r', 'sd-1l', 'sd-1r', 'sd-1l', 'sd-1r', 'sd-1l'],
         durations: [1, 1, 1, 1, 1, 1, 1, 1],
         keySig: 0, timeSig: { num: 4, den: 4 },
-        prerequisiteIds: ['sd-1r', 'sd-1l'],
-      },
-      {
-        id: 'sd-song-1', type: 'song', audioUrl: null, bpm: 100, noteName: 'My First Note',
-        description: 'A short warm-up on your very first rudiment. Relax and keep the strokes even!',
-        prompt: 'Play the rudiment a few times, long and even. Listen for a clear, centred sound.',
+        prerequisiteIds: ['sd-1r', 'sd-1l', 'sd-6'],
       },
       {
         id: 'sd-2', degree: 4, noteName: 'Double Stroke', octave: 0, staffStep: 4, accidental: null, freq: 100,
         fingeringState: [true, true],
+        strokeBeats: [0, 0.5, 1, 1.5],
         description: 'Two strokes per hand: right-right, left-left. Builds speed and control.',
         prompt: 'Two strokes with the right, two with the left. Let the second stroke rebound.'
       },
@@ -2021,34 +2026,31 @@ const CURRICULUM = {
         id: 'sd-song-4', type: 'song', audioUrl: null, bpm: 100, noteName: 'Double Stroke Roll',
         description: 'Four double strokes: right-right, left-left. Builds speed and control.',
         prompt: 'RR LL RR LL. Let the second stroke of each pair rebound naturally.',
-        noteIds: ['sd-2', 'sd-2', 'sd-2', 'sd-2'],
-        durations: [1, 1, 1, 1],
+        noteIds: ['sd-1r', 'sd-1r', 'sd-1l', 'sd-1l', 'sd-1r', 'sd-1r', 'sd-1l', 'sd-1l'],
+        durations: [0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5],
         keySig: 0, timeSig: { num: 4, den: 4 },
         prerequisiteIds: ['sd-2'],
       },
       {
-        id: 'sd-song-2', type: 'song', audioUrl: null, bpm: 100, noteName: 'Step Up and Down',
-        description: 'A two-rudiment pattern that steps from your first rudiment to your second and back.',
-        prompt: 'Move smoothly between just two rudiments. Keep each stroke centred!',
-      },
-      {
         id: 'sd-3', degree: 5, noteName: 'Paradiddle', octave: 0, staffStep: 4, accidental: null, freq: 100,
         fingeringState: [true, false],
+        strokeBeats: [0, 0.5, 1, 1.5, 2, 2.5, 3, 3.5],
         description: 'Right-left-right-right, left-right-left-left. The classic hand-to-hand pattern.',
         prompt: 'RLRR LRLL. Accent the first stroke of each group. Keep it even.'
       },
       {
         id: 'sd-song-5', type: 'song', audioUrl: null, bpm: 100, noteName: 'Paradiddle Drill',
-        description: 'Four paradiddles in a row. The classic hand-to-hand pattern.',
-        prompt: 'RLRR LRLL, repeated. Accent the first stroke of each group; keep it even.',
-        noteIds: ['sd-3', 'sd-3', 'sd-3', 'sd-3'],
-        durations: [1, 1, 1, 1],
+        description: 'One complete paradiddle: the classic hand-to-hand pattern.',
+        prompt: 'RLRR LRLL. Accent the first stroke of each group; keep it even.',
+        noteIds: ['sd-1r', 'sd-1l', 'sd-1r', 'sd-1r', 'sd-1l', 'sd-1r', 'sd-1l', 'sd-1l'],
+        durations: Array(8).fill(0.5),
         keySig: 0, timeSig: { num: 4, den: 4 },
         prerequisiteIds: ['sd-3'],
       },
       {
         id: 'sd-4', degree: 6, noteName: 'Flam', octave: 0, staffStep: 4, accidental: null, freq: 100,
         fingeringState: [true, false],
+        strokeBeats: [0, 0.18, 1, 1.18, 2, 2.18, 3, 3.18],
         description: 'A grace note just before the main note. Right hand leads, left follows.',
         prompt: 'Play a soft grace note with the left, then the main note with the right. Tight and clean.'
       },
@@ -2056,14 +2058,15 @@ const CURRICULUM = {
         id: 'sd-song-6', type: 'song', audioUrl: null, bpm: 100, noteName: 'Flam Exercise',
         description: 'Four flams in a row. A grace note just before the main note.',
         prompt: 'Soft grace note, then the main note. Tight and clean; right hand leads.',
-        noteIds: ['sd-4', 'sd-4', 'sd-4', 'sd-4'],
-        durations: [1, 1, 1, 1],
+        noteIds: ['sd-1l', 'sd-1r', 'sd-1l', 'sd-1r', 'sd-1l', 'sd-1r', 'sd-1l', 'sd-1r'],
+        durations: [0.18, 0.82, 0.18, 0.82, 0.18, 0.82, 0.18, 0.82],
         keySig: 0, timeSig: { num: 4, den: 4 },
         prerequisiteIds: ['sd-4'],
       },
       {
         id: 'sd-5', degree: 7, noteName: 'Drag', octave: 0, staffStep: 4, accidental: null, freq: 100,
         fingeringState: [true, true],
+        strokeBeats: [0, 0.16, 0.32, 1, 1.16, 1.32, 2, 2.16, 2.32, 3, 3.16, 3.32],
         description: 'Two grace notes before the main note. A wider, fuller flam.',
         prompt: 'Play two soft grace notes, then the main note. Keep the grace notes tight.'
       },
@@ -2071,8 +2074,8 @@ const CURRICULUM = {
         id: 'sd-song-7', type: 'song', audioUrl: null, bpm: 100, noteName: 'Drag Exercise',
         description: 'Four drags in a row. Two grace notes before the main note.',
         prompt: 'Two soft grace notes, then the main note. Keep the grace notes tight.',
-        noteIds: ['sd-5', 'sd-5', 'sd-5', 'sd-5'],
-        durations: [1, 1, 1, 1],
+        noteIds: ['sd-1l', 'sd-1l', 'sd-1r', 'sd-1l', 'sd-1l', 'sd-1r', 'sd-1l', 'sd-1l', 'sd-1r', 'sd-1l', 'sd-1l', 'sd-1r'],
+        durations: [0.16, 0.16, 0.68, 0.16, 0.16, 0.68, 0.16, 0.16, 0.68, 0.16, 0.16, 0.68],
         keySig: 0, timeSig: { num: 4, den: 4 },
         prerequisiteIds: ['sd-5'],
       },
@@ -2102,7 +2105,7 @@ const CANONICAL_SONGS = {
     degrees: [3,2,1, 3,2,1, 1,1,1,1, 2,2,2,2, 3,2,1],
     durations: [1,1,2, 1,1,2, 1,1,1,1, 1,1,1,1, 1,1,2],
   },
-  // The three-note "B A G" beginner arrangement of the Mary Had a Little Lamb
+  // The three-note "E D C" beginner arrangement of the Mary Had a Little Lamb
   // tune, so it stays within the first three notes the student has learned.
   'Merrily We Roll Along': {
     degrees: [3,2,1,2,3,3,3, 2,2,2, 3,3,3, 3,2,1,2,3,3,3, 2,2,3,2,1],

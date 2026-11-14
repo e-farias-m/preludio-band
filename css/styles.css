@@ -57,6 +57,8 @@
   --accent-french-horn:    #E8845A;
   --accent-euphonium:      #D8C34A;
   --accent-tuba:           #E0A24E;
+  --accent-glockenspiel:   #F2C24E;
+  --accent-snare-drum:     #E85D5D;
 
   /* Per-note mastery scale */
   --mastery-new:       #524F70;
@@ -111,6 +113,8 @@
   --accent-french-horn:    #C0562A;
   --accent-euphonium:      #8F7A16;
   --accent-tuba:           #A9742A;
+  --accent-glockenspiel:   #946A00;
+  --accent-snare-drum:     #C13939;
 
   --mastery-new:       #5E5A80;
   --mastery-learning:  #E3601A;

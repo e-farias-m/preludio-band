@@ -746,10 +746,9 @@ const Graphics = (() => {
     const [left, right] = fingeringState || [true, false];
     const hand = right ? 'R' : 'L';
     const cx = 65;
-    // Lessons still teach C → C (degree 1..8), but the instrument's lowest
-    // physical bar is F, so the diagram runs F → F. Remap the highlight
-    // so degree 1 (C) lands on the C bar (5th from the left), etc.
-    const DEGREE_TO_BAR = { 1: 4, 2: 5, 3: 6, 4: 0, 5: 1, 6: 2, 7: 3, 8: 4 };
+    // The natural bars run F4 through C6. Glockenspiel lessons teach C5 to C6,
+    // so map each scale degree to its matching physical bar in that range.
+    const DEGREE_TO_BAR = { 1: 4, 2: 5, 3: 6, 4: 7, 5: 8, 6: 9, 7: 10, 8: 11 };
     const barIdx = (highlightIdx >= 0 && highlightIdx <= 7)
       ? (DEGREE_TO_BAR[highlightIdx + 1] ?? highlightIdx) : -1;
     let svg = `<svg viewBox="0 0 130 130" width="${size}" height="${size}" xmlns="http://www.w3.org/2000/svg">`;
@@ -771,7 +770,7 @@ const Graphics = (() => {
       // centre groove + pegs
       svg += `<line x1="${x + natW / 2}" y1="${natY + 4}" x2="${x + natW / 2}" y2="${natY + natH - 4}" stroke="#9B978F" stroke-width="1"/>`;
       svg += `<circle cx="${x + natW / 2}" cy="${natY + 6}" r="1.6" fill="#2B2B2B"/><circle cx="${x + natW / 2}" cy="${natY + natH - 6}" r="1.6" fill="#2B2B2B"/>`;
-      svg += `<text x="${x + natW / 2}" y="${natY + natH + 10}" font-size="7" font-weight="${isHl ? '800' : '700'}" fill="${isHl ? '#111' : '#3E2412'}" text-anchor="middle" font-family="var(--pauta-font-sans),sans-serif">${noteNames[i]}${i === 7 ? '′' : ''}</text>`;
+      svg += `<text x="${x + natW / 2}" y="${natY + natH + 10}" font-size="7" font-weight="${isHl ? '800' : '700'}" fill="${isHl ? '#111' : '#3E2412'}" text-anchor="middle" font-family="var(--pauta-font-sans),sans-serif">${noteNames[i]}${i >= 7 ? '′' : ''}</text>`;
     }
     // Back row: accidental bars sitting *between* naturals in the gap.
     // Narrower than the gap so they read as in-between, e.g. C♯ between C
