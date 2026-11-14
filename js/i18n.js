@@ -29,11 +29,21 @@ var NOTE_TO_SOLFEGE_PT = {
   'A': 'Lá', 'A#': 'Lá#', 'Bb': 'Sib', 'B': 'Si'
 };
 
+var NOTE_TO_SOLFEGE_FR = {
+  'C': 'Do', 'C#': 'Do#', 'D': 'Ré', 'D#': 'Ré#', 'E': 'Mi', 'F': 'Fa', 'F#': 'Fa#',
+  'G': 'Sol', 'G#': 'Sol#', 'A': 'La', 'A#': 'La#', 'Bb': 'Sib', 'B': 'Si'
+};
+
 function noteToSolfeggio(str) {
   if (typeof str !== 'string') return str;
-  if (LANG === 'pt') {
-    if (/^[A-G][#b]?$/.test(str.trim())) {
-      return NOTE_TO_SOLFEGE_PT[str.trim()] || str;
+  if (LANG === 'pt' || LANG === 'fr') {
+    const m = str.trim().match(/^([A-G])([#b♯♭]?)(\d*)$/);
+    if (m) {
+      const acc = m[2];
+      const key = acc ? m[1] + (acc === '♭' ? 'b' : acc) : m[1];
+      const table = LANG === 'pt' ? NOTE_TO_SOLFEGE_PT : NOTE_TO_SOLFEGE_FR;
+      const base = table[key] || table[m[1]] || m[1];
+      return base + (m[3] || '');
     }
   }
   return str;
@@ -82,9 +92,11 @@ function t(str) {
 
 function tFill(template, vars) {
   if (typeof template !== 'string') return template;
-  return template.replace(/\{(\w+)\}/g, (m, key) => (
-    Object.prototype.hasOwnProperty.call(vars || {}, key) ? String(vars[key]) : m
-  ));
+  return template.replace(/\{(\w+)\}/g, (m, key) => {
+    const raw = Object.prototype.hasOwnProperty.call(vars || {}, key) ? String(vars[key]) : m;
+    if (key === 'note') return noteToSolfeggio(raw);
+    return raw;
+  });
 }
 
 function getLang() { return LANG; }
