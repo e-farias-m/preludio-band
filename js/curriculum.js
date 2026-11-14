@@ -2029,7 +2029,7 @@ const CURRICULUM = {
         noteIds: ['sd-1r', 'sd-1r', 'sd-1l', 'sd-1l', 'sd-1r', 'sd-1r', 'sd-1l', 'sd-1l'],
         durations: [0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5],
         keySig: 0, timeSig: { num: 4, den: 4 },
-        prerequisiteIds: ['sd-2'],
+        prerequisiteIds: ['sd-1r', 'sd-1l', 'sd-2'],
       },
       {
         id: 'sd-3', degree: 5, noteName: 'Paradiddle', octave: 0, staffStep: 4, accidental: null, freq: 100,
@@ -2045,7 +2045,7 @@ const CURRICULUM = {
         noteIds: ['sd-1r', 'sd-1l', 'sd-1r', 'sd-1r', 'sd-1l', 'sd-1r', 'sd-1l', 'sd-1l'],
         durations: Array(8).fill(0.5),
         keySig: 0, timeSig: { num: 4, den: 4 },
-        prerequisiteIds: ['sd-3'],
+        prerequisiteIds: ['sd-1r', 'sd-1l', 'sd-3'],
       },
       {
         id: 'sd-4', degree: 6, noteName: 'Flam', octave: 0, staffStep: 4, accidental: null, freq: 100,
@@ -2061,7 +2061,7 @@ const CURRICULUM = {
         noteIds: ['sd-1l', 'sd-1r', 'sd-1l', 'sd-1r', 'sd-1l', 'sd-1r', 'sd-1l', 'sd-1r'],
         durations: [0.18, 0.82, 0.18, 0.82, 0.18, 0.82, 0.18, 0.82],
         keySig: 0, timeSig: { num: 4, den: 4 },
-        prerequisiteIds: ['sd-4'],
+        prerequisiteIds: ['sd-1r', 'sd-1l', 'sd-4'],
       },
       {
         id: 'sd-5', degree: 7, noteName: 'Drag', octave: 0, staffStep: 4, accidental: null, freq: 100,
@@ -2077,7 +2077,7 @@ const CURRICULUM = {
         noteIds: ['sd-1l', 'sd-1l', 'sd-1r', 'sd-1l', 'sd-1l', 'sd-1r', 'sd-1l', 'sd-1l', 'sd-1r', 'sd-1l', 'sd-1l', 'sd-1r'],
         durations: [0.16, 0.16, 0.68, 0.16, 0.16, 0.68, 0.16, 0.16, 0.68, 0.16, 0.16, 0.68],
         keySig: 0, timeSig: { num: 4, den: 4 },
-        prerequisiteIds: ['sd-5'],
+        prerequisiteIds: ['sd-1r', 'sd-1l', 'sd-5'],
       },
       {
         id: 'sd-review-1', type: 'review',
