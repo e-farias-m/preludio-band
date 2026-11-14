@@ -681,8 +681,8 @@ TRANSLATIONS.pt = {
   "Breathing and tone reminders before you play.": "Lembretes de respiração e som antes de tocar.",
   "A quick guide to your first sound, before note one.": "Um guia rápido para o seu primeiro som, antes da primeira nota.",
   "Tip": "Dica",
-  'Your first glockenspiel note — C5, one octave above middle C. Strike with the left mallet.': 'Sua primeira nota de glockenspiel — C5, uma oitava acima do Dó central. Toque com a baqueta esquerda.',
-  'Left hand (L). Strike the C5 bar with a clean, controlled stroke. Let it ring.': 'Mão esquerda (E). Toque a barra de C5 com um golpe limpo e controlado. Deixe soar.',
+  'Your first glockenspiel note — C5, one octave above middle C. Strike with the left mallet.': 'Sua primeira nota de glockenspiel — Dó5, uma oitava acima do Dó central. Toque com a baqueta esquerda.',
+  'Left hand (L). Strike the C5 bar with a clean, controlled stroke. Let it ring.': 'Mão esquerda (E). Toque a barra de Dó5 com um golpe limpo e controlado. Deixe soar.',
   'D — right hand. The next bar up.': 'Ré — mão direita. A próxima barra acima.',
   'Right hand (R). Keep the wrist relaxed; let the mallet bounce.': 'Mão direita (D). Mantenha o punho relaxado; deixe a baqueta quicar.',
   'E — left hand. You now know CDE!': 'Mi — mão esquerda. Você já conhece Dó-Ré-Mi!',
@@ -1004,8 +1004,8 @@ TRANSLATIONS.fr = {
   "Model": "Modèle",
   "Re-record": "Réenregistrer",
   "Delete recording": "Supprimer l’enregistrement",
-  "Your first glockenspiel note — C5, one octave above middle C. Strike with the left mallet.": "Votre première note de glockenspiel — C5, une octave au-dessus du do central. Frappez avec la mailloche gauche.",
-  "Left hand (L). Strike the C5 bar with a clean, controlled stroke. Let it ring.": "Main gauche (G). Frappez la barre de C5 avec un coup net et contrôlé. Laissez sonner.",
+  "Your first glockenspiel note — C5, one octave above middle C. Strike with the left mallet.": "Votre première note de glockenspiel — Do5, une octave au-dessus du do central. Frappez avec la mailloche gauche.",
+  "Left hand (L). Strike the C5 bar with a clean, controlled stroke. Let it ring.": "Main gauche (G). Frappez la barre de Do5 avec un coup net et contrôlé. Laissez sonner.",
   "D — right hand. The next bar up.": "Ré — main droite. La barre suivante vers le haut.",
   "Right hand (R). Keep the wrist relaxed; let the mallet bounce.": "Main droite (D). Gardez le poignet détendu; laissez la mailloche rebondir.",
   "E — left hand. You now know CDE!": "Mi — main gauche. Vous connaissez déjà Do-Ré-Mi !",
@@ -1067,8 +1067,8 @@ TRANSLATIONS.fr = {
 };
 
 const PT_EXTRA = {
-  "Your first glockenspiel note — C5, one octave above middle C. Strike with the left mallet.": "Sua primeira nota de glockenspiel — C5, uma oitava acima do Dó central. Toque com a baqueta esquerda.",
-  "Left hand (L). Strike the C5 bar with a clean, controlled stroke. Let it ring.": "Mão esquerda (E). Toque a barra de C5 com um golpe limpo e controlado. Deixe soar.",
+  "Your first glockenspiel note — C5, one octave above middle C. Strike with the left mallet.": "Sua primeira nota de glockenspiel — Dó5, uma oitava acima do Dó central. Toque com a baqueta esquerda.",
+  "Left hand (L). Strike the C5 bar with a clean, controlled stroke. Let it ring.": "Mão esquerda (E). Toque a barra de Dó5 com um golpe limpo e controlado. Deixe soar.",
   "D — right hand. The next bar up.": "Ré — mão direita. A próxima barra acima.",
   "Right hand (R). Keep the wrist relaxed; let the mallet bounce.": "Mão direita (D). Mantenha o punho relaxado; deixe a baqueta quicar.",
   "E — left hand. You now know CDE!": "Mi — mão esquerda. Você já conhece Dó-Ré-Mi!",
