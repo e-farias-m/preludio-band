@@ -2457,7 +2457,7 @@ function renderSprintView(inst) {
   const q = s.question;
   const promptHtml = q.mode === SPRINT_MODES.SIGHT
     ? `<div class="quiz-prompt-svg">${Graphics.staffSVG({ pos: q.prompt.staffStep, accidental: q.prompt.accidental, clef: inst.clef, accentColor: instAccent(inst), width: 100 })}</div>`
-    : `<div class="quiz-prompt-note">${escapeHtml(t(q.prompt.noteName))}</div>`;
+    : `<div class="quiz-prompt-note">${escapeHtml(quizDisplayNoteName(inst, q.prompt))}</div>`;
 
   const optionsHtml = q.options.map(opt => {
     let cls = 'quiz-option';
@@ -2465,7 +2465,7 @@ function renderSprintView(inst) {
     let content;
     if (q.mode === SPRINT_MODES.SIGHT) {
       cls += ' text-only';
-      content = `<div class="quiz-option-note">${escapeHtml(t(opt.noteName))}</div>`;
+      content = `<div class="quiz-option-note">${escapeHtml(quizDisplayNoteName(inst, opt))}</div>`;
     } else {
       content = `<div class="quiz-option-svg">${Graphics.fingeringSVG(inst.fingeringType, opt.fingeringState, instAccent(inst), 72, (opt.degree != null ? opt.degree - 1 : -1))}</div>`;
     }
@@ -2979,6 +2979,12 @@ function buildSprintQuestion(instrumentId, mode) {
   };
 }
 
+function quizDisplayNoteName(inst, note) {
+  const name = t(note.noteName);
+  return inst.fingeringType === 'glockenspiel' && Number.isFinite(note.octave)
+    ? `${name}${note.octave}` : name;
+}
+
 function getQuizQuestionText(quizType) {
   switch (quizType) {
     case QUIZ_TYPES.FINGERING_TO_NOTE:  return t('Which note does this fingering play?');
@@ -3013,11 +3019,11 @@ function renderQuizPhase(inst, lesson) {
   if (q.quizType === QUIZ_TYPES.FINGERING_TO_NOTE) {
     promptHtml = `<div class="quiz-prompt-svg">${Graphics.fingeringSVG(inst.fingeringType, q.prompt.fingeringState, instAccent(inst), 100, (q.prompt.degree != null ? q.prompt.degree - 1 : -1))}</div>`;
   } else if (q.quizType === QUIZ_TYPES.NOTE_TO_FINGERING) {
-    promptHtml = `<div class="quiz-prompt-note">${escapeHtml(t(q.prompt.noteName))}</div>`;
+    promptHtml = `<div class="quiz-prompt-note">${escapeHtml(quizDisplayNoteName(inst, q.prompt))}</div>`;
   } else if (q.quizType === QUIZ_TYPES.STAFF_TO_NOTE) {
     promptHtml = `<div class="quiz-prompt-svg">${Graphics.staffSVG({ pos: q.prompt.staffStep, accidental: q.prompt.accidental, clef: inst.clef, accentColor: instAccent(inst), width: 100 })}</div>`;
   } else if (q.quizType === QUIZ_TYPES.NOTE_TO_STAFF) {
-    promptHtml = `<div class="quiz-prompt-note">${escapeHtml(t(q.prompt.noteName))}</div>`;
+    promptHtml = `<div class="quiz-prompt-note">${escapeHtml(quizDisplayNoteName(inst, q.prompt))}</div>`;
   }
 
   // ── OPTIONS ──
@@ -3034,12 +3040,12 @@ function renderQuizPhase(inst, lesson) {
     let content = '';
     if (q.quizType === QUIZ_TYPES.FINGERING_TO_NOTE) {
       cls += ' text-only';
-      content = `<div class="quiz-option-note">${escapeHtml(t(opt.noteName))}</div>`;
+      content = `<div class="quiz-option-note">${escapeHtml(quizDisplayNoteName(inst, opt))}</div>`;
     } else if (q.quizType === QUIZ_TYPES.NOTE_TO_FINGERING) {
       content = `<div class="quiz-option-svg">${Graphics.fingeringSVG(inst.fingeringType, opt.fingeringState, instAccent(inst), 72, (opt.degree != null ? opt.degree - 1 : -1))}</div>`;
     } else if (q.quizType === QUIZ_TYPES.STAFF_TO_NOTE) {
       cls += ' text-only';
-      content = `<div class="quiz-option-note">${escapeHtml(t(opt.noteName))}</div>`;
+      content = `<div class="quiz-option-note">${escapeHtml(quizDisplayNoteName(inst, opt))}</div>`;
     } else if (q.quizType === QUIZ_TYPES.NOTE_TO_STAFF) {
       content = `<div class="quiz-option-svg">${Graphics.staffSVG({ pos: opt.staffStep, accidental: opt.accidental, clef: inst.clef, accentColor: instAccent(inst), width: 72 })}</div>`;
     }
