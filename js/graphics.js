@@ -739,9 +739,10 @@ const Graphics = (() => {
 
   // ── GLOCKENSPIEL FINGERING (top-down, like the real instrument) ───────
   // Top-down view: wooden case, naturals in the front (longer, silver),
-  // sharps/flats behind (shorter, darker steel), low C on the left,
-  // high C on the right, pins visible. highlightIdx marks natural bar
-  // 0 = low C … 7 = high C. No resonators (glockenspiels don't have them).
+  // sharps/flats behind (shorter, darker steel), F4 on the left and C6 on
+  // the right, pins visible. highlightIdx is the lesson degree
+  // index (0 = C5 … 7 = C6), mapped to the matching physical bar below.
+  // No resonators (glockenspiels don't have them).
   function glockenspielFingeringSVG(fingeringState, accentColor = 'var(--accent-warm)', size = 130, highlightIdx = -1) {
     const [left, right] = fingeringState || [true, false];
     const hand = right ? 'R' : 'L';
@@ -787,11 +788,13 @@ const Graphics = (() => {
       svg += `<circle cx="${gapCenter}" cy="${accY + 5}" r="1.2" fill="#24211D"/><circle cx="${gapCenter}" cy="${accY + accH - 5}" r="1.2" fill="#24211D"/>`;
       svg += `<text x="${gapCenter}" y="${accY - 3}" font-size="5.5" font-weight="700" fill="#3E2412" text-anchor="middle" font-family="var(--pauta-font-sans),sans-serif">${accNames[k]}</text>`;
     }
-    // mallet points at the highlighted bar (or centre if none); handle below
-    const hlX = (barIdx >= 0 && barIdx < noteNames.length) ? natX0 + barIdx * (natW + natGap) + natW / 2 : cx;
+    // With no note selected, point into the case rather than accidentally at
+    // E5, which happens to sit at the centre of this keyboard drawing.
+    const hasHighlightedBar = barIdx >= 0 && barIdx < noteNames.length;
+    const hlX = hasHighlightedBar ? natX0 + barIdx * (natW + natGap) + natW / 2 : cx;
     const malletX = hand === 'R' ? cx + 18 : cx - 18;
-    svg += `<line x1="${cx}" y1="118" x2="${malletX}" y2="${natY + 22}" stroke="${accentColor}" stroke-width="2.5" stroke-linecap="round"/>`;
-    svg += `<circle cx="${hlX}" cy="${natY + 22}" r="5" fill="${accentColor}" stroke="#fff" stroke-width="1.5"/>`;
+    svg += `<line x1="${cx}" y1="118" x2="${malletX}" y2="${hasHighlightedBar ? natY + 22 : natY - 4}" stroke="${accentColor}" stroke-width="2.5" stroke-linecap="round"/>`;
+    if (hasHighlightedBar) svg += `<circle cx="${hlX}" cy="${natY + 22}" r="5" fill="${accentColor}" stroke="#fff" stroke-width="1.5"/>`;
     // Hand indicator circle
     svg += `<circle cx="${cx}" cy="118" r="10" fill="${accentColor}" />`;
     svg += `<text x="${cx}" y="122" font-size="11" font-weight="700" fill="#fff" text-anchor="middle">${hand}</text>`;

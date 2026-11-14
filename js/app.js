@@ -1977,7 +1977,7 @@ function renderLookupScreen() {
     const cls = 'lookup-card'
       + (l.id === selected.id ? ' lookup-card-active' : '')
       + (learned ? '' : ' lookup-card-locked');
-    const svg = Graphics.fingeringSVG(inst.fingeringType, l.fingeringState, learned ? instAccent(inst) : '#6b6b7d', 46);
+    const svg = Graphics.fingeringSVG(inst.fingeringType, l.fingeringState, learned ? instAccent(inst) : '#6b6b7d', 46, (l.degree != null ? l.degree - 1 : -1));
     return `
       <button class="${cls}" data-action="lookup-select" data-id="${l.id}" aria-label="${escapeHtml(t(l.noteName))}">
         <div class="lookup-card-svg">${svg}</div>
@@ -2467,7 +2467,7 @@ function renderSprintView(inst) {
       cls += ' text-only';
       content = `<div class="quiz-option-note">${escapeHtml(t(opt.noteName))}</div>`;
     } else {
-      content = `<div class="quiz-option-svg">${Graphics.fingeringSVG(inst.fingeringType, opt.fingeringState, instAccent(inst), 72)}</div>`;
+      content = `<div class="quiz-option-svg">${Graphics.fingeringSVG(inst.fingeringType, opt.fingeringState, instAccent(inst), 72, (opt.degree != null ? opt.degree - 1 : -1))}</div>`;
     }
     return `<div class="${cls}" data-action="sprint-answer" data-id="${opt.id}">${content}</div>`;
   }).join('');
@@ -3011,7 +3011,7 @@ function renderQuizPhase(inst, lesson) {
   // ── PROMPT ──
   let promptHtml = '';
   if (q.quizType === QUIZ_TYPES.FINGERING_TO_NOTE) {
-    promptHtml = `<div class="quiz-prompt-svg">${Graphics.fingeringSVG(inst.fingeringType, q.prompt.fingeringState, instAccent(inst), 100)}</div>`;
+    promptHtml = `<div class="quiz-prompt-svg">${Graphics.fingeringSVG(inst.fingeringType, q.prompt.fingeringState, instAccent(inst), 100, (q.prompt.degree != null ? q.prompt.degree - 1 : -1))}</div>`;
   } else if (q.quizType === QUIZ_TYPES.NOTE_TO_FINGERING) {
     promptHtml = `<div class="quiz-prompt-note">${escapeHtml(t(q.prompt.noteName))}</div>`;
   } else if (q.quizType === QUIZ_TYPES.STAFF_TO_NOTE) {
@@ -3036,7 +3036,7 @@ function renderQuizPhase(inst, lesson) {
       cls += ' text-only';
       content = `<div class="quiz-option-note">${escapeHtml(t(opt.noteName))}</div>`;
     } else if (q.quizType === QUIZ_TYPES.NOTE_TO_FINGERING) {
-      content = `<div class="quiz-option-svg">${Graphics.fingeringSVG(inst.fingeringType, opt.fingeringState, instAccent(inst), 72)}</div>`;
+      content = `<div class="quiz-option-svg">${Graphics.fingeringSVG(inst.fingeringType, opt.fingeringState, instAccent(inst), 72, (opt.degree != null ? opt.degree - 1 : -1))}</div>`;
     } else if (q.quizType === QUIZ_TYPES.STAFF_TO_NOTE) {
       cls += ' text-only';
       content = `<div class="quiz-option-note">${escapeHtml(t(opt.noteName))}</div>`;
