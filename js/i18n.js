@@ -726,7 +726,10 @@ TRANSLATIONS.pt = {
   'Play six even left-hand strokes. Stay relaxed and let the stick rebound.': 'Toque seis golpes regulares com a mão esquerda. Relaxe e deixe a baqueta rebater.',
   'A steady pattern that alternates between left and right.': 'Um padrão regular que alterna entre a mão esquerda e a direita.',
   'L R L R, one stroke per beat. Keep both hands even and relaxed.': 'E D E D, um golpe por tempo. Mantenha as mãos regulares e relaxadas.',
-  "Got it — let's play!": "Entendi — vamos tocar!",};
+  "Got it — let's play!": "Entendi — vamos tocar!",
+  'Single Stroke — Left': 'Golpe simples — Esquerda',
+  'Single Stroke — Right': 'Golpe simples — Direita',
+};
 
 // French (Canadian French) translations - starter set
 TRANSLATIONS.fr = {
@@ -1059,6 +1062,8 @@ TRANSLATIONS.fr = {
   "Which note does this fingering play?": "Quelle note joue ce doigté ?",
   "Tap Start, then play along on the count.": "Appuyez sur Démarrer, puis jouez en rythme avec le comptage.",
   "Record yourself and compare with the model.": "Enregistrez-vous et comparez avec le modèle.",
+  "Single Stroke — Left": "Coup simple — gauche",
+  "Single Stroke — Right": "Coup simple — droite",
 };
 
 const PT_EXTRA = {
