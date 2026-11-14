@@ -229,7 +229,7 @@ const CURRICULUM = {
         accidental: null,
         freq: 261.63,
         fingeringState: [true, true, true, true, true, true, true, true, false],
-        description: 'Low C — the bottom of the flute. Every main key covered, plus the little-finger C key.',
+        description: 'C — the bottom of the flute. Every main key covered, plus the little-finger C key.',
         prompt: 'Left thumb + all three left fingers + all three right fingers, plus the footjoint C key with your right pinky. Warm, supported air.'
       },
       {
@@ -600,7 +600,7 @@ const CURRICULUM = {
         accidental: null,
         freq: 155.56,
         fingeringState: [false, true, true, true, true, true, true, true, false],
-        description: 'Low C (written) — all fingers down including the low C key.',
+        description: 'C (written) — all fingers down including the low C key.',
         prompt: 'No octave key. All three left-hand and all three right-hand fingers down. Right pinky on low C key.'
       },
       {
@@ -789,7 +789,7 @@ const CURRICULUM = {
         accidental: null,
         freq: 261.63,
         fingeringState: [false, true, true, true, true, true, true, true, false],
-        description: 'Low C — the bottom of the oboe. All six main fingers down plus the low C key.',
+        description: 'C — the bottom of the oboe. All six main fingers down plus the low C key.',
         prompt: 'No octave key. All three left fingers + all three right fingers, plus the low C key with your right pinky. Focused, steady air through the reed.'
       },
       {
@@ -971,7 +971,7 @@ const CURRICULUM = {
         accidental: null,
         freq: 130.81,
         fingeringState: [true, true, true, true, false, false, false, false, false],
-        description: 'Low C — the bottom of the bassoon. Whisper key with all three left fingers down.',
+        description: 'C — the bottom of the bassoon. Whisper key with all three left fingers down.',
         prompt: 'Left thumb on the whisper key. Left index, middle, and ring down. Right hand open. Slow, warm, steady air.'
       },
       {
@@ -992,7 +992,7 @@ const CURRICULUM = {
         accidental: null,
         freq: 146.83,
         fingeringState: [true, true, true, false, false, false, false, false, false],
-        description: 'Low D — whisper key with the left index and middle fingers down.',
+        description: 'D — whisper key with the left index and middle fingers down.',
         prompt: 'Whisper key on. Left index + left middle down, left ring up. Right hand open.'
       },
       {
@@ -2211,8 +2211,8 @@ const EXTENDED_NOTES = {
     '9':  extNote('D', 5, null, 6, 523.25, [true, false, false], 0, 'High D — valve 1, the top of the beginner range.', 'Valve 1. Firm air.', 'C5'),
   },
   trombone: {
-    '0':  extNote('A', 2, null, 1, 110.00, 2, 0, 'Low A — 2nd position.', '2nd position. Support the low note.'),
-    '-1': extNote('G', 2, null, 0, 98.00, 4, 0, 'Low G — 4th position.', '4th position. Stay relaxed.'),
+    '0':  extNote('A', 2, null, 1, 110.00, 2, 0, 'A — 2nd position.', '2nd position. Support the low note.'),
+    '-1': extNote('G', 2, null, 0, 98.00, 4, 0, 'G — 4th position.', '4th position. Stay relaxed.'),
     '0b': extNote('A\u266d', 2, '\u266d', 1, 103.83, 3, -1, 'Ab — 3rd position, your first flat.', '3rd position.'),
     '7b': extNote('A\u266d', 3, '\u266d', 8, 207.65, 3, -1, 'Ab above the staff — 3rd position.', '3rd position, faster air.'),
     '4#': extNote('E', 3, null, 5, 164.81, 2, 1, 'E natural — 2nd position (or 7th).', '2nd position.'),
@@ -2220,8 +2220,8 @@ const EXTENDED_NOTES = {
     '9':  extNote('C', 4, null, 10, 261.63, 3, 0, 'C above the staff — 3rd position.', '3rd position.'),
   },
   euphonium: {
-    '0':  extNote('A', 2, null, 1, 110.00, [false, true, false], 0, 'Low A — valve 2, a half-step below Bb.', 'Valve 2.'),
-    '-1': extNote('G', 2, null, 0, 98.00, [true, true, false], 0, 'Low G — valves 1 and 2.', 'Valves 1 and 2.'),
+    '0':  extNote('A', 2, null, 1, 110.00, [false, true, false], 0, 'A — valve 2, a half-step below Bb.', 'Valve 2.'),
+    '-1': extNote('G', 2, null, 0, 98.00, [true, true, false], 0, 'G — valves 1 and 2.', 'Valves 1 and 2.'),
     '0b': extNote('A\u266d', 2, '\u266d', 1, 103.83, [true, false, false], -1, 'Ab — valve 1, your first flat.', 'Valve 1.'),
     '7b': extNote('A\u266d', 3, '\u266d', 8, 207.65, [true, false, false], -1, 'Ab above the staff — valve 1.', 'Valve 1.'),
     '4#': extNote('E', 3, null, 5, 164.81, [false, true, false], 1, 'E natural — valve 2.', 'Valve 2.'),
@@ -2229,8 +2229,8 @@ const EXTENDED_NOTES = {
     '9':  extNote('C', 4, null, 10, 261.63, [true, false, true], 0, 'C above the staff — valves 1 and 3.', 'Valves 1 and 3.'),
   },
   tuba: {
-    '0':  extNote('A', 1, null, -6, 55.00, [false, true, false], 0, 'Low A — valve 2, a half-step below Bb.', 'Valve 2.'),
-    '-1': extNote('G', 1, null, -7, 49.00, [true, true, false], 0, 'Low G — valves 1 and 2.', 'Valves 1 and 2.'),
+    '0':  extNote('A', 1, null, -6, 55.00, [false, true, false], 0, 'A — valve 2, a half-step below Bb.', 'Valve 2.'),
+    '-1': extNote('G', 1, null, -7, 49.00, [true, true, false], 0, 'G — valves 1 and 2.', 'Valves 1 and 2.'),
     '0b': extNote('A\u266d', 1, '\u266d', -6, 51.91, [true, false, false], -1, 'Ab — valve 1, your first flat.', 'Valve 1.'),
     '7b': extNote('A\u266d', 2, '\u266d', 1, 103.83, [true, false, false], -1, 'Ab in the staff — valve 1.', 'Valve 1.'),
     '4#': extNote('E', 2, null, -2, 82.41, [false, true, false], 1, 'E natural — valve 2.', 'Valve 2.'),
@@ -2249,8 +2249,8 @@ const EXTENDED_NOTES = {
     '6':  extNote('D', 5, null, 6, 392.00, [false, false, false], 0, 'D — open.', 'No valves. Keep the air fast.', 'G4'),
     '7':  extNote('E', 5, null, 7, 440.00, [false, false, false], 0, 'E — open.', 'No valves.', 'A4'),
     '8':  extNote('F', 5, null, 8, 466.16, [true, false, false], 0, 'F — an octave above your first note, valve 1.', 'Valve 1. Firm embouchure.', 'B\u266d4'),
-    '0':  extNote('E', 4, null, 0, 220.00, [false, false, false], 0, 'Low E — open.', 'No valves.', 'A3'),
-    '-1': extNote('D', 4, null, -1, 196.00, [true, false, false], 0, 'Low D — valve 1.', 'Valve 1.', 'G3'),
+    '0':  extNote('E', 4, null, 0, 220.00, [false, false, false], 0, 'E — open.', 'No valves.', 'A3'),
+    '-1': extNote('D', 4, null, -1, 196.00, [true, false, false], 0, 'D — valve 1.', 'Valve 1.', 'G3'),
     '0b': extNote('E\u266d', 4, '\u266d', 0, 207.65, [false, true, false], -1, 'Eb — valve 2, your first flat.', 'Valve 2.', 'A\u266d3'),
     '7b': extNote('E\u266d', 5, '\u266d', 7, 415.30, [false, true, false], -1, 'Eb above the staff — valve 2.', 'Valve 2.', 'A\u266d4'),
     '4#': extNote('B', 4, null, 4, 329.63, [false, true, false], 1, 'B natural — valve 2.', 'Valve 2.', 'E4'),
@@ -2263,8 +2263,8 @@ const EXTENDED_NOTES = {
   // lhp2, rthumb, rp2, halfHole]. `undefined` means the pad is not drawn.
   // Clarinet follows the shared order; the register/R key lives in `extra`.
   clarinet: {
-    '0':  extNote('B', 3, null, -3, 220.00, [true, true, true, true, false, true, false, false], 0, 'Low B — thumb hole, the left-hand rings, and the right index.', 'Thumb hole + left rings 1-2-3 + right index. Right middle and ring open.', 'A3'),
-    '-1': extNote('A', 3, null, -4, 196.00, [true, true, true, true, true, true, false, false], 0, 'Low A — the low B shape plus the right middle finger.', 'Thumb hole + left rings 1-2-3 + right index and middle.', 'G3'),
+    '0':  extNote('B', 3, null, -3, 220.00, [true, true, true, true, false, true, false, false], 0, 'B — thumb hole, the left-hand rings, and the right index.', 'Thumb hole + left rings 1-2-3 + right index. Right middle and ring open.', 'A3'),
+    '-1': extNote('A', 3, null, -4, 196.00, [true, true, true, true, true, true, false, false], 0, 'A — the low B shape plus the right middle finger.', 'Thumb hole + left rings 1-2-3 + right index and middle.', 'G3'),
     '0b': extNote('B\u266d', 3, '\u266d', -3, 207.65, [true, true, true, true, true, false, false, false], -1, 'Bb — like low A with the right middle finger lifted.', 'Thumb hole + left rings 1-2-3 + right index only.', 'A\u266d3'),
     '4#': extNote('F#', 4, '#', 1, 329.63, [false, true, false, false, false, false, false, false], 1, 'F# — the left index alone, no thumb.', 'Left index ring only. Thumb hole open.', 'E4'),
     '3b': extNote('E\u266d', 4, '\u266d', 0, 277.18, [true, true, true, false, false, false, false, true], -1, 'Eb — thumb hole, two left rings, and the right-hand side key.', 'Thumb hole + left rings 1-2 + the right-hand (Eb) side key.', 'D\u266d4'),
@@ -2272,8 +2272,8 @@ const EXTENDED_NOTES = {
     '9':  extNote('D', 5, null, 6, 523.25, [true, true, true, true, true, true, true, false, true], 0, 'Clarion D — every finger down with the register key.', 'Thumb hole + all left and right fingers + register key.', 'C5'),
   },
   'alto-saxophone': {
-    '0':  extNote('B', 3, null, -3, 146.83, [false, true, true, true, true, true, true, true, undefined, true], 0, 'Low B — all fingers down plus the left little-finger B key.', 'All main fingers down + the left pinky B key.', 'D3'),
-    '0b': extNote('B\u266d', 3, '\u266d', -3, 138.59, [false, true, true, true, true, true, true, true, undefined, undefined, undefined, true], -1, 'Low Bb — all fingers down plus the low Bb pinky key.', 'All main fingers down + the left pinky Bb key.', 'D\u266d3'),
+    '0':  extNote('B', 3, null, -3, 146.83, [false, true, true, true, true, true, true, true, undefined, true], 0, 'B — all fingers down plus the left little-finger B key.', 'All main fingers down + the left pinky B key.', 'D3'),
+    '0b': extNote('B\u266d', 3, '\u266d', -3, 138.59, [false, true, true, true, true, true, true, true, undefined, undefined, undefined, true], -1, 'Bb — all fingers down plus the low Bb pinky key.', 'All main fingers down + the left pinky Bb key.', 'D\u266d3'),
     '4#': extNote('F#', 4, '#', 1, 220.00, [false, true, true, true, false, true, false, false], 1, 'F# — left hand with the right middle finger.', 'Left hand 1-2-3 + right middle finger only.', 'A3'),
     '3b': extNote('E\u266d', 4, '\u266d', 0, 185.00, [false, true, true, true, true, true, true, false, undefined, undefined, undefined, undefined, undefined, true], -1, 'Eb — all fingers down and the low Eb pinky key.', 'All main fingers down + the right pinky Eb key.', 'G\u266d3'),
     '7b': extNote('B\u266d', 4, '\u266d', 4, 277.18, [false, true, true, false, false, false, false, true], -1, 'Bb — left index and middle plus the right-hand side Bb key.', 'Left hand 1-2 + the right-hand Bb side key.', 'D\u266d4'),
@@ -2290,8 +2290,8 @@ const EXTENDED_NOTES = {
     '12': extNote('G', 5, null, 9, 783.99, [true, true, true, true, false, false, false, false, true], 0, 'High G — the top note of your range.', 'Thumb + left 1-2-3 + the Eb key. Support with fast air.', 'G5'),
   },
   oboe: {
-    '0':  extNote('B', 3, null, -3, 246.94, [false, true, true, true, true, true, true, true, undefined, true], 0, 'Low B — all fingers down plus the left little-finger B key.', 'All main fingers down + the left pinky B key.', 'B3'),
-    '0b': extNote('B\u266d', 3, '\u266d', -3, 233.08, [false, true, true, true, true, true, true, true, undefined, undefined, undefined, true], -1, 'Low Bb — all fingers down plus the low Bb pinky key.', 'All main fingers down + the left pinky Bb key.', 'B\u266d3'),
+    '0':  extNote('B', 3, null, -3, 246.94, [false, true, true, true, true, true, true, true, undefined, true], 0, 'B — all fingers down plus the left little-finger B key.', 'All main fingers down + the left pinky B key.', 'B3'),
+    '0b': extNote('B\u266d', 3, '\u266d', -3, 233.08, [false, true, true, true, true, true, true, true, undefined, undefined, undefined, true], -1, 'Bb — all fingers down plus the low Bb pinky key.', 'All main fingers down + the left pinky Bb key.', 'B\u266d3'),
     '4#': extNote('F#', 4, '#', 1, 369.99, [false, true, true, true, true, false, false, false], 1, 'F# — the left hand with the right index finger.', 'Left hand 1-2-3 + right index only.', 'F\u266f4'),
     '3b': extNote('E\u266d', 4, '\u266d', 0, 311.13, [false, true, true, true, true, true, true, false, undefined, undefined, undefined, undefined, undefined, true], -1, 'Eb — all fingers down and the low Eb pinky key.', 'All main fingers down + the right pinky Eb key.', 'E\u266d4'),
     '7b': extNote('B\u266d', 4, '\u266d', 4, 466.16, [false, true, true, false, true, false, false, false], -1, 'Bb — left hand 1-2 with the right index finger.', 'Left hand 1-2 + right index only. Thumb off.', 'B\u266d4'),
@@ -2299,9 +2299,9 @@ const EXTENDED_NOTES = {
     '10': extNote('E', 5, null, 7, 659.25, [true, true, true, true, true, true, false, false], 0, 'High E — the octave key with the left hand and two right fingers.', 'Octave key + left 1-2-3 + right index and middle.', 'E5'),
   },
   bassoon: {
-    '0':  extNote('B', 2, null, 2, 123.47, [true, true, true, true, true, false, false, false], 0, 'Low B — whisper key, left hand, and the right index.', 'Whisper key + left rings 1-2-3 + right index.', 'B2'),
-    '-1': extNote('A', 2, null, 1, 110.00, [true, true, true, true, true, true, false, false], 0, 'Low A — add the right middle finger.', 'Whisper key + left rings 1-2-3 + right index and middle.', 'A2'),
-    '0b': extNote('B\u266d', 2, '\u266d', 2, 116.54, [true, true, true, true, true, true, false, false, false, undefined, undefined, undefined, true], -1, 'Low Bb — the low A shape plus the right-thumb Bb key.', 'Whisper key + left rings + right index and middle + the right-thumb Bb key.', 'B\u266d2'),
+    '0':  extNote('B', 2, null, 2, 123.47, [true, true, true, true, true, false, false, false], 0, 'B — whisper key, left hand, and the right index.', 'Whisper key + left rings 1-2-3 + right index.', 'B2'),
+    '-1': extNote('A', 2, null, 1, 110.00, [true, true, true, true, true, true, false, false], 0, 'A — add the right middle finger.', 'Whisper key + left rings 1-2-3 + right index and middle.', 'A2'),
+    '0b': extNote('B\u266d', 2, '\u266d', 2, 116.54, [true, true, true, true, true, true, false, false, false, undefined, undefined, undefined, true], -1, 'Bb — the low A shape plus the right-thumb Bb key.', 'Whisper key + left rings + right index and middle + the right-thumb Bb key.', 'B\u266d2'),
     '4#': extNote('F#', 3, '#', 6, 185.00, [true, false, true, true, true, true, true, true, false, undefined, undefined, undefined, true, undefined, true], 1, 'F# — the half-hole with the right-thumb F# key.', 'Whisper key + cracked left index (half-hole) + left middle/ring + all right fingers + the right-thumb F# key.', 'F\u266f3'),
     '3b': extNote('E\u266d', 3, '\u266d', 5, 155.56, [true, true, false, true, false, false, false, false], -1, 'Eb — whisper key with the left index and ring.', 'Whisper key + left index and left ring. Left middle open.', 'E\u266d3'),
     '7b': extNote('B\u266d', 3, '\u266d', 9, 233.08, [false, true, true, true, true, true, false, false, false, undefined, undefined, undefined, true], -1, 'Bb above the staff — the right-thumb Bb key.', 'Left rings 1-2-3 + right index and middle + the right-thumb Bb key.', 'B\u266d3'),
