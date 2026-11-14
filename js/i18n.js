@@ -1051,6 +1051,14 @@ TRANSLATIONS.fr = {
   "A steady pattern that alternates between left and right.": "Un motif régulier qui alterne entre la main gauche et la main droite.",
   "L R L R, one stroke per beat. Keep both hands even and relaxed.": "G D G D, un coup par temps. Gardez les deux mains régulières et détendues.",
   "No valves. Buzz a steady, centred pitch — this open note is your home base.": "Sans valves. Soufflez un son ferme et centré — cette note ouverte est votre base.",
+  "Clear all lesson progress and XP for all instruments. This cannot be undone.": "Efface tout le progrès des leçons et l’XP de tous les instruments. Cette action ne peut pas être annulée.",
+  "Welcome! This is a one-minute tour of how the app works. You can skip it and replay it any time from your lesson map.": "Bienvenue ! Ceci est un tour d’une minute sur le fonctionnement de l’application. Vous pouvez l’ignorer et le refaire à tout moment depuis votre carte de leçon.",
+  "Open the floating metronome and tuner.": "Ouvrez le métronome et l’accordeur flottants.",
+  "New badges this week": "Nouveaux badges cette semaine",
+  "No new badges this week": "Aucun nouveau badge cette semaine",
+  "Which note does this fingering play?": "Quelle note joue ce doigté ?",
+  "Tap Start, then play along on the count.": "Appuyez sur Démarrer, puis jouez en rythme avec le comptage.",
+  "Record yourself and compare with the model.": "Enregistrez-vous et comparez avec le modèle.",
 };
 
 const PT_EXTRA = {
