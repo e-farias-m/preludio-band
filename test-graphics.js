@@ -193,6 +193,8 @@ check(Graphics.instrumentIconSVG('flute', 56).includes('<ellipse'),
   // Rests come from the engraved Bravura rest glyph, not a fake notehead.
   check(Graphics.melodySVG({ notes: [{ pos: 2, duration: 1 }], gaps: [1], accentColor: '#e0a020' }).includes('class="rest rest-quarter"'),
     'a quarter rest is drawn from the engraved rest glyph');
+  // The song's written tempo is drawn as a marking above the staff.
+  check(Graphics.melodySVG({ notes: [{ pos: 2, duration: 1 }], bpm: 100 }).includes('\u2669=100'), 'the song tempo is drawn above the staff');
 }
 
 if (failures.length) console.log(failures.join('\n'));
