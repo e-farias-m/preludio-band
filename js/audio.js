@@ -63,51 +63,6 @@ const AudioEngine = (() => {
     g.exponentialRampToValueAtTime(0.0001, releaseStart + release);
   }
 
-  // ── RECORDER VOICE ──────────────────────────────────────────────────────
-  // Breathy, pure-ish tone: sine fundamental + light noise for "breath"
-  function playRecorder(freq, duration = 1.1) {
-    const c = getCtx();
-    const t0 = c.currentTime + 0.02;
-    const out = c.createGain();
-    out.connect(c.destination);
-
-    // Fundamental
-    const osc1 = c.createOscillator();
-    osc1.type = 'sine';
-    osc1.frequency.value = freq;
-
-    // Light upper partial for body
-    const osc2 = c.createOscillator();
-    osc2.type = 'triangle';
-    osc2.frequency.value = freq * 2;
-    const osc2Gain = c.createGain();
-    osc2Gain.gain.value = 0.12;
-
-    // Breath noise
-    const noiseBuf = c.createBuffer(1, c.sampleRate * duration, c.sampleRate);
-    const data = noiseBuf.getChannelData(0);
-    for (let i = 0; i < data.length; i++) data[i] = (Math.random() * 2 - 1);
-    const noise = c.createBufferSource();
-    noise.buffer = noiseBuf;
-    const noiseFilter = c.createBiquadFilter();
-    noiseFilter.type = 'bandpass';
-    noiseFilter.frequency.value = freq * 1.5;
-    noiseFilter.Q.value = 0.6;
-    const noiseGain = c.createGain();
-    noiseGain.gain.value = 0.035;
-
-    osc1.connect(out);
-    osc2.connect(osc2Gain).connect(out);
-    noise.connect(noiseFilter).connect(noiseGain).connect(out);
-
-    applyEnvelope(out, t0, 0.045, 0.08, 0.65, t0 + duration - 0.18, 0.18, 0.85);
-
-    osc1.start(t0); osc2.start(t0); noise.start(t0);
-    osc1.stop(t0 + duration + 0.1);
-    osc2.stop(t0 + duration + 0.1);
-    noise.stop(t0 + duration + 0.1);
-  }
-
   // ── BRASS VOICE (trumpet / euphonium / horn / trombone / tuba) ──────────
   // Buzzy core via sawtooth stack + bright filter sweep on attack
   function playBrass(freq, duration = 1.1, brightness = 1.0) {
@@ -275,9 +230,7 @@ const AudioEngine = (() => {
 
   function playInstrumentNote(freq, fingeringType, duration = 1.1) {
     const c = getCtx();
-    if (fingeringType === 'recorder') {
-      playRecorder(freq, duration);
-    } else if (fingeringType === 'glockenspiel') {
+    if (fingeringType === 'glockenspiel') {
       playGlockenspiel(freq, duration);
     } else if (fingeringType === 'snare') {
       playSnare(duration);
@@ -286,7 +239,7 @@ const AudioEngine = (() => {
     } else if (WOODWIND_TYPES.includes(fingeringType)) {
       playWoodwind(freq, duration);
     } else {
-      playRecorder(freq, duration);
+      playWoodwind(freq, duration);
     }
   }
 
@@ -296,9 +249,7 @@ const AudioEngine = (() => {
     const c = getCtx();
     freqs.forEach(freq => {
       if (freq == null) return;
-      if (fingeringType === 'recorder') {
-        playRecorder(freq, duration);
-      } else if (fingeringType === 'glockenspiel') {
+      if (fingeringType === 'glockenspiel') {
         playGlockenspiel(freq, duration);
       } else if (fingeringType === 'snare') {
         playSnare(duration);
@@ -307,7 +258,7 @@ const AudioEngine = (() => {
       } else if (WOODWIND_TYPES.includes(fingeringType)) {
         playWoodwind(freq, duration);
       } else {
-        playRecorder(freq, duration);
+        playWoodwind(freq, duration);
       }
     });
   }

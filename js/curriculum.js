@@ -9,9 +9,6 @@
 //
 // freq: concert pitch in Hz (what the app synthesises)
 //
-// fingeringState for recorder: [thumb, h1, h2, h3, h4, h5, h6, h7]
-//   true = hole covered, false = open
-//
 // fingeringState for trumpet/euphonium: [v1, v2, v3]
 //   true = valve pressed
 

@@ -372,43 +372,6 @@ const Graphics = (() => {
     return svg;
   }
 
-  // ── RECORDER FINGERING DIAGRAM ──────────────────────────────────────────
-  function recorderFingeringSVG(fingeringState, accentColor = 'var(--accent-warm)', size = 130) {
-    const [thumb, h1, h2, h3, h4, h5, h6, h7] = fingeringState;
-    const cx = 65;
-    const tubeTop = 18, tubeBottom = 215, tubeW = 30;
-    const holeYs = [62, 84, 106, 132, 154, 176, 198]; // h1..h7
-    const holes = [h1, h2, h3, h4, h5, h6, h7];
-
-    let svg = `<svg viewBox="0 0 130 230" width="${size}" height="${size * 230 / 130}" xmlns="http://www.w3.org/2000/svg">`;
-
-    // Mouthpiece notch
-    svg += `<path d="M ${cx - 14} ${tubeTop} Q ${cx} ${tubeTop - 10} ${cx + 14} ${tubeTop} L ${cx + 15} ${tubeTop + 14} L ${cx - 15} ${tubeTop + 14} Z" fill="${HOUSING}" stroke="${INK_DIM}" stroke-width="1.5"/>`;
-
-    // Tube body
-    svg += `<rect x="${cx - tubeW/2}" y="${tubeTop + 12}" width="${tubeW}" height="${tubeBottom - tubeTop - 12}" rx="10" fill="${HOUSING}" stroke="${HOUSING_EDGE}" stroke-width="1.5"/>`;
-
-    // Joint lines (decorative, suggests head/body/foot joints)
-    svg += `<line x1="${cx - tubeW/2}" y1="70" x2="${cx + tubeW/2}" y2="70" stroke="${INK_DIM}" stroke-width="1.5"/>`;
-    svg += `<line x1="${cx - tubeW/2}" y1="188" x2="${cx + tubeW/2}" y2="188" stroke="${INK_DIM}" stroke-width="1.5"/>`;
-
-    // Thumb hole (back) — offset left with dashed connector + labeled button
-    const thumbY = 46;
-    const thumbX = cx - tubeW/2 - 22;
-    svg += `<line x1="${cx - tubeW/2 - 2}" y1="${thumbY}" x2="${thumbX + 12}" y2="${thumbY}" stroke="${INK_DIM}" stroke-width="1" stroke-dasharray="2,2"/>`;
-    svg += labeledKey(thumbX, thumbY, 12, thumb, accentColor, 'TH');
-
-    // Finger holes 1-7 down the front
-    holes.forEach((covered, i) => {
-      const y = holeYs[i];
-      const r = i < 3 ? 9 : 7.5;
-      svg += `<circle cx="${cx}" cy="${y}" r="${r}" fill="${covered ? accentColor : OPEN}" stroke="${accentColor}" stroke-width="2"/>`;
-    });
-
-    svg += `</svg>`;
-    return svg;
-  }
-
   // ── BRASS VALVE FINGERING DIAGRAM (trumpet, euphonium, tuba style) ──────
   function valveFingeringSVG(fingeringState, accentColor = 'var(--accent-trumpet)', size = 130) {
     const [v1, v2, v3] = fingeringState;
@@ -437,7 +400,7 @@ const Graphics = (() => {
   }
 
   // ── WOODWIND KEY DIAGRAM (flute, clarinet, sax, oboe, bassoon) ──────────
-  // Simplified key pads on a tube — same visual language as recorder but with
+  // Simplified key pads on a tube — same visual language as the brass diagrams but with
   // a distinct label and smaller "key" circles to suggest pads not holes.
   function woodwindFingeringSVG(fingeringState, accentColor = 'var(--accent-flute)', size = 130, instrument = 'clarinet') {
     const [thumb, h1, h2, h3, h4, h5, h6, h7, extra, extra2, sideKey, lhp2, rthumb, rp2, halfHole] = fingeringState;
@@ -821,7 +784,6 @@ const Graphics = (() => {
   }
 
   function fingeringSVG(fingeringType, fingeringState, accentColor, size = 130, highlightIdx = -1) {
-    if (fingeringType === 'recorder') return recorderFingeringSVG(fingeringState, accentColor, size);
     if (fingeringType === 'trombone') return tromboneFingeringSVG(fingeringState, accentColor, size);
     if (fingeringType === 'flute') return fluteFingeringSVG(fingeringState, accentColor, size * 1.15);
     if (fingeringType === 'glockenspiel') return glockenspielFingeringSVG(fingeringState, accentColor, size, highlightIdx);
@@ -838,16 +800,6 @@ const Graphics = (() => {
     const s = (inner) => `<svg viewBox="0 0 64 64" width="${size}" height="${size}" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg">${inner}</svg>`;
 
     switch (id) {
-      case 'soprano-recorder':
-        return s(`
-          <path d="M26 8 Q32 4 38 8 L40 18 L24 18 Z"/>
-          <rect x="25" y="18" width="14" height="38" rx="5"/>
-          <line x1="25" y1="28" x2="39" y2="28"/>
-          <line x1="25" y1="46" x2="39" y2="46"/>
-          <circle cx="32" cy="34" r="1.8" fill="currentColor"/>
-          <circle cx="32" cy="40" r="1.8" fill="currentColor"/>
-          <path d="M27 56 L30 60 M37 56 L34 60" />
-        `);
       case 'flute':
         return s(`
           <rect x="6" y="27" width="46" height="9" rx="4.5"/>
@@ -970,5 +922,5 @@ const Graphics = (() => {
     }
   }
 
-  return { staffSVG, melodySVG, fingeringSVG, recorderFingeringSVG, fluteFingeringSVG, valveFingeringSVG, tromboneFingeringSVG, woodwindFingeringSVG, instrumentIconSVG, yForPos, ledgerPositions };
+  return { staffSVG, melodySVG, fingeringSVG, fluteFingeringSVG, valveFingeringSVG, tromboneFingeringSVG, woodwindFingeringSVG, instrumentIconSVG, yForPos, ledgerPositions };
 })();
