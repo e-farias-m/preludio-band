@@ -129,7 +129,7 @@ check(Graphics.instrumentIconSVG('flute', 56).includes('<ellipse'),
 {
   const heads = svg => (svg.match(/<ellipse/g) || []).length;
   const headAt = (svg, i) => (svg.match(/<ellipse[^>]*>/g) || [])[i];
-  const stems = svg => (svg.match(/<line x1="([\d.]+)" y1="([\d.]+)" x2="([\d.]+)" y2="([\d.]+)" stroke="var\(--dg-ink\)" stroke-width="1.1"\/>/g) || []).filter(l => { const m = l.match(/x1="([\d.]+)" y1="([\d.]+)" x2="([\d.]+)" y2="([\d.]+)"/); return m[1] === m[3] && Math.abs(parseFloat(m[2]) - parseFloat(m[4])) < 40; }).length;
+  const stems = svg => (svg.match(/<line x1="([\d.]+)" y1="([\d.]+)" x2="([\d.]+)" y2="([\d.]+)" stroke="var\(--dg-ink\)" stroke-width="1.2"\/>/g) || []).filter(l => { const m = l.match(/x1="([\d.]+)" y1="([\d.]+)" x2="([\d.]+)" y2="([\d.]+)"/); return m[1] === m[3] && Math.abs(parseFloat(m[2]) - parseFloat(m[4])) < 40; }).length;
   const notes = [
     { pos: 0, accidental: null, duration: 1 },
     { pos: 2, accidental: null, duration: 2 },
@@ -206,9 +206,9 @@ check(Graphics.instrumentIconSVG('flute', 56).includes('<ellipse'),
   const withDyn = Graphics.melodySVG({ ...base, dynamics: [{ index: 0, text: 'f' }] });
   check(withDyn.includes('>f</text>'), 'a dynamic marking is drawn below the staff');
   const withArt = Graphics.melodySVG({ ...base, articulations: [{ index: 0, type: 'staccato' }] });
-  check(withArt.includes('r="1.5"'), 'a staccato articulation dot is drawn');
+  check(withArt.includes('r="1.7"'), 'a staccato articulation dot is drawn');
   const withSlur = Graphics.melodySVG({ notes: q(2), accentColor: '#e0a020', slurs: [{ from: 0, to: 1 }] });
-  check(withSlur.includes('stroke-width="1.1"') && withSlur.includes(' Q'), 'a slur arc is drawn between notes');
+  check(withSlur.includes('stroke-width="1.2"') && withSlur.includes(' Q'), 'a slur arc is drawn between notes');
 }
 
 if (failures.length) console.log(failures.join('\n'));
