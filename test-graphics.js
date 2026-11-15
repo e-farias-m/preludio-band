@@ -150,7 +150,7 @@ check(Graphics.instrumentIconSVG('flute', 56).includes('<ellipse'),
   // Vertical bar lines span the full staff (y1 !== y2, x1 === x2); staff lines
   // are horizontal. Count the vertical ones (interior + the closing line).
   const barLines = svg => {
-    const lines = svg.match(/<line x1="([\d.]+)" y1="([\d.]+)" x2="([\d.]+)" y2="([\d.]+)" stroke="var\(--dg-ink\)" stroke-width="1.3"\/>/g) || [];
+    const lines = svg.match(/<line x1="([\d.]+)" y1="([\d.]+)" x2="([\d.]+)" y2="([\d.]+)" stroke="var\(--dg-ink\)" stroke-width="(1\.3|3\.5)"/g) || [];
     return lines.filter(l => {
       const m = l.match(/x1="([\d.]+)" y1="([\d.]+)" x2="([\d.]+)" y2="([\d.]+)"/);
       return m[1] === m[3] && m[2] !== m[4];
@@ -180,6 +180,16 @@ check(Graphics.instrumentIconSVG('flute', 56).includes('<ellipse'),
   const half = [{ pos: 2, duration: 1 }, { pos: 2, duration: 1 }, { pos: 2, duration: 1 }, { pos: 2, duration: 2 }];
   check(barLines(Graphics.melodySVG({ notes: half, accentColor: '#e0a020', pickup: 1 })) === 2,
     'a half note is never split by a bar line');
+  // The closing bar line of the tune is thick; a line that only ends a system
+  // stays thin, so a single-bar tune still gets its final (thick) bar line.
+  check(Graphics.melodySVG({ notes: q(4), accentColor: '#e0a020' }).includes('stroke-width="3.5"'),
+    'the closing bar line of a tune is thick');
+  // A key signature (here, one sharp) is drawn to the right of the clef.
+  check(Graphics.melodySVG({ notes: q(4), keySig: 1, accentColor: '#e0a020' }).includes('\u266F'),
+    'a one-sharp key signature is drawn');
+  // A pair of eighth notes gets a beam instead of two bare stems.
+  check(Graphics.melodySVG({ notes: [{ pos: 2, duration: 0.5 }, { pos: 3, duration: 0.5 }], accentColor: '#e0a020' }).includes('<path d="M'),
+    'a pair of eighth notes is beamed');
 }
 
 if (failures.length) console.log(failures.join('\n'));
