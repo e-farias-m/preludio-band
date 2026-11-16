@@ -2445,3 +2445,31 @@ Object.assign(TRANSLATIONS.fr, {
   "🔊 Hear a target note": "🔊 Écouter une note cible",
   "🔊 Hear it": "🔊 Écouter",
 });
+
+// ── Analytics screen (mirrors Recorder/Strings) ────────────────────────────
+Object.assign(TRANSLATIONS.pt, {
+  "Your Stats": "Suas Estatísticas",
+  "Total XP": "XP Total",
+  "Lessons done": "Aulas concluídas",
+  "3-star rate": "Taxa de 3 estrelas",
+  "Per instrument": "Por instrumento",
+  "Recent activity": "Atividade recente",
+  "No activity yet — complete a lesson!": "Nenhuma atividade ainda — complete uma aula!",
+  "Clear analytics data": "Limpar dados de análise",
+  "Lesson": "Aula",
+  "Song": "Música",
+  "lessons": "aulas",
+});
+Object.assign(TRANSLATIONS.fr, {
+  "Your Stats": "Vos statistiques",
+  "Total XP": "XP total",
+  "Lessons done": "Leçons terminées",
+  "3-star rate": "Taux 3 étoiles",
+  "Per instrument": "Par instrument",
+  "Recent activity": "Activité récente",
+  "No activity yet — complete a lesson!": "Aucune activité pour l'instant — terminez une leçon !",
+  "Clear analytics data": "Effacer les données d'analyse",
+  "Lesson": "Leçon",
+  "Song": "Chanson",
+  "lessons": "leçons",
+});

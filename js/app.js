@@ -111,6 +111,17 @@ APP.songSpeed = getSavedSpeed();
 function getStudentName() { return LS.getItem(NAME_KEY) || ''; }
 function setStudentName(name) { LS.setItem(NAME_KEY, name); }
 
+const ANALYTICS_KEY = 'preludioBandAnalytics';
+function recordLessonComplete(lessonId, type, xpGained, stars) {
+  const events = getAnalyticsEvents();
+  events.push({ lessonId, type, xpGained, stars, timestamp: Date.now(), instrumentId: APP.instrumentId, studentName: getStudentName() });
+  try { LS.setItem(ANALYTICS_KEY, JSON.stringify(events)); } catch (e) { /* ignore */ }
+}
+function getAnalyticsEvents() {
+  try { return JSON.parse(LS.getItem(ANALYTICS_KEY)) || []; }
+  catch { return []; }
+}
+
 // Instruments whose "how to use the app" tour the student has already seen.
 function getTutorialSeen(id) {
   let seen = [];
@@ -1630,7 +1641,7 @@ function renderSelectScreen() {
       ${instrumentArea}
       ${badgesHtml}
       ${reportHtml}
-      <div class="version-badge" style="cursor:pointer">v2.0.0</div>
+      <div class="version-badge" data-action="show-analytics" style="cursor:pointer">v2.0.0</div>
     </div>`;
 }
 
@@ -2335,6 +2346,62 @@ function renderReportScreen() {
         <div class="report-actions">
           <button class="btn btn-primary" data-action="copy-report">${t('Copy summary')}</button>
           <button class="btn btn-secondary" data-action="print-report">${t('Print')}</button>
+        </div>
+      </div>
+    </div>`;
+}
+
+function renderAnalyticsScreen() {
+  const events = getAnalyticsEvents();
+  const totalXp = events.reduce((sum, e) => sum + (e.xpGained || 0), 0);
+  const lessonCount = events.length;
+  const streak = getCurrentStreak();
+
+  const byInstrument = {};
+  events.forEach(e => {
+    const inst = e.instrumentId || 'unknown';
+    if (!byInstrument[inst]) byInstrument[inst] = { lessons: 0, xp: 0 };
+    byInstrument[inst].lessons++;
+    byInstrument[inst].xp += e.xpGained || 0;
+  });
+
+  const instrumentRows = Object.entries(byInstrument).map(([id, data]) => {
+    const name = (typeof CURRICULUM !== 'undefined' && CURRICULUM[id]) ? (CURRICULUM[id].shortName || id) : id;
+    return `<div class="stat-row"><span class="stat-label">${escapeHtml(t(name))}</span><span class="stat-value">${data.lessons} ${t('lessons')} · ${data.xp} XP</span></div>`;
+  }).join('');
+
+  const recentEvents = events.slice(-20).reverse().map(e => {
+    const date = new Date(e.timestamp);
+    const timeStr = date.toLocaleDateString() + ' ' + date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    const typeLabel = { lesson: t('Lesson'), review: t('Review'), song: t('Song') }[e.type] || e.type;
+    const inst = (typeof CURRICULUM !== 'undefined' && CURRICULUM[e.instrumentId]) ? (CURRICULUM[e.instrumentId].shortName || e.instrumentId) : (e.instrumentId || '');
+    return `<div class="event-row"><span class="event-type">${typeLabel}</span><span class="event-lesson">${escapeHtml(e.lessonId || '')}</span><span class="event-xp">+${e.xpGained || 0} XP</span><span class="event-date">${timeStr}</span></div>`;
+  }).join('') || `<div class="stat-row" style="color:var(--text-muted)">${t('No activity yet — complete a lesson!')}</div>`;
+
+  const starCount = events.filter(e => e.stars === 3).length;
+  const pct = lessonCount ? Math.round((starCount / lessonCount) * 100) : 0;
+
+  return `
+    <div class="screen active analytics-screen">
+      <div class="analytics-header">
+        <button class="header-back" data-action="close-analytics">←</button>
+        <h2>${t('Your Stats')}</h2>
+      </div>
+      <div class="analytics-body">
+        <div class="analytics-cards">
+          <div class="analytics-card"><span class="card-stat">${totalXp}</span><span class="card-label">${t('Total XP')}</span></div>
+          <div class="analytics-card"><span class="card-stat">${lessonCount}</span><span class="card-label">${t('Lessons done')}</span></div>
+          <div class="analytics-card"><span class="card-stat">${streak}</span><span class="card-label">${t('Day streak')}</span></div>
+          <div class="analytics-card"><span class="card-stat">${pct}%</span><span class="card-label">${t('3-star rate')}</span></div>
+        </div>
+        <div class="analytics-section">
+          <div class="analytics-section-title">${t('Per instrument')}</div>
+          <div class="stats-list">${instrumentRows || `<div class="stat-row" style="color:var(--text-muted)">${t('No activity yet — complete a lesson!')}</div>`}</div>
+        </div>
+        <div class="analytics-section">
+          <div class="analytics-section-title">${t('Recent activity')}</div>
+          <div class="events-list">${recentEvents}</div>
+          <button class="btn btn-danger" data-action="clear-analytics" style="margin-top:16px">${t('Clear analytics data')}</button>
         </div>
       </div>
     </div>`;
@@ -3202,6 +3269,7 @@ function render() {
   else if (APP.screen === 'settings') app.innerHTML = renderSettingsScreen();
   else if (APP.screen === 'report') app.innerHTML = renderReportScreen();
   else if (APP.screen === 'digest') app.innerHTML = renderDigestScreen();
+  else if (APP.screen === 'analytics') app.innerHTML = renderAnalyticsScreen();
   else if (APP.screen === 'tutorial') app.innerHTML = renderTutorialScreen();
   else if (APP.screen === 'map') app.innerHTML = renderMapScreen();
   else if (APP.screen === 'practice') app.innerHTML = renderPracticeScreen();
@@ -3910,6 +3978,22 @@ function handleAction(action, el) {
       render();
       break;
 
+    case 'show-analytics':
+    case 'open-analytics':
+      APP.screen = 'analytics';
+      render();
+      break;
+
+    case 'close-analytics':
+      APP.screen = 'select';
+      render();
+      break;
+
+    case 'clear-analytics':
+      try { LS.removeItem(ANALYTICS_KEY); } catch (e) { /* ignore */ }
+      render();
+      break;
+
     case 'copy-digest': {
       const text = tx(formatDigestText(buildWeeklyDigest(getStudentName())));
       copyText(text).then(ok => showToast(ok ? tx('Weekly recap copied.') : tx('Copy failed — try Print instead.')));
@@ -4369,6 +4453,7 @@ function handleAction(action, el) {
         const xp = 10 + (stars * 5);
         APP.lastStars = stars;
         APP.lastXp = xp;
+        recordLessonComplete(lesson.id, 'song', xp, stars);
         const prog = getInstrumentProgress(APP.instrumentId);
         const prevStars = prog.completed[lesson.id] ? prog.completed[lesson.id].stars : 0;
         APP.completedBefore = !!prog.completed[lesson.id];
@@ -4389,6 +4474,7 @@ function handleAction(action, el) {
           const totalMistakes = APP.reviewTotal - APP.reviewCorrect;
           APP.lastStars = totalMistakes === 0 ? 3 : (totalMistakes <= 1 ? 2 : 1);
           APP.lastXp = 10 + (APP.lastStars * 5);
+          recordLessonComplete(lesson.id, 'review', APP.lastXp, APP.lastStars);
           const prog = getInstrumentProgress(APP.instrumentId);
           const prevStars = prog.completed[lesson.id] ? prog.completed[lesson.id].stars : 0;
           prog.completed[lesson.id] = { stars: Math.max(APP.lastStars, prevStars) };
@@ -4453,6 +4539,7 @@ function handleAction(action, el) {
 
       const prog = getInstrumentProgress(APP.instrumentId);
       const lesson = getLesson(APP.instrumentId, APP.lessonIndex);
+      recordLessonComplete(lesson.id, 'lesson', xp, stars);
       const prevStars = prog.completed[lesson.id] ? prog.completed[lesson.id].stars : 0;
       APP.completedBefore = !!prog.completed[lesson.id];
       prog.completed[lesson.id] = { stars: Math.max(stars, prevStars) };
