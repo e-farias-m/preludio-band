@@ -1258,11 +1258,11 @@ function showTranslationEditor() {
         <h3 style="margin:0">${t('Edit translations')} (${lang.toUpperCase()})</h3>
         <button class="btn-icon" data-action="close-translation-editor" style="background:none;border:none;cursor:pointer;font-size:24px;">✕</button>
       </div>
-      <p style="font-size:13px;color:var(--text-muted);margin-bottom:12px;">One translation per line: English = Translated. Leave empty to use default.</p>
+      <p style="font-size:13px;color:var(--text-muted);margin-bottom:12px;">${t('One translation per line: English = Translated. Leave empty to use default.')}</p>
       <textarea id="translation-editor-textarea" style="width:100%;min-height:300px;font-family:monospace;font-size:12px;padding:8px;border:1px solid var(--border);border-radius:8px;background:var(--bg);color:var(--text);"></textarea>
       <div style="display:flex;gap:8px;margin-top:12px;justify-content:flex-end;">
-        <button class="btn btn-secondary" data-action="clear-translations">Reset</button>
-        <button class="btn btn-primary" data-action="save-translations">Save</button>
+        <button class="btn btn-secondary" data-action="clear-translations">${t('Reset')}</button>
+        <button class="btn btn-primary" data-action="save-translations">${t('Save')}</button>
       </div>
     </div>`;
   document.body.appendChild(overlay);
@@ -1298,7 +1298,7 @@ function showTranslationEditor() {
     render();
   });
   overlay.querySelector('[data-action="clear-translations"]').addEventListener('click', () => {
-    if (confirm('Clear all custom translations for this language?')) {
+    if (confirm(t('Clear all custom translations for this language?'))) {
       clearUserOverrides(lang);
       overlay.remove();
       showToast(t('Translations reset.'));
@@ -1647,13 +1647,13 @@ function renderSettingsScreen() {
         <div class="settings-section">
           <label class="settings-label">${t('Appearance')}</label>
           <p class="settings-desc">${t('Switch between the light "paper" theme and the dark theme.')}</p>
-          <button class="btn btn-secondary" data-action="toggle-theme">${getTheme() === 'light' ? '\u{1F319} Dark theme' : '\u2600\uFE0F Light theme'}</button>
+          <button class="btn btn-secondary" data-action="toggle-theme">${getTheme() === 'light' ? t('\u{1F319} Dark theme') : t('\u2600\uFE0F Light theme')}</button>
         </div>
         <div class="settings-section">
           <label class="settings-label">${t('Student name')}</label>
           <div class="settings-row">
             <input type="text" id="settings-name-input" class="settings-input" value="${escapeHtml(name)}" maxlength="50" autocomplete="off" />
-            <button class="btn btn-primary" data-action="save-settings-name">Save</button>
+            <button class="btn btn-primary" data-action="save-settings-name">${t('Save')}</button>
           </div>
         </div>
         <div class="settings-section">
@@ -1688,29 +1688,29 @@ function buildTutorialSlides(inst) {
     },
     {
       icon: '🗺️',
-      title: 'Follow your lesson path',
+      title: t('Follow your lesson path'),
       body: `${t('Every note and song is a stop on your')} ${t(inst.shortName)} ${t('map. Finish one step to unlock the next — a 🔒 just means the step before it is still waiting.')}`,
     },
     {
       icon: '👀',
-      title: 'See it, then check it',
-      body: 'Each new note shows its name, sound, and fingering. Tap “Hear it,” then answer a quick check to lock the note in.',
+      title: t('See it, then check it'),
+      body: t('Each new note shows its name, sound, and fingering. Tap “Hear it,” then answer a quick check to lock the note in.'),
       visual: noteArt,
     },
     {
       icon: '🎵',
-      title: 'Play it yourself',
-      body: 'Then play the note on your instrument. On a device with a microphone you can record a take and listen back to compare.',
+      title: t('Play it yourself'),
+      body: t('Then play the note on your instrument. On a device with a microphone you can record a take and listen back to compare.'),
     },
     {
       icon: '🥁',
-      title: 'Practice and tools',
-      body: 'Practice drills build speed, ear training sharpens your listening, and the metronome and tuner keep you steady and in tune.',
+      title: t('Practice and tools'),
+      body: t('Practice drills build speed, ear training sharpens your listening, and the metronome and tuner keep you steady and in tune.'),
     },
     {
       icon: '⭐',
-      title: 'Watch yourself grow',
-      body: 'You earn XP, streaks, and badges as you play, and the weekly recap shows how much you practiced. Ready? Let’s play!',
+      title: t('Watch yourself grow'),
+      body: t('You earn XP, streaks, and badges as you play, and the weekly recap shows how much you practiced. Ready? Let’s play!'),
     },
   ];
 }
@@ -1738,7 +1738,7 @@ function renderTutorialScreen() {
       <div class="action-bar">
         <div class="tutorial-actions">
           <button class="btn btn-secondary" data-action="tutorial-back" ${i === 0 ? 'disabled' : ''}>${t('Back')}</button>
-          <button class="btn btn-primary" data-action="tutorial-next">${last ? 'Start playing' : 'Next'}</button>
+          <button class="btn btn-primary" data-action="tutorial-next">${last ? t('Start playing') : t('Next')}</button>
         </div>
       </div>
     </div>`;
@@ -1901,8 +1901,8 @@ function renderMapScreen() {
           <input type="file" id="import-file-input" accept=".xml,.musicxml" style="display:none"/>
         </div>
         <div class="map-guide">
-          <button class="map-guide-link" data-action="open-lookup">🎼 Fingering chart</button>
-          <button class="map-guide-link" data-action="open-tutorial">❔ How this app works</button>
+          <button class="map-guide-link" data-action="open-lookup">🎼 ${t('Fingering chart')}</button>
+          <button class="map-guide-link" data-action="open-tutorial">❔ ${t('How this app works')}</button>
         </div>
       </div>
     </div>`;
@@ -2009,7 +2009,7 @@ function renderLookupScreen() {
             </div>
           </div>
           <div class="lookup-name">${escapeHtml(t(selected.noteName))}</div>
-          <div class="lookup-desc">${escapeHtml(selected.description || '')}</div>
+          <div class="lookup-desc">${escapeHtml(t(selected.description || ''))}</div>
           <button class="btn btn-secondary btn-wide" data-action="lookup-hear">\u{1F50A} ${t('Hear it')}</button>
         </div>
         <div class="lookup-grid-label">${learnedIds.size} of ${notes.length} notes learned</div>
@@ -2101,7 +2101,7 @@ function renderPracticeTools() {
       </button>
       <button class="tool-card" data-action="tools-tab" data-tab="tuner">
         <div class="tool-icon">\u{1F3A4}</div>
-        <div class="tool-name">Tuner</div>
+        <div class="tool-name">${t('Tuner')}</div>
         <div class="tool-sub">${t('Check your pitch against the floating tuner.')}</div>
       </button>
       <button class="tool-card" data-action="open-lookup">
@@ -2156,7 +2156,7 @@ function renderEarScreen() {
   const total = phrase.length;
   const perfect = e && e.finished && total > 0 && correct === total;
   const result = e && e.finished
-    ? `<div class="ear-result ${perfect ? 'ear-result-perfect' : ''}">${tFill('{correct}/{total} correct{golden}', { correct, total, golden: perfect ? ' — golden ear!' : '' })}</div>`
+    ? `<div class="ear-result ${perfect ? 'ear-result-perfect' : ''}">${tFill('{correct}/{total} correct{golden}', { correct, total, golden: perfect ? t(' — golden ear!') : '' })}</div>`
     : `<div class="ear-result ear-result-pending">${t('Tap the notes in the order you heard them.')}</div>`;
 
   const best = getInstrumentProgress(APP.instrumentId).earBest || 0;
@@ -2195,10 +2195,10 @@ function renderMetronomePanel() {
     `<option value="${t}"${m.beatsPerBar === t ? ' selected' : ''}>${t}/4</option>`
   ).join('');
   const subOpts = METRONOME_SUBDIVISIONS.map(s =>
-    `<option value="${s.value}"${(m.subdivision || 1) === s.value ? ' selected' : ''}>${s.label}</option>`
+    `<option value="${s.value}"${(m.subdivision || 1) === s.value ? ' selected' : ''}>${t(s.label)}</option>`
   ).join('');
   const soundOpts = METRONOME_SOUNDS.map(s =>
-    `<option value="${s.value}"${(m.sound || 'click') === s.value ? ' selected' : ''}>${s.label}</option>`
+    `<option value="${s.value}"${(m.sound || 'click') === s.value ? ' selected' : ''}>${t(s.label)}</option>`
   ).join('');
   const vol = Math.round((typeof m.volume === 'number' ? m.volume : METRONOME_DEFAULT_VOLUME) * 100);
   return `
@@ -2210,11 +2210,11 @@ function renderMetronomePanel() {
         <button class="tool-step" data-action="metronome-bpm" data-delta="1" aria-label="${t('Faster')}">+</button>
       </div>
       <div class="tool-row">
-        <select id="tool-preset" class="tool-select" aria-label="Tempo preset"><option value="">Preset…</option>${presetOpts}</select>
-        <select id="tool-timesig" class="tool-select" aria-label="Time signature">${timeOpts}</select>
+        <select id="tool-preset" class="tool-select" aria-label="${t('Tempo preset')}"><option value="">${t('Preset…')}</option>${presetOpts}</select>
+        <select id="tool-timesig" class="tool-select" aria-label="${t('Time signature')}">${timeOpts}</select>
       </div>
       <div class="tool-row">
-        <select id="tool-subdivision" class="tool-select" aria-label="Subdivision">${subOpts}</select>
+        <select id="tool-subdivision" class="tool-select" aria-label="${t('Subdivision')}">${subOpts}</select>
         <select id="tool-sound" class="tool-select" aria-label="${t('Click sound')}">${soundOpts}</select>
       </div>
       <div class="tool-row tool-row-between">
@@ -2222,8 +2222,8 @@ function renderMetronomePanel() {
         <input type="range" id="metronome-volume" class="tool-volume" min="0" max="100" step="5" value="${vol}" aria-label="${t('Metronome volume')}" />
       </div>
       <div class="tool-actions">
-        <button class="btn btn-secondary" data-action="metronome-tap">Tap</button>
-        <button class="btn btn-primary tool-play" data-action="metronome-toggle" id="metronome-toggle">${m.running ? '\u25A0 Stop' : '\u25B6 Start'}</button>
+        <button class="btn btn-secondary" data-action="metronome-tap">${t('Tap')}</button>
+        <button class="btn btn-primary tool-play" data-action="metronome-toggle" id="metronome-toggle">${m.running ? t('■ Stop') : t('▶ Start')}</button>
       </div>
     </div>`;
 }
@@ -2249,7 +2249,7 @@ function renderTunerPanel() {
         <div class="tuner-needle" id="tuner-needle" style="left:${offset}%"></div>
         <div class="tuner-center"></div>
       </div>
-      <button class="btn btn-primary btn-wide" data-action="tuner-toggle" style="margin-top:12px">${listening ? '\u25A0 Stop' : '\u25B6 Tune'}</button>
+      <button class="btn btn-primary btn-wide" data-action="tuner-toggle" style="margin-top:12px">${listening ? t('■ Stop') : t('▶ Tune')}</button>
     </div>`;
 }
 
@@ -2266,7 +2266,7 @@ function renderToolWidget() {
       <div class="tool-panel-head">
         <div class="tool-tabs">
           <button class="tool-tab${tab === 'metronome' ? ' active' : ''}" data-action="tools-tab" data-tab="metronome">Metronome</button>
-          <button class="tool-tab${tab === 'tuner' ? ' active' : ''}" data-action="tools-tab" data-tab="tuner">Tuner</button>
+          <button class="tool-tab${tab === 'tuner' ? ' active' : ''}" data-action="tools-tab" data-tab="tuner">${t('Tuner')}</button>
         </div>
         <button class="tool-close" data-action="close-tools" aria-label="Close">\u2715</button>
       </div>
@@ -2328,9 +2328,9 @@ function renderReportScreen() {
           </div>
         </div>
         ${statChips}
-        <div class="report-section-label">Instruments</div>
+        <div class="report-section-label">${t('Instruments')}</div>
         ${cards}
-        <div class="report-section-label">Badges · ${report.badges.length}/${report.badgeTotal}</div>
+        <div class="report-section-label">${t('Badges')} · ${report.badges.length}/${report.badgeTotal}</div>
         <div class="report-badges">${badges}</div>
         <div class="report-actions">
           <button class="btn btn-primary" data-action="copy-report">${t('Copy summary')}</button>
@@ -2382,7 +2382,7 @@ function renderDigestScreen(now = new Date()) {
     const isToday = x.key === today;
     return `<div class="digest-col">
       <div class="digest-bar${isToday ? ' digest-bar-today' : ''}" style="height:${h}%"></div>
-      <span class="digest-col-label${isToday ? ' digest-col-today' : ''}">${x.label}</span>
+      <span class="digest-col-label${isToday ? ' digest-col-today' : ''}">${t(x.label)}</span>
       <span class="digest-col-min">${x.minutes}</span>
     </div>`;
   }).join('');
@@ -2418,7 +2418,7 @@ function renderDigestScreen(now = new Date()) {
         </div>
         <div class="report-section-label">${t('Daily practice (minutes)')}</div>
         <div class="digest-bars digest-bars-tall">${bars}</div>
-        ${d.bestDayLabel ? `<div class="digest-best">Best day: ${d.bestDayLabel} · ${d.bestDayMinutes} min</div>` : ''}
+        ${d.bestDayLabel ? `<div class="digest-best">${tFill('Best day: {label} · {minutes} min', { label: t(d.bestDayLabel), minutes: d.bestDayMinutes })}</div>` : ''}
         <div class="report-section-label">${t('Weekly goal')}</div>
         <div class="digest-goal-track digest-goal-track-lg"><div class="digest-goal-fill${d.goalMet ? ' digest-goal-met' : ''}" style="width:${d.goalPct}%"></div></div>
         <div class="digest-goal-status">${goalStatus}</div>
@@ -2482,7 +2482,7 @@ function renderSprintView(inst) {
         <button class="header-back" data-action="exit-sprint">✕</button>
         <div class="sprint-hud">
           <div class="sprint-timer" id="sprint-timer">${remain}</div>
-          <div class="sprint-score">Score <b id="sprint-score">${s.score}</b></div>
+          <div class="sprint-score">${t('Score')} <b id="sprint-score">${s.score}</b></div>
         </div>
       </div>
       <div class="lesson-body">
@@ -2666,19 +2666,19 @@ function renderSongPresentPhase(inst, lesson) {
   if (hasAudio) {
     actionButtons = `
       <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
-        <button class="btn btn-secondary" data-action="song-prev" ${isFirst ? 'disabled' : ''}>‹ Prev</button>
+        <button class="btn btn-secondary" data-action="song-prev" ${isFirst ? 'disabled' : ''}>‹ ${t('Prev')}</button>
         <button class="btn btn-secondary" data-action="song-next" ${isLast ? 'disabled' : ''}>${t('Next ›')}</button>
       </div>
       <button class="btn btn-primary btn-wide" data-action="play-song-audio-start" style="margin-top:8px">▶ Play with recording</button>`;
   } else {
     actionButtons = `
       <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
-        <button class="btn btn-secondary" data-action="song-prev" ${isFirst ? 'disabled' : ''}>‹ Prev</button>
+        <button class="btn btn-secondary" data-action="song-prev" ${isFirst ? 'disabled' : ''}>‹ ${t('Prev')}</button>
         <button class="btn-hear" data-action="hear-note"><span class="hear-icon">🔊</span> ${t('Play note')}</button>
         <button class="btn btn-secondary" data-action="song-next" ${isLast ? 'disabled' : ''}>${t('Next ›')}</button>
       </div>
       <div class="song-playback-controls">
-        <button class="btn btn-secondary" data-action="play-melody">▶ Play whole melody</button>
+        <button class="btn btn-secondary" data-action="play-melody">▶ ${t('Play whole melody')}</button>
         ${renderSongSpeedControl()}
       </div>`;
   }
@@ -3061,7 +3061,7 @@ function renderQuizPhase(inst, lesson) {
     : (q.wrongIds.length > 0 ? `<div class="quiz-feedback wrong visible">${t('Not quite — try again.')}</div>` : `<div class="quiz-feedback"></div>`);
 
   const btnLabel = isReview
-    ? (APP.reviewIndex >= APP.reviewTotal - 1 ? 'See summary' : 'Next note')
+    ? (APP.reviewIndex >= APP.reviewTotal - 1 ? t('See summary') : t('Next note'))
     : (APP.quizIndex >= APP.quizQueue.length - 1 ? t('Continue') : t('Next question'));
 
   return `
@@ -3123,7 +3123,7 @@ function renderPlayPhase(inst, lesson) {
         </div>
         <div class="beat-grid">${cells}${playCell}</div>
         <div class="play-status" id="play-status">${t('Tap Start, then play along on the count.')}</div>
-        <button class="btn btn-secondary" data-action="play-start" id="play-start-btn">▶ Start count-in</button>
+        <button class="btn btn-secondary" data-action="play-start" id="play-start-btn">${t('▶ Start count-in')}</button>
         ${recordPanel}
       </div>
     </div>
