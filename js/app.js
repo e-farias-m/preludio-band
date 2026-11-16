@@ -2642,7 +2642,7 @@ function renderPresentPhase(inst, lesson) {
   const fingeringSvg = Graphics.fingeringSVG(inst.fingeringType, lesson.fingeringState, instAccent(inst), 97, (lesson.degree != null ? lesson.degree - 1 : -1));
   const isPerc = isPercussionLesson(lesson);
   const staffSvg = isPerc
-    ? Graphics.melodySVG({ notes: [{ pos: 4, accidental: null, duration: 1 }, { pos: 4, accidental: null, duration: 1 }, { pos: 4, accidental: null, duration: 1 }, { pos: 4, accidental: null, duration: 1 }], clef: 'percussion', accentColor: instAccent(inst), width: 96, percussion: true, perSystem: 4, beatsPerBar: 4 })
+    ? Graphics.melodySVG({ notes: [{ pos: 4, accidental: null, duration: 1 }, { pos: 4, accidental: null, duration: 1 }, { pos: 4, accidental: null, duration: 1 }, { pos: 4, accidental: null, duration: 1 }], clef: 'percussion', accentColor: instAccent(inst), width: 96, percussion: true, beatsPerBar: 4 })
     : Graphics.staffSVG({ pos: lesson.staffStep, accidental: lesson.accidental, clef: inst.clef, accentColor: instAccent(inst), width: 96 });
   const transposeNote = inst.isTransposing && lesson.concertNote
     ? `<div class="note-description">${tFill('Sounds as concert {note} ({key} instrument).', { note: lesson.concertNote, key: ({'-9':'E\u266d','-7':'F','-2':'B\u266d'})[inst.transposeSemitones] || 'B\u266d' })}</div>` : '';
