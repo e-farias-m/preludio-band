@@ -3,6 +3,7 @@
 // getLang, initLang, applyI18nToDOM.
 
 const LANG_STORAGE_KEY = 'preludioBandLang';
+const OVERRIDE_STORAGE_KEY = 'preludioBandLangOverrides';
 
 // Default language: browser locale (pt* -> 'pt', else 'en').
 function detectDefaultLang() {
@@ -30,8 +31,9 @@ var NOTE_TO_SOLFEGE_PT = {
 };
 
 var NOTE_TO_SOLFEGE_FR = {
-  'C': 'Do', 'C#': 'Do#', 'D': 'Ré', 'D#': 'Ré#', 'E': 'Mi', 'F': 'Fa', 'F#': 'Fa#',
-  'G': 'Sol', 'G#': 'Sol#', 'A': 'La', 'A#': 'La#', 'Bb': 'Sib', 'B': 'Si'
+  'C': 'Do', 'C#': 'Do#', 'Cb': 'Dob', 'Db': 'Réb', 'D': 'Ré', 'D#': 'Ré#', 'Eb': 'Mib',
+  'E': 'Mi', 'F': 'Fa', 'F#': 'Fa#', 'Gb': 'Solb', 'G': 'Sol', 'G#': 'Sol#', 'Ab': 'Lab',
+  'A': 'La', 'A#': 'La#', 'Bb': 'Sib', 'B': 'Si'
 };
 
 function noteToSolfeggio(str) {
