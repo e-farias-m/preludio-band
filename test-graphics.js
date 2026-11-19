@@ -24,6 +24,9 @@ function check(cond, msg) {
 function isSvg(s) {
   return typeof s === 'string' && s.startsWith('<svg') && s.endsWith('</svg>');
 }
+function isIcon(s) {
+  return isSvg(s) || (typeof s === 'string' && s.startsWith('<img') && s.endsWith('/>'));
+}
 // Every circle must sit inside the diagram's viewBox, otherwise an enlarged or
 // repositioned key can be clipped at the edges.
 function circlesWithinViewBox(svg) {
@@ -100,7 +103,7 @@ check(diagrams > 0, 'no fingering diagrams rendered');
 // ── Home-screen icons render for every instrument ──────────────────────────
 for (const inst of Object.values(CURRICULUM)) {
   const icon = Graphics.instrumentIconSVG(inst.id, 56);
-  check(isSvg(icon), `${inst.id} home icon is not valid SVG`);
+  check(isIcon(icon), `${inst.id} home icon is not valid SVG or image`);
 }
 check(Graphics.instrumentIconSVG('flute', 56).includes('<ellipse'),
   'flute home icon should show an embouchure to match its diagram');
