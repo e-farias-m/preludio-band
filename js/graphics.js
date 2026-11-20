@@ -960,7 +960,7 @@ const Graphics = (() => {
   // ── INSTRUMENT ICON SET (home screen) ───────────────────────────────────
   // Consistent line-icon language: currentColor stroke, 64x64 viewBox.
   function instrumentIconSVG(id, size = 56) {
-    const iconImg = (file) => `<img src="icons/${file}" width="${size}" height="${size}" alt="" style="object-fit:contain;display:block;" />`;
+    const iconImg = (file) => `<img src="icons/${file}" width="${size}" height="${size}" alt="" style="object-fit:contain;display:block;background:#ffffff;border-radius:6px;padding:3px;box-sizing:border-box;" />`;
     // Instruments with photo-based square icons.
     switch (id) {
       case 'trombone': return iconImg('trombone.png');
