@@ -105,8 +105,8 @@ for (const inst of Object.values(CURRICULUM)) {
   const icon = Graphics.instrumentIconSVG(inst.id, 56);
   check(isIcon(icon), `${inst.id} home icon is not valid SVG or image`);
 }
-check(Graphics.instrumentIconSVG('flute', 56).includes('<ellipse'),
-  'flute home icon should show an embouchure to match its diagram');
+check(Graphics.instrumentIconSVG('flute', 56).includes('icons/flute.png'),
+  'flute home icon uses the approved flute image');
 
 // ── Melody staff draws every note, wraps, and highlights one ───────────────
 {
